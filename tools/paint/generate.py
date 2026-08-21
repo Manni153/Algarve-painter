@@ -30,8 +30,11 @@ CANVAS = (248, 243, 234)          # warm off-white; a shade lighter than the pag
 PALETTES = {
     # widest hue spread: two warms, a cool, a soft mid, and a dark anchor
     'studio':    [(233, 176, 31), (23, 166, 152), (242, 100, 60), (226, 138, 132), (34, 48, 63)],
-    # modelled on a painted-swatch photo: gold, magenta, orange, tan, burgundy
-    'reference': [(232, 175, 30), (214, 65, 126), (242, 100, 60), (214, 163, 116), (126, 36, 55)],
+    # "Basic Canvas": the reference swatch set — one warm, dusty tonal family
+    # (mustard, blush pink, terracotta, cream/tan, burgundy) with nothing
+    # jumping out of it. Every value is deliberately low-chroma; the earlier
+    # bright magenta read as a separate colour rather than part of the set.
+    'reference': [(201, 163,  78), (201, 142, 142), (192, 107,  76), (223, 195, 166), (126,  68,  80)],
     # maximum separation: four saturated hues plus near-black
     'pop':       [(242, 183, 5), (18, 168, 160), (214, 65, 126), (255, 107, 74), (46, 42, 40)],
 }

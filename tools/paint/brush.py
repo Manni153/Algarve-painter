@@ -67,26 +67,63 @@ def stroke(w, h, colour, seed=0, arc=0.10, load=0.85, thickness=0.74):
     a *= np.clip(0.82 + 0.40 * grain, 0, 1)
     a = np.clip(a * 1.95, 0, 1)
 
+    # ---- smudge -----------------------------------------------------------
+    # Pressed, finger-worked paint has no clean boundary: the silhouette is
+    # softened, then given back a little bite so it reads as blended pigment
+    # rather than an airbrush cloud. This happens before shading so the body
+    # and the edge are lit as one mass.
+    a = np.asarray(Image.fromarray((a * 255).astype(np.uint8))
+                   .filter(ImageFilter.GaussianBlur(max(1.4, h * 0.032))), np.float32) / 255.0
+    a = np.clip((a - 0.11) / 0.72, 0, 1)
+
+    # Broad, low-frequency density variation — where the swatch was pressed
+    # thin and where the pigment pooled.
+    press = _noise(max(5, w // 34), max(4, h // 7), 3, 3, rng)
+    press = np.asarray(Image.fromarray((press * 255).astype(np.uint8)).resize((w, h), Image.BICUBIC), np.float32) / 255.0
+    a = np.clip(a * (0.72 + 0.46 * press), 0, 1)
+
+    # Canvas tooth showing through where the pigment was pressed thin — the
+    # difference between worked paint and an airbrushed gradient.
+    tooth_n = _noise(w, h, 4, 14, rng)
+    a = np.clip(a * (0.86 + 0.20 * tooth_n), 0, 1)
+
     # ---- body shading -----------------------------------------------------
+    # Matte, not glossy: the pigment is knocked back toward a warm grey and
+    # lit only by broad, soft variation. No specular rim — a bright edge
+    # highlight is what made the earlier strokes read as motion graphics.
     base = np.array(colour, np.float32)
-    tone = _noise(w, h, 5, 6, rng)
-    body = base[None, None, :] * (0.86 + 0.26 * tone[..., None])  # tight range: keeps pigment near its stated hue on a light ground
-    # drag striations across the whole body, not just the dry tail
-    drag = _noise(max(8, w // 14), h, 3, 6, rng)
-    drag = np.asarray(Image.fromarray((drag * 255).astype(np.uint8)).resize((w, h), Image.BILINEAR), np.float32) / 255.0
-    body *= (0.88 + 0.26 * drag[..., None])
+    grey = float(base @ np.array([0.299, 0.587, 0.114], np.float32))
+    base = base * (1 - 0.12) + np.array([grey * 1.03, grey * 0.98, grey * 0.91], np.float32) * 0.12
+
+    tone = _noise(w, h, 5, 5, rng)
+    body = base[None, None, :] * (0.90 + 0.17 * tone[..., None])
+    body *= (0.94 + 0.13 * press[..., None])
+
+    # Striations survive, but blurred and shallow — worked into the paint
+    # rather than dragged across the top of it.
+    drag = _noise(max(8, w // 18), h, 3, 5, rng)
+    drag = np.asarray(Image.fromarray((drag * 255).astype(np.uint8))
+                      .resize((w, h), Image.BILINEAR)
+                      .filter(ImageFilter.GaussianBlur(max(1.0, h * 0.010))), np.float32) / 255.0
+    body *= (0.95 + 0.11 * drag[..., None])
 
     lanes_light = np.zeros((h, w), np.float32)
-    for i in range(0, lanes, 1):
+    for i in range(lanes):
         band_c = centre + (lane_y[i] + lane_off[i]) * half
-        lanes_light += np.exp(-((yy - band_c[None, :]) ** 2) / (2 * (max(h * 0.012, 1)) ** 2)) * (lane_load[i] - 0.5)
-    body *= (1 + np.clip(lanes_light, -1, 1)[..., None] * 0.22)
+        lanes_light += np.exp(-((yy - band_c[None, :]) ** 2) / (2 * (max(h * 0.018, 1)) ** 2)) * (lane_load[i] - 0.5)
+    body *= (1 + np.clip(lanes_light, -1, 1)[..., None] * 0.09)
 
-    blur = np.asarray(Image.fromarray((a * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(max(1.5, h * 0.012))), np.float32) / 255.0
-    gy, gx = np.gradient(blur)
-    lit = np.clip(-(gy * 1.0 + gx * 0.30) * (h * 0.42), -1, 1)
-    hi = np.clip(lit, 0, 1)[..., None]; sh = np.clip(-lit, 0, 1)[..., None]
-    body = body * (1 + hi * 0.22) * (1 - sh * 0.24)
+    # A single soft cross-stroke gradient stands in for form. Deliberately
+    # much weaker than the old edge-gradient lighting, and with no positive
+    # highlight term at all.
+    blur = np.asarray(Image.fromarray((a * 255).astype(np.uint8))
+                      .filter(ImageFilter.GaussianBlur(max(2.5, h * 0.06))), np.float32) / 255.0
+    body *= (0.93 + 0.09 * blur[..., None])
+
+    # Soften the pigment itself, so colour bleeds slightly across the body
+    # the way worked paint does.
+    body = np.asarray(Image.fromarray(np.clip(body, 0, 255).astype(np.uint8))
+                      .filter(ImageFilter.GaussianBlur(max(0.6, h * 0.006))), np.float32)
 
     return Image.fromarray(np.dstack([np.clip(body, 0, 255), a * 255]).astype(np.uint8), 'RGBA')
 

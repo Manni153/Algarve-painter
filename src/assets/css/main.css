@@ -50,6 +50,9 @@
   --ink-700: #4e3325;
   --teal-muted: #6e5647; /* NOT teal: warm mid-brown, secondary body text on light grounds */
 
+  --hero-canvas-rgb: 248, 243, 234; /* the hero canvas cream — the veil over it and the
+                                       stats band behind the trust row both derive from
+                                       this one triplet so they can never drift apart */
   --terracotta: #c25a38;      /* the accent — painted marks, swatches, script wordmark */
   --terracotta-btn: #b85132;  /* the same hue, one step deeper: used wherever the accent
                                  sits behind text. #c25a38 with the cream label on top
@@ -4151,12 +4154,12 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
      the text wherever it actually is. */
   --hero-veil-left: max(24px, calc(50% - 590px));
   background: linear-gradient(100deg,
-    rgba(248, 243, 234, 0.97) 0px,
-    rgba(248, 243, 234, 0.95) calc(var(--hero-veil-left) + 560px),
-    rgba(248, 243, 234, 0.86) calc(var(--hero-veil-left) + 760px),
-    rgba(248, 243, 234, 0.35) calc(var(--hero-veil-left) + 880px),
-    rgba(248, 243, 234, 0.05) calc(var(--hero-veil-left) + 980px),
-    rgba(248, 243, 234, 0) calc(var(--hero-veil-left) + 1060px)) !important;
+    rgba(var(--hero-canvas-rgb), 0.94) 0px,
+    rgba(var(--hero-canvas-rgb), 0.90) calc(var(--hero-veil-left) + 520px),
+    rgba(var(--hero-canvas-rgb), 0.70) calc(var(--hero-veil-left) + 700px),
+    rgba(var(--hero-canvas-rgb), 0.26) calc(var(--hero-veil-left) + 820px),
+    rgba(var(--hero-canvas-rgb), 0.04) calc(var(--hero-veil-left) + 920px),
+    rgba(var(--hero-canvas-rgb), 0) calc(var(--hero-veil-left) + 1000px)) !important;
 }
 @media (max-width: 1024px) {
   /* Mobile and tablet stack text above the strokes, so the veil runs
@@ -4166,11 +4169,11 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
   .page-home .hero-stack--split .hero-stack-media::after,
   .page-lagos-rs .hero-stack--split .hero-stack-media::after {
     background: linear-gradient(to bottom,
-      rgba(248, 243, 234, 0.95) 0%,
-      rgba(248, 243, 234, 0.90) 32%,
-      rgba(248, 243, 234, 0.55) 48%,
-      rgba(248, 243, 234, 0.10) 62%,
-      rgba(248, 243, 234, 0) 72%) !important;
+      rgba(var(--hero-canvas-rgb), 0.95) 0%,
+      rgba(var(--hero-canvas-rgb), 0.90) 32%,
+      rgba(var(--hero-canvas-rgb), 0.55) 48%,
+      rgba(var(--hero-canvas-rgb), 0.10) 62%,
+      rgba(var(--hero-canvas-rgb), 0) 72%) !important;
   }
 }
 
@@ -4213,5 +4216,36 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     border-radius: 16px;
     padding: 14px 12px 12px;
     border-top-color: rgba(58, 36, 26, 0.12);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Hero stats band
+   -------------------------------------------------------------------------
+   The trust row gets its own solid cream band rather than relying on the
+   veil. The veil is a gradient, so how much cover the row got depended on
+   where it happened to sit relative to the strokes — fine at one width,
+   marginal at another, and it would change again on any future palette or
+   composition edit. A flat band makes the row's legibility independent of
+   what is painted behind it.
+
+   The band spans the row and nothing else: .hero-trust-inline is exactly as
+   wide as the hero text column, so no full-bleed treatment is involved and
+   the strokes either side of the row are untouched. Colour comes from the
+   same --hero-canvas-rgb triplet as the canvas and the veil.
+   ------------------------------------------------------------------------- */
+.page-home .hero-stack--split .hero-trust-inline,
+.page-lagos-rs .hero-stack--split .hero-trust-inline {
+  background: rgb(var(--hero-canvas-rgb));
+  border-radius: 14px;
+  border-top-color: rgba(58, 36, 26, 0.14);
+  padding: 14px 20px 15px;
+  box-shadow: 0 1px 0 rgba(58, 36, 26, 0.05);
+}
+@media (max-width: 1024px) {
+  .page-home .hero-stack--split .hero-trust-inline,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline {
+    padding: 12px 14px 13px;
+    border-radius: 12px;
   }
 }
