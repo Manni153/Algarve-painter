@@ -2638,7 +2638,16 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     position: relative;
     z-index: 0;
     overflow: hidden;
+    /* One screen, exactly. 100vh is the LARGE viewport on a phone — the
+       height with the browser toolbar retracted — so with the toolbar
+       showing the hero runs past the fold, and some in-app webviews resolve
+       it shorter than the area they actually paint, which leaves a strip of
+       page ground under the artwork. 100dvh is whatever is visible right
+       now, so the hero matches the screen in both cases; 100vh stays first
+       as the fallback for anything that does not know the unit. Desktop is
+       not touched: its own height sits in the min-width: 1025px block. */
     height: 100vh;
+    height: 100dvh;
     margin-top: calc(-1 * var(--header-h));
     padding-top: 0;
     padding-bottom: 0;
@@ -3602,7 +3611,16 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     position: relative;
     z-index: 0;
     overflow: hidden;
+    /* One screen, exactly. 100vh is the LARGE viewport on a phone — the
+       height with the browser toolbar retracted — so with the toolbar
+       showing the hero runs past the fold, and some in-app webviews resolve
+       it shorter than the area they actually paint, which leaves a strip of
+       page ground under the artwork. 100dvh is whatever is visible right
+       now, so the hero matches the screen in both cases; 100vh stays first
+       as the fallback for anything that does not know the unit. Desktop is
+       not touched: its own height sits in the min-width: 1025px block. */
     height: 100vh;
+    height: 100dvh;
     margin-top: calc(-1 * var(--header-h));
     padding-top: 0;
     padding-bottom: 0;
@@ -4177,25 +4195,40 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
   }
 }
 
-/* Below 360px the percentages above stop tracking the row. The hero's
-   height follows the viewport, the row's offset does not, and at 320px the
-   labels wrap to two lines: the row runs 54-68% of a 320x700 frame where it
-   runs 41-51% of a 390x844 one, so a veil that covers it there has already
-   cleared here and the labels fall to 1.00:1. Only at this width is the
-   trade worth it — px stops hold the veil where the row actually is. The
-   alphas match the block above, for the same reason: against edge-to-edge
-   photographic art a heavier ramp leaves the top of the frame blank. */
-@media (max-width: 359px) {
+/* Phones (<=767px) take px stops instead of the percentages above, because
+   on a phone the percentages do not track the stats row.
+
+   The hero is 100vh, so its height follows the viewport, while the row's
+   own offset from the top of the page barely moves — around 347px at 390px
+   wide, 379px at 320px where the labels wrap to two lines. As a fraction of
+   the hero that slides a long way: the row runs 41-51% of a 390x844 handset
+   and 54-68% of a 320x700 one. A percentage veil tuned to the tall case has
+   already cleared by the time it reaches the row on a short one, and the
+   labels fall to around 1.0:1 — measured on 375x667, 393x660 and 320x700,
+   all of them ordinary phone sizes rather than edge cases. In px the veil
+   holds where the row actually is, whatever the viewport height: 5.42:1 at
+   worst across 320x568 through 430x932.
+
+   The cost lands on short screens only. At 660px tall the artwork is
+   squeezed into less height, so the row sits over the plum rather than the
+   orange, and the veil that carries it desaturates that band. Tall phones
+   are barely touched. The alternative is unreadable labels, so it is not
+   much of a trade.
+
+   Tablet (768-1024px) stays on the percentages: its row is bottom-anchored
+   over the strokes at every width and carried by its own panel, so it is
+   not the thing these stops are tracking. */
+@media (max-width: 767px) {
   .page-home .hero-stack--split .hero-stack-media::before,
   .page-lagos-rs .hero-stack--split .hero-stack-media::before,
   .page-home .hero-stack--split .hero-stack-media::after,
   .page-lagos-rs .hero-stack--split .hero-stack-media::after {
     background: linear-gradient(to bottom,
-      rgba(var(--hero-canvas-rgb), 0.86) 0px,
-      rgba(var(--hero-canvas-rgb), 0.74) 340px,
-      rgba(var(--hero-canvas-rgb), 0.62) 500px,
-      rgba(var(--hero-canvas-rgb), 0.10) 590px,
-      rgba(var(--hero-canvas-rgb), 0) 680px) !important;
+      rgba(var(--hero-canvas-rgb), 0.88) 0px,
+      rgba(var(--hero-canvas-rgb), 0.78) 300px,
+      rgba(var(--hero-canvas-rgb), 0.66) 470px,
+      rgba(var(--hero-canvas-rgb), 0.10) 560px,
+      rgba(var(--hero-canvas-rgb), 0) 650px) !important;
   }
 }
 
