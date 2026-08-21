@@ -13,7 +13,10 @@ third-party licence. See tools/paint/brush.py for the stroke engine.
 To change the hero colourway, pass a palette name (see PALETTES below) or add
 a new entry — geometry stays fixed, so a swap is colour-only:
 
-    python3 tools/paint/generate.py reference
+    python3 tools/paint/generate.py studio
+
+'reference' is the colourway the site ships; it is the default here so a bare
+run reproduces exactly what is committed.
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -62,7 +65,7 @@ def save(im, path, q=86):
     im.save(path + '.jpg', quality=q, optimize=True, progressive=True)
     im.save(path + '.webp', quality=82, method=6)
 
-def main(name='studio'):
+def main(name='reference'):
     if name not in PALETTES:
         sys.exit('unknown palette %r; choose from %s' % (name, ', '.join(PALETTES)))
     cols = PALETTES[name]
@@ -100,4 +103,4 @@ def main(name='studio'):
     print('favicon')
 
 if __name__ == '__main__':
-    main(sys.argv[1] if len(sys.argv) > 1 else 'studio')
+    main(sys.argv[1] if len(sys.argv) > 1 else 'reference')

@@ -66,7 +66,7 @@ The `/public` folder is a complete static site — point any static host at it:
 **v4 "paint-craft"** — warm, tactile and pigment-led, replacing the navy/crimson palette inherited from the sister site. Structure, layout, grid, components, breakpoints and the measured hero budgets are unchanged; this is a visual restyle, not a rebuild.
 
 - **Page palette** — terracotta `#c25a38` (the accent; `#b85132` wherever it sits behind text, so button labels clear WCAG AA), ochre `#d9a02b`, dusty pink `#d9a08c`, deep brown `#3a241a` for text and dark surfaces, cream `#fbf4e8` as the ground.
-- **Hero palette** — deliberately wider than the page palette, on a warm off-white canvas `#f8f3ea`: mustard `#e9b01f`, turquoise `#17a698`, coral `#f2643c`, dusty pink `#e28a84`, deep navy `#22303f`. Two alternates (`reference`, `pop`) ship in the generator; switching is one command and colour-only. Set as token *values* at the top of `src/assets/css/main.css`; the token *names* are unchanged so the component CSS between them keeps resolving.
+- **Hero palette** — deliberately wider than the page palette, on a warm off-white canvas `#f8f3ea`: gold `#e8af1e`, magenta `#d6417e`, orange `#f2643c`, tan `#d6a374`, burgundy `#7e2437`. Two alternates (`studio`, `pop`) ship in the generator; switching is one command and colour-only. Set as token *values* at the top of `src/assets/css/main.css`; the token *names* are unchanged so the component CSS between them keeps resolving.
 - **Type** — Fredoka (rounded display) for headlines, wordmark, buttons and labels; Nunito Sans for running text; Caveat (brush script) reserved for the wordmark's "Painter" and the hero tagline, so it reads as a signature rather than decoration. All three are self-hosted variable fonts in `src/assets/fonts` — no Google Fonts request, no third-party dependency.
 - **Wordmark** — "Algarve" in the display face, "Painter" in the script with a tapered brushstroke swiped underneath (the SVG lives in `wordmarkHtml` in `layout.js`).
 - **Everything the token swap can't express** lives in one clearly-marked `PAINT-CRAFT RESTYLE` block at the very end of `main.css` — type roles, the painted section marks, the wordmark, the trust band and the button fills. It sits last because much of the inherited stylesheet carries `!important` at high specificity.
@@ -83,8 +83,8 @@ There is **no photography of real work yet**. The hero and the section marks are
 **The generator is in the repo**, at `tools/paint/`:
 
 ```
-python3 tools/paint/generate.py            # studio (default)
-python3 tools/paint/generate.py reference  # or: pop
+python3 tools/paint/generate.py reference  # the shipped colourway
+python3 tools/paint/generate.py studio     # or: pop
 ```
 
 `brush.py` is the stroke engine — each stroke is built from individual bristle lanes, each with its own paint load and drop-out point, which is what produces the dry-brush skips, splayed tails and irregular edges. `generate.py` holds the palettes and the fixed stroke geometry, so a palette swap changes colour only. It needs Pillow and NumPy; neither is a runtime dependency of the site. Nothing is downloaded — every pixel is procedural, so the generated assets carry no third-party licence. Every service is listed in `SERVICE_MINIMAL_IMAGES_SLUGS`, which drops the media column from the "Real-World Scenarios" and "In Detail" sections rather than filling them with placeholder boxes. The build renders **zero** visible `[Placeholder: …]` boxes.

@@ -4140,13 +4140,23 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 .page-lagos-rs .hero-stack--split .hero-stack-media::before,
 .page-home .hero-stack--split .hero-stack-media::after,
 .page-lagos-rs .hero-stack--split .hero-stack-media::after {
+  /* Stops are anchored to the text column, not to the viewport. A
+     percentage veil that clears the text at 1920px still sits under it at
+     1025px, where the same fixed-width column fills 76% of the screen; and
+     plain px stops measured from the viewport's left edge drift out from
+     under the text on ultra-wide, because the column is centred inside a
+     1180px max-width container rather than pinned left. --hero-veil-left
+     resolves to that container's own left edge at every width (the
+     max() picks up the gutter below 1180px + padding), so the veil tracks
+     the text wherever it actually is. */
+  --hero-veil-left: max(24px, calc(50% - 590px));
   background: linear-gradient(100deg,
-    rgba(248, 243, 234, 0.97) 0%,
-    rgba(248, 243, 234, 0.95) 34%,
-    rgba(248, 243, 234, 0.78) 47%,
-    rgba(248, 243, 234, 0.30) 59%,
-    rgba(248, 243, 234, 0.05) 70%,
-    rgba(248, 243, 234, 0) 80%) !important;
+    rgba(248, 243, 234, 0.97) 0px,
+    rgba(248, 243, 234, 0.95) calc(var(--hero-veil-left) + 560px),
+    rgba(248, 243, 234, 0.86) calc(var(--hero-veil-left) + 760px),
+    rgba(248, 243, 234, 0.35) calc(var(--hero-veil-left) + 880px),
+    rgba(248, 243, 234, 0.05) calc(var(--hero-veil-left) + 980px),
+    rgba(248, 243, 234, 0) calc(var(--hero-veil-left) + 1060px)) !important;
 }
 @media (max-width: 1024px) {
   /* Mobile and tablet stack text above the strokes, so the veil runs
