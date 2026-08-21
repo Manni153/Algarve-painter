@@ -50,9 +50,10 @@
   --ink-700: #4e3325;
   --teal-muted: #6e5647; /* NOT teal: warm mid-brown, secondary body text on light grounds */
 
-  --hero-canvas-rgb: 248, 243, 234; /* the hero canvas cream — the veil over it and the
-                                       stats band behind the trust row both derive from
-                                       this one triplet so they can never drift apart */
+  --hero-canvas-rgb: 234, 235, 236; /* sampled from the hero photograph's own canvas —
+                                       the veil over it and the stats band behind the
+                                       trust row both derive from this one triplet so
+                                       they can never drift apart */
   --terracotta: #c25a38;      /* the accent — painted marks, swatches, script wordmark */
   --terracotta-btn: #b85132;  /* the same hue, one step deeper: used wherever the accent
                                  sits behind text. #c25a38 with the cream label on top
@@ -4154,10 +4155,10 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
      the text wherever it actually is. */
   --hero-veil-left: max(24px, calc(50% - 590px));
   background: linear-gradient(100deg,
-    rgba(var(--hero-canvas-rgb), 0.85) 0px,
-    rgba(var(--hero-canvas-rgb), 0.62) calc(var(--hero-veil-left) + 470px),
-    rgba(var(--hero-canvas-rgb), 0.14) calc(var(--hero-veil-left) + 610px),
-    rgba(var(--hero-canvas-rgb), 0) calc(var(--hero-veil-left) + 720px)) !important;
+    rgba(var(--hero-canvas-rgb), 0.93) 0px,
+    rgba(var(--hero-canvas-rgb), 0.82) calc(var(--hero-veil-left) + 470px),
+    rgba(var(--hero-canvas-rgb), 0.36) calc(var(--hero-veil-left) + 610px),
+    rgba(var(--hero-canvas-rgb), 0) calc(var(--hero-veil-left) + 760px)) !important;
 }
 @media (max-width: 1024px) {
   /* Mobile and tablet stack text above the strokes, so the veil runs

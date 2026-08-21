@@ -30,7 +30,7 @@ const SHARED_HERO = {
   mobileJpg: '/assets/images/hero-paint-mobile.jpg',
   desktopWebp: '/assets/images/hero-paint-desktop.webp',
   desktopJpg: '/assets/images/hero-paint-desktop.jpg',
-  alt: 'Thick brushstrokes of terracotta, ochre and dusty pink paint swatched across a dark canvas',
+  alt: 'Five thick impasto brushstrokes — ochre, dusty rose, orange, deep plum and burgundy — swept across artist\u2019s canvas',
 };
 const SERVICE_HERO_PHOTO = {
   'exterior-house-painting': SHARED_HERO,

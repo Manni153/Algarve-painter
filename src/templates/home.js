@@ -66,7 +66,7 @@ function renderHome() {
   };
 
   const hero = heroIntro({
-    alt: 'Thick brushstrokes of terracotta, ochre and dusty pink paint swatched across a dark canvas',
+    alt: 'Five thick impasto brushstrokes — ochre, dusty rose, orange, deep plum and burgundy — swept across artist\u2019s canvas',
     h1Text: 'Painting & Decorating in the Algarve',
     // "Decorating" never splits across lines (nbsp, all breakpoints); the
     // <br> is desktop-only (see .hero-kicker-break in main.css) so it

@@ -83,23 +83,10 @@ def main(name='reference'):
         sys.exit('unknown palette %r; choose from %s' % (name, ', '.join(PALETTES)))
     cols = PALETTES[name]
 
-    # 1x and 2x of each hero. Almost every phone and most laptops render at
-    # DPR 2 or 3, and the 1x asset was being stretched 2.0x at 1920@2x and
-    # 2.7x at 2560@2x — that upscale, plus the banding above, is what made
-    # the strokes look pixelated. The 2x files are only fetched by devices
-    # that can actually use them (see the srcset in layout.js's heroIntro).
-    # Two sizes of each hero, selected by width descriptor rather than DPR
-    # (see HERO_WIDTHS in layout.js). The large desktop file covers 1920 at
-    # DPR 2; the large portrait file is 1.5x rather than 2x because the
-    # portrait art only ever serves viewports up to 1024px, so 2182px covers
-    # a 1024 tablet at DPR 2 — a true 2x there would be ~450KB of hero for
-    # no visible gain.
-    for w, h, geo, stem in ((1900, 1069, GEO_DESKTOP, 'hero-paint-desktop'),
-                            (3800, 2138, GEO_DESKTOP, 'hero-paint-desktop@2x'),
-                            (1455, 1826, GEO_MOBILE,  'hero-paint-mobile'),
-                            (2182, 2739, GEO_MOBILE,  'hero-paint-mobile@2x')):
-        save(compose(cols, geo, w, h), IMG + stem)
-    print('heroes (%s), two sizes each' % name)
+    # The hero is no longer generated here — it is built from the supplied
+    # photograph by tools/paint/hero_from_photo.py, which owns those four
+    # files. Generating them here too would silently overwrite the artwork on
+    # the next run.
 
     # Section marks: the swatch swiped under each heading, alternating by
     # section. Drawn from the same palette so page and hero stay in family.
@@ -123,7 +110,16 @@ def main(name='reference'):
     # one stretched asset: the row is roughly 8:1 on desktop and 3:1 on
     # mobile, and stretching a single stroke across that range visibly
     # smears its texture.
-    TAN = (226, 201, 170)
+    # A pale tint of the hero photograph's own rose, rather than a neutral.
+    # Near-white read as a glowing bar rather than paint — it disappeared
+    # into the canvas on the left and glowed over the strokes on the right.
+    # A tint that is clearly a colour from the set reads as a light swipe of
+    # paint laid over the others, while still giving the dark labels on top
+    # of it around 9:1.
+    # Note this is the base pigment, not the rendered result: the shading
+    # terms lighten a stroke by up to ~13%, so a pale base clips toward white
+    # in the bright passes. Set deeper than the tone the band should read as.
+    TAN = (212, 186, 176)
     # Sized close to what it actually renders at, not far above it. The row
     # is ~780x92 CSS on desktop = 1560x184 device pixels at DPR 2, so 2400px
     # covers DPR 3 while only downscaling ~1.5x. Generating it much larger

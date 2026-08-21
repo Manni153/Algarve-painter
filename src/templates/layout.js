@@ -148,7 +148,7 @@ function renderBreadcrumb(items) {
 // used by the homepage only. Every other page keeps the single-column,
 // stacked-then-image layout at every breakpoint. Mobile/tablet are
 // unaffected either way: the split only activates at the desktop breakpoint.
-// Hero art ships in two sizes (see tools/paint/generate.py); the larger is
+// Hero art ships in two sizes (see tools/paint/hero_from_photo.py); the larger is
 // the same name with an @2x suffix before the extension, so the srcset can be
 // derived rather than threaded through every call site.
 //
@@ -157,7 +157,7 @@ function renderBreadcrumb(items) {
 // and is served the small portrait file, while a 1024px tablet at DPR 2 needs
 // 2048px and is served the large one. A `2x` descriptor would instead hand
 // that phone the largest file purely because of its pixel density.
-const HERO_WIDTHS = { desktop: [1900, 3800], mobile: [1455, 2182] };
+const HERO_WIDTHS = { desktop: [1500, 2048], mobile: [1250, 1650] };
 function x2(src) {
   return src.replace(/(\.[a-z0-9]+)$/i, '@2x$1');
 }
