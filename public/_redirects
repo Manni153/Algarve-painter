@@ -1,0 +1,33 @@
+# Site-wide trailing-slash enforcement: every page route without a
+# trailing slash 301-redirects to its trailing-slash version, matching
+# the canonical tag / sitemap.xml convention already used across all 33
+# pages (see layout.js's renderPage() and build.js's sitemap generation).
+#
+# This can't be a single unconditional "/*  /:splat/  301!" rule for two
+# reasons:
+#   1. Netlify's splat (*) matches the whole remaining path including any
+#      trailing slash already present, so a request for an already-correct
+#      URL like /monchique/ would get redirected to /monchique// (a
+#      broken double slash) instead of being left alone.
+#   2. The force flag (!) needed to override Netlify's default
+#      extensionless "pretty URL" serving (which would otherwise silently
+#      serve /monchique at the bare path with no redirect at all) applies
+#      to literally anything matching the pattern — including real static
+#      files like /assets/css/main.css, which would then get force-
+#      redirected to a nonexistent trailing-slash path and break.
+#
+# So: explicitly pass through real assets and already-slashed paths first
+# (first matching rule wins, so the forced catch-all below never sees
+# them), then the one forced rule at the bottom handles every remaining
+# page route uniformly — still a single global pattern for the actual
+# redirect, not one rule per page.
+
+/                        /                        200
+/assets/*                /assets/:splat           200
+/favicon.ico             /favicon.ico             200
+/apple-touch-icon.png    /apple-touch-icon.png    200
+/robots.txt              /robots.txt              200
+/sitemap.xml             /sitemap.xml             200
+/*/                      /:splat/                 200
+
+/*                       /:splat/                 301!

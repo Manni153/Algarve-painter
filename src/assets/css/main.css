@@ -1,0 +1,3829 @@
+/* ==========================================================================
+   Algarve Painter — Design System v3
+   Warm, bright, trust-first, photography-led. Direct structure over
+   asymmetric composition — a local-service brand, not a tech showcase.
+   Inherited wholesale from the sister site (AlgarveSecure) and retuned for
+   painting: same tokens, type scale, components and breakpoints, with the
+   page-scoped rules rekeyed to this site's own service slugs.
+   ========================================================================== */
+
+:root {
+  --sand: #f5ecd8;      /* base background — warm paper, deepened for more contrast against the accent */
+  --sand-alt: #eee0c2;  /* alternating section wash — shifted down with --sand to keep the same relative gap */
+  --stone: #e7d9bc;     /* borders / dividers — warm neutral, not gray */
+  --white: #fffdf9;     /* card surfaces */
+
+  --ink: #0f3238;       /* headings, primary text, header/footer */
+  --ink-700: #1b4750;
+  --teal-muted: #3f565a; /* secondary body text on light backgrounds — deepened from a washed-out teal for a more grounded feel */
+
+  --terracotta: #c81e3a;      /* crimson — reserved for CTA buttons and phone links only */
+  --terracotta-dark: #9c172d; /* hover / pressed */
+  --terracotta-tint: #ecb0ba; /* light accent wash, used sparingly alongside the accent itself */
+
+  --teal-tint: #d3eaee; /* pale teal wash — secondary-accent surfaces (badges, icon dots) and a section-rhythm background */
+
+  --cream: #f7f1e4; /* text on dark (ink) backgrounds */
+
+  --placeholder-fill: #ded2b6; /* flat, unobtrusive image-slot fill */
+
+  /* Homepage-only white header variant (.site-header--home, desktop) —
+     neutral pure white + true light grey, distinct from --white (an
+     off-white/cream) and --stone (a warm beige border), which read wrong
+     against a pure-white bar. */
+  --header-home-bg: #ffffff;
+  --header-home-border: #e6e8eb;
+  --header-home-hamburger-bg: #f4f5f6;
+
+  /* Exact client-specified palette for this hero pass — kept as its own
+     token set (not merged into --rs-* or --header-home-*) since these are
+     literal signed-off hex values, not derived design-system colours. */
+  --hero2-crimson: #dc143c;
+  --hero2-steel: #475569;
+  --hero2-steel-tint: rgba(71, 85, 105, 0.13); /* image panel bg — within the requested 12-15% range */
+  --hero2-near-black: #111827;
+  --hero2-soft-grey: #f8fafc;
+  --hero2-panel-grey: #e8eef2; /* light-grey panel bg/border — the client's own "soft alternative" to the blue-tinted panel */
+
+  --whatsapp: #25d366;
+  --whatsapp-dark: #1ebc59;
+
+  --serif: 'DM Serif Display', Georgia, serif;
+  --body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ui: 'Syne', var(--body);
+
+  /* Homepage typography test (see .page-home below for where these
+     actually get applied — defining them here is inert on its own).
+     Nunito: rounded, used for exactly two things — the header wordmark
+     and the hero H1. Nunito Sans: neutral, used for everything else on
+     the homepage. Global tokens so re-using them on other pages later
+     (if this test is approved) doesn't require re-declaring anything. */
+  --font-nunito: 'Nunito', var(--body);
+  --font-nunito-sans: 'Nunito Sans', var(--body);
+
+  --header-h: 76px;
+  --container: 1180px;
+
+  /* Phone-handset icon as an SVG mask (not a Unicode glyph) so it renders
+     identically everywhere instead of depending on a device's emoji/symbol
+     font coverage. Colored via currentColor at each usage site. */
+  --icon-phone: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z'/%3E%3C/svg%3E");
+}
+
+/* Reusable phone-icon box: an empty element sized in em, filled with
+   currentColor and shaped by the SVG mask above. */
+.icon-phone {
+  display: inline-block;
+  width: 0.95em;
+  height: 0.95em;
+  flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask: var(--icon-phone) center / contain no-repeat;
+  mask: var(--icon-phone) center / contain no-repeat;
+}
+
+/* -------------------------------------------------------------------------
+   Reset
+   ------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { width: 100%; -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  background: var(--sand);
+  color: var(--teal-muted);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+/* In-prose links (body copy, FAQ answers, region link paragraphs) need to
+   actually look like links; nav/buttons/cards override this locally. */
+main p a { color: var(--teal-muted); text-decoration: underline; text-underline-offset: 2px; }
+main p a:hover { color: var(--ink); }
+ul { margin: 0; padding: 0; list-style: none; }
+button { font: inherit; cursor: pointer; background: none; border: none; }
+input, textarea, select { font: inherit; }
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 400; margin: 0 0 0.5em; line-height: 1.15; color: var(--ink); text-wrap: balance; }
+h1 em, h2 em { font-style: italic; }
+p { margin: 0 0 1em; color: var(--teal-muted); }
+:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 3px; }
+
+.container { width: 100%; max-width: var(--container); margin: 0 auto; padding: 0 20px; }
+@media (min-width: 900px) { .container { padding: 0 32px; } }
+
+/* -------------------------------------------------------------------------
+   Bleed — breaks a full-width section out of whatever narrower container a
+   host page (e.g. a page-builder's embed block) wraps pasted content in.
+   The section itself spans the full viewport width; the .container inside
+   it still centers and constrains the actual content as normal. Uses a
+   margin-only technique (no position/left/right) so it doesn't fight a
+   sticky-positioned element's own `position` and `top` — an earlier
+   position:relative + left:50% version shifted the sticky header off
+   the visible viewport entirely.
+   ------------------------------------------------------------------------- */
+.bleed { width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); }
+
+section { padding: 56px 0; scroll-margin-top: calc(var(--header-h) + 16px); }
+@media (min-width: 900px) { section { padding: 84px 0; } }
+.section-alt { background: var(--sand-alt); border-top: 1px solid var(--stone); border-bottom: 1px solid var(--stone); }
+
+/* Pale teal wash — a rhythm beat between the sand/sand-alt sections and the
+   solid-ink ones, so the page doesn't run more than one beige section in a
+   row before hitting a real break. */
+.section-teal { background: var(--teal-tint); border-top: 1px solid rgba(15, 50, 56, 0.1); border-bottom: 1px solid rgba(15, 50, 56, 0.1); }
+
+/* Solid dark-ink section — a deliberate rhythm beat partway down the page,
+   not just at the CTA band/footer. Cards/components inside keep their own
+   light surfaces (e.g. .card stays white) and read as floating on the dark
+   ground; only the section-head intro text needs light-on-dark treatment. */
+.section-dark { background: var(--ink); }
+.section-dark .section-head h2 { color: var(--cream); }
+.section-dark .section-head .lede { color: rgba(247, 241, 228, 0.78); }
+
+.eyebrow {
+  font-family: var(--ui);
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-size: 0.76rem;
+  color: var(--teal-muted);
+  font-weight: 700;
+  margin: 0 0 12px;
+  display: block;
+}
+
+h1 { font-size: clamp(2.1rem, 4.6vw, 3.3rem); letter-spacing: -0.01em; }
+h2 { font-size: clamp(1.6rem, 3.2vw, 2.3rem); }
+h3 { font-size: clamp(1.15rem, 2.2vw, 1.4rem); }
+.lede { font-size: clamp(1.02rem, 1.8vw, 1.15rem); color: var(--teal-muted); max-width: 60ch; }
+
+/* Section headers are centered by default — direct, not asymmetric */
+.section-head { text-align: center; max-width: 640px; margin: 0 auto 40px; }
+.section-head .lede { margin: 12px auto 0; }
+.section-head.left { text-align: left; margin-left: 0; }
+
+/* -------------------------------------------------------------------------
+   Buttons — a pill with real physical presence: a subtle top-to-bottom
+   gradient (not a flat fill) plus a layered shadow — a tight contact shadow
+   directly under the button and a softer, wider glow beneath it — so it
+   reads as raised and tappable rather than a flat color chip.
+   ------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--ui);
+  font-weight: 700;
+  border: none;
+  border-radius: 999px;
+  padding: 15px 28px;
+  background: linear-gradient(180deg, var(--terracotta) 0%, var(--terracotta-dark) 100%);
+  color: var(--white);
+  box-shadow: 0 2px 4px rgba(156, 23, 45, 0.35), 0 14px 30px rgba(156, 23, 45, 0.32);
+  transition: filter 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+.btn:hover { filter: brightness(0.94); box-shadow: 0 3px 6px rgba(156, 23, 45, 0.4), 0 18px 36px rgba(156, 23, 45, 0.38); }
+.btn:active { filter: brightness(0.9); transform: translateY(1px); }
+.btn-lg { font-size: clamp(1.05rem, 2vw, 1.3rem); padding: 18px 34px; }
+.btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--stone); box-shadow: none; }
+.btn-outline:hover { border-color: var(--terracotta); color: var(--terracotta); background: transparent; }
+.btn-block { width: 100%; }
+.btn-icon::before { content: ''; display: inline-block; width: 0.92em; height: 0.92em; flex-shrink: 0; background-color: currentColor; -webkit-mask: var(--icon-phone) center / contain no-repeat; mask: var(--icon-phone) center / contain no-repeat; }
+
+/* -------------------------------------------------------------------------
+   Header
+   ------------------------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  background: rgba(15, 50, 56, 0.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(247, 241, 228, 0.1);
+}
+.site-header .container { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.wordmark { font-family: var(--ui); font-weight: 800; font-size: clamp(0.86rem, 4vw, 1.15rem); color: var(--ink); display: flex; align-items: baseline; gap: 0; white-space: nowrap; }
+.wordmark span.accent { color: var(--teal-muted); }
+/* Header sits on an ink-dark bar (not the sand nav-panel), so its wordmark
+   needs the light-on-dark treatment already used in the footer/CTA band. */
+.site-header .wordmark { color: var(--cream); }
+.site-header .wordmark span.accent { color: #f3caa4; }
+
+/* Inline service links — hidden by default (mobile/tablet rely on the
+   hamburger drawer for everything), shown from the desktop breakpoint up.
+   The 22-town list and Company links stay hamburger-only at every width;
+   there's no room to surface those inline without crowding the bar. */
+.header-nav { display: none; }
+@media (min-width: 1025px) {
+  .header-nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    justify-content: center;
+    margin: 0 20px;
+    list-style: none;
+    padding: 0;
+  }
+  .header-nav a {
+    font-family: var(--ui);
+    font-weight: 600;
+    font-size: 0.8rem;
+    /* Full-opacity cream reads distinctly brighter/warmer than the
+       previous 82%-alpha blend, which washed out next to the crimson
+       phone number; peach on hover matches the site's existing
+       accent-on-dark convention (wordmark, footer headers, CTA em). */
+    color: var(--cream);
+    white-space: nowrap;
+  }
+  .header-nav a:hover { color: #f3caa4; }
+  /* Explicit :visited guard — a link a browser has in its history (e.g.
+     Waterproof & Roof Coating, if that page was opened separately) would
+     otherwise be free to pick up the browser's own visited-link colour on
+     top of this. Pins every state to the same value so all seven links
+     always match regardless of browsing history. */
+  .header-nav a:visited { color: var(--cream); font-style: normal; font-weight: 600; }
+}
+
+.header-actions { display: flex; align-items: center; gap: 14px; }
+/* Crimson-on-ink here measures ~2.4:1 (WCAG AA needs 4.5:1 for text) —
+   this is the one crimson usage that sits directly on the dark header as
+   text/icon color rather than inside a button with its own background, so
+   it gets the same light-on-dark treatment as the wordmark instead. */
+.header-phone { font-family: var(--ui); font-weight: 700; color: var(--cream); font-size: clamp(0.88rem, 2vw, 1.08rem); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.header-phone .icon { display: inline-block; width: 1.15em; height: 1.15em; background-color: currentColor; -webkit-mask: var(--icon-phone) center / contain no-repeat; mask: var(--icon-phone) center / contain no-repeat; }
+@media (max-width: 480px) {
+  .header-phone .phone-digits { display: none; }
+  .header-phone .icon { width: 1.5rem; height: 1.5rem; }
+}
+
+.hamburger {
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+  width: 44px; height: 44px;
+  background: var(--white); border: 1px solid var(--stone); border-radius: 10px;
+  flex-shrink: 0;
+}
+.hamburger span { display: block; width: 20px; height: 2px; background: var(--ink); transition: transform 0.2s ease, opacity 0.2s ease; }
+.hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Typography test: the header wordmark is one of the two Nunito (rounded)
+   exceptions, at every breakpoint (not just desktop) — .site-header--home
+   exists in the DOM whenever isHome is true regardless of viewport width
+   (only its other visual treatment, below, is desktop-gated), so this one
+   rule alone covers the homepage's header wordmark everywhere without
+   needing a mobile-specific duplicate. Every other page's header keeps
+   the original --ui font (unaffected — this class never renders there). */
+.site-header--home .wordmark { font-family: var(--font-nunito); }
+
+/* Same fix, same root cause, for the mobile hamburger nav drawer's own
+   wordmark heading ("Algarve Painter" at the top of the slide-out
+   panel) — it's rendered unconditionally for every page by
+   renderNavDrawer(), as a DOM sibling of <main> just like the header, so
+   it never inherits .page-home/.page-lagos-rs's --ui override either and
+   was falling back to Syne. */
+.nav-panel .wordmark { font-family: var(--font-nunito); }
+
+/* .header-phone's own font-family: var(--ui) never resolves to Nunito Sans
+   on this element — .page-home/.page-lagos-rs only redefine --ui on
+   <main>, and the header renders as <main>'s DOM sibling (before it), not
+   its descendant, so that custom-property override never inherits down to
+   the header. Fixed the same way as .wordmark just above: a direct
+   font-family here, independent of the broken --ui inheritance chain. */
+.site-header--home .header-phone { font-family: var(--font-nunito-sans); }
+
+/* Brush-sweep accent mark above the "P" of "Painter" — em-sized so it scales with whatever
+   font-size the wordmark carries at any given breakpoint. The wrapper is
+   inline-block so it lays out inline with the surrounding text exactly like
+   a plain "P" would; the SVG is pulled out of flow (position: absolute)
+   above it, so it can never affect the header's height or wrap anything. */
+.site-header--home .wordmark .wordmark-h-wrap { position: relative; display: inline-block; line-height: 1; }
+.site-header--home .wordmark .wordmark-roof {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.1em;
+  width: 1.3em;
+  height: 0.45em;
+  overflow: visible;
+}
+
+/* -------------------------------------------------------------------------
+   Homepage-only white header — .site-header--home is applied by
+   renderHeader(isHome) only when rendering the homepage (see layout.js),
+   so this can't reach the header on any of the other 32 pages, which keep
+   the original dark header untouched.
+   Colour/background now applies at every breakpoint (brought down from
+   mobile/tablet's old dark-teal header to match this round's design-system
+   sweep); the layout-specific overrides below (bigger logo/phone, hiding
+   the nav links and hamburger) stay desktop-only, since mobile/tablet keep
+   their own hamburger-driven nav structure unchanged. */
+.site-header--home {
+  background: var(--header-home-bg);
+  backdrop-filter: none;
+  border-bottom: 1px solid var(--hero2-soft-grey);
+  /* Soft, low-opacity shadow beneath the bar — just enough separation
+     from the content below to read as sitting slightly above the page
+     (Hippo-style), not a heavy drop shadow. */
+  box-shadow: 0 4px 12px rgba(17, 24, 39, 0.06);
+}
+/* Logo: near-black wordmark, steel blue-grey accent span — the exact
+   client palette, replacing the old --ink/--teal-muted-on-dark pairing. */
+.site-header--home .wordmark { color: var(--hero2-near-black); }
+.site-header--home .wordmark span.accent { color: var(--hero2-steel); }
+/* Phone number and hamburger icon were tuned for the old dark bar (cream
+   text, --ink lines) — both need the same near-black treatment now that
+   the bar itself is white, or they'd disappear against it. */
+.site-header--home .header-phone { color: var(--hero2-near-black); }
+.site-header--home .hamburger span { background: var(--hero2-near-black); }
+/* The base .hamburger rule (shared with the other 32 pages) draws a
+   cream box + tan border around the icon — a leftover of the old dark
+   header pairing. Plain icon here, no block/border. Safe at every width:
+   the hamburger is display:none on the homepage header at 1025px+
+   regardless (see below), so this only ever renders visually <1025px. */
+.site-header--home .hamburger { background: none; border: none; }
+
+@media (min-width: 1025px) {
+  /* Logo: bigger — the only lockup left in the bar now that the nav links
+     are gone at this breakpoint, so it carries more visual weight.
+     +3px via calc(), not a new rem value — keeps the increase exact and
+     independent of rem rounding. */
+  .site-header--home .wordmark { font-size: calc(1.4rem + 3px); }
+
+  /* Nav links removed from the header entirely (latest pass) — the seven
+     inline service links no longer render on the homepage's desktop
+     header. The drawer (hamburger) still carries them, along with towns
+     and company links, unchanged. */
+  .site-header--home .header-nav { display: none; }
+
+  /* Phone number: bigger and heavier than the standard header-phone size,
+     now the header's clearest call to action besides the hamburger. Icon
+     is sized in em off the phone number's own font-size, so it scales up
+     with it automatically. */
+  .site-header--home .header-phone {
+    font-size: 1.4rem;
+    font-weight: 800;
+  }
+
+  /* Latest pass: the full nav bar (Services/Service Areas/About/Contact)
+     makes the hamburger redundant at this breakpoint — hidden here only;
+     mobile/tablet keep it exactly as before (this rule only exists inside
+     the 1025px+ media query). */
+  .site-header--home .hamburger { display: none; }
+}
+
+/* -------------------------------------------------------------------------
+   Full-bleed hero (originally desktop-only, branch: claude/hero-fullbleed-
+   desktop; now unconditional — mobile/tablet got their own full-bleed hero
+   in a later round, branch: claude/hero-fullbleed-mobile-tablet, see the
+   dedicated max-width:1024px block near the end of this file) — transparent
+   header variant. A NEW class, layered alongside the existing
+   .site-header--home rule above rather than editing it, so the other 32
+   pages (which never render .site-header--home at all) are byte-for-byte
+   unaffected. No .page-home prefix here on purpose: <nav class="site-
+   header site-header--home"> is a preceding SIBLING of <main class="page-
+   home"> in the DOM (see .page-home ~ .whatsapp-float further down for
+   the same fact affecting a different element), not a descendant, so a
+   ".page-home .site-header--home-transparent" descendant selector would
+   never match anything at all — confirmed the hard way, via a screenshot
+   that still showed a solid header despite the class correctly being
+   present on the element. .site-header--home itself is already homepage-
+   only (renderHeader(isHome) only ever adds it there), so no extra scope
+   is needed regardless. Toggled by main.js: present while the hero's own
+   box still overlaps the viewport top (so the transparent bar sits over
+   the hero image as intended), removed once scrolled past it (so the bar
+   reads correctly over the plain page background further down). Used to
+   be desktop-only by media query here and by a matchMedia guard in the JS
+   — both removed once mobile/tablet grew their own full-bleed hero, since
+   the underlying hero box this reads (.hero-stack--split) is now full-
+   bleed at every width, not just 1025px+. */
+.site-header--home.site-header--home-transparent {
+  background: transparent;
+  border-bottom-color: transparent;
+  box-shadow: none;
+}
+.site-header--home-transparent .wordmark,
+.site-header--home-transparent .header-phone,
+.site-header--home-transparent .home-header-nav-link,
+.site-header--home-transparent .home-header-nav-trigger {
+  color: #ffffff;
+}
+.site-header--home-transparent .wordmark span.accent {
+  color: rgba(255, 255, 255, 0.82);
+}
+.site-header--home-transparent .home-header-nav-link:hover,
+.site-header--home-transparent .home-header-nav-trigger:hover {
+  color: rgba(255, 255, 255, 0.75);
+}
+/* Hamburger icon (mobile/tablet only — hidden at 1025px+ regardless, see
+   .site-header--home .hamburger above): the bars are near-black by default
+   (tuned for the solid white header), invisible against a dark scrimmed
+   image, so they need the same white treatment as the wordmark/phone. */
+.site-header--home-transparent .hamburger span {
+  background: #ffffff;
+}
+/* The roof-mark SVG above the "H" keeps its own hardcoded crimson stroke
+   (#DC143C) unchanged — already a bright accent that reads clearly
+   against a dark image, same reasoning as leaving the CTA and stat
+   icons untouched below. */
+
+/* -------------------------------------------------------------------------
+   Homepage desktop nav bar (Services dropdown + Service Areas/About/
+   Contact) — .home-header-nav only exists in the markup when isHome is
+   true (see layout.js renderHomeHeaderNav), so nothing here can reach the
+   other 32 pages' headers even without the breakpoint guard. Hidden below
+   1025px on principle anyway, matching the "desktop only" brief; mobile/
+   tablet keep the hamburger exactly as before, untouched by any rule in
+   this block. header-phone is deliberately not touched anywhere here.
+   ------------------------------------------------------------------------- */
+.home-header-nav { display: none; }
+@media (min-width: 1025px) {
+  .home-header-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex: 1;
+    justify-content: center;
+    margin: 0 32px;
+  }
+  .home-header-nav-item { position: relative; }
+  .home-header-nav-link,
+  .home-header-nav-trigger {
+    font-family: var(--ui);
+    font-weight: 500;
+    /* +3px, matching the wordmark bump above. */
+    font-size: calc(0.85rem + 3px);
+    letter-spacing: 0.05em;
+    color: var(--hero2-steel);
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .home-header-nav-link:hover,
+  .home-header-nav-trigger:hover { color: var(--hero2-near-black); }
+
+  /* .home-header-dropdown is now the *hoverable hit area*, not the visible
+     panel — it starts flush against the trigger (top: 100%, no gap) and
+     carries an invisible 16px top padding as a hover bridge, so the
+     cursor never crosses a dead zone (no element under it) on the way
+     from the trigger down into the panel; :hover on a descendant keeps
+     .home-header-nav-item's :hover true the whole way, whereas a real
+     gap in the layout — the old `top: calc(100% + 16px)` — meant that
+     16px strip belonged to neither element, so :hover (and the delayed
+     close transition below) could lose the diagonal-mouse-move race and
+     close before the cursor ever reached the panel. The actual visible
+     panel (background/shadow/radius/padding) moved to the nested
+     .home-header-dropdown-panel, offset by that same 16px via its own
+     position within the padded box — same visual gap, continuous hover. */
+  .home-header-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-top: 16px;
+    min-width: 210px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    /* Delay only applies going OUT of view (leaving the trigger/panel) —
+       a short grace period so moving the cursor away doesn't snap the
+       panel shut instantly. The hover/is-open rule below overrides this
+       with a zero-delay transition so it still opens immediately. */
+    transition: opacity 0.15s ease 0.12s, visibility 0.15s ease 0.12s;
+  }
+  .home-header-nav-item:hover .home-header-dropdown,
+  .home-header-nav-item.is-open .home-header-dropdown {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.12s ease, visibility 0.12s ease;
+  }
+  .home-header-dropdown-panel {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 16px 32px rgba(15, 23, 42, 0.14);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(-6px);
+    transition: transform 0.15s ease 0.12s;
+  }
+  .home-header-nav-item:hover .home-header-dropdown-panel,
+  .home-header-nav-item.is-open .home-header-dropdown-panel {
+    transform: translateY(0);
+    transition: transform 0.12s ease;
+  }
+  .home-header-dropdown a {
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family: var(--ui);
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    color: var(--hero2-steel);
+  }
+  .home-header-dropdown a:hover { background: var(--hero2-panel-grey); color: var(--hero2-near-black); }
+}
+
+/* -------------------------------------------------------------------------
+   Nav drawer
+   ------------------------------------------------------------------------- */
+.nav-drawer { position: fixed; inset: 0; z-index: 70; background: rgba(15, 50, 56, 0.45); opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+.nav-drawer.is-open { opacity: 1; pointer-events: auto; }
+.nav-panel {
+  position: absolute; top: 0; right: 0; height: 100%; width: min(420px, 88vw);
+  /* Recolored to match the desktop nav bar's own palette (white bar,
+     var(--hero2-panel-grey) "ice blue" hover on items) instead of the
+     old warm sand/teal pairing — desktop's white/ice-blue/near-black
+     trio (site-header--home + .home-header-dropdown above) is the
+     source of truth for every token swapped in this block. */
+  background: var(--header-home-bg); border-left: 1px solid var(--hero2-soft-grey); box-shadow: -30px 0 60px rgba(15, 50, 56, 0.15);
+  padding: 22px 26px 32px; overflow-y: auto;
+  transform: translateX(100%); transition: transform 0.25s ease;
+  display: flex; flex-direction: column;
+}
+.nav-drawer.is-open .nav-panel { transform: translateX(0); }
+.nav-panel-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.nav-close { width: 40px; height: 40px; border-radius: 10px; background: var(--header-home-bg); border: 1px solid var(--hero2-near-black); color: var(--hero2-near-black); font-size: 1.1rem; display: flex; align-items: center; justify-content: center; }
+.nav-group-label { font-family: var(--ui); text-transform: uppercase; letter-spacing: 0.09em; font-size: 0.68rem; color: var(--hero2-steel); margin: 22px 0 10px; }
+.nav-group-label:first-of-type { margin-top: 0; }
+.nav-list a { display: block; font-family: var(--ui); font-weight: 600; font-size: 1.02rem; color: var(--hero2-near-black); padding: 10px 4px; border-bottom: 1px solid var(--hero2-soft-grey); }
+/* Same treatment as .home-header-dropdown a:hover (desktop's Services
+   dropdown item hover, ~line 500): ice-blue background fill, not just a
+   text-color change. */
+.nav-list a:hover { background: var(--hero2-panel-grey); color: var(--hero2-near-black); }
+.nav-cta { margin-top: auto; padding-top: 24px; display: flex; flex-direction: column; gap: 10px; }
+.nav-towns-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 16px; }
+.nav-towns-grid a { font-size: 0.9rem; font-weight: 500; }
+body.nav-open { overflow: hidden; }
+
+/* -------------------------------------------------------------------------
+   Hero stack — headline-first, single column, top to bottom: kicker (the
+   real, crawlable <h1>, keyword-driven and small) -> large emotional
+   headline (a separate heading, not the H1, carrying the visual weight)
+   -> subtext -> CTA -> supporting image. The image sits below the CTA,
+   full width of the content column (not full-bleed), height scaled per
+   breakpoint via object-fit: cover, so it reads as evidence rather than a
+   mood-setting backdrop.
+   ------------------------------------------------------------------------- */
+.hero-stack { padding-top: 40px; padding-bottom: 40px; }
+@media (min-width: 768px) { .hero-stack { padding-top: 56px; padding-bottom: 56px; } }
+@media (min-width: 1025px) { .hero-stack { padding-top: 20px; padding-bottom: 18px; } }
+.hero-stack-text { max-width: 720px; }
+.hero-stack .breadcrumb { margin-bottom: 14px; }
+
+.hero-kicker {
+  font-family: var(--ui);
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--teal-muted);
+  margin: 0 0 14px;
+  line-height: 1.3;
+}
+@media (min-width: 1025px) { .hero-kicker { margin-bottom: 6px; } }
+.hero-headline {
+  font-size: clamp(2.1rem, 5vw, 3.4rem);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.42em;
+}
+@media (min-width: 1025px) { .hero-headline { margin-bottom: 0.14em; } }
+.hero-headline em { color: var(--terracotta); }
+.hero-subtext {
+  font-family: var(--body);
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  color: var(--teal-muted);
+  margin: 0 0 22px;
+  max-width: 60ch;
+}
+@media (min-width: 1025px) {
+  .hero-subtext {
+    font-size: 0.98rem;
+    margin-bottom: 10px;
+    max-width: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+.hero-stack .btn { margin-top: 4px; }
+@media (min-width: 1025px) { .hero-stack .btn { margin-top: 0; } }
+
+/* Image-free hero (About, Contact, How We Work only — see heroIntro's
+   `dark`/`noMedia` params) — a solid --ink background stands in for the
+   photo these three pages don't have, reusing the same dark-section
+   language already established for the CTA band and footer rather than
+   leaving the hero on the flat page background with an empty gap where
+   the image would go. Text colours mirror .page-lagos-rs's existing
+   dark-hero breadcrumb treatment (rgba(255,255,255,0.75)) and the
+   header/footer wordmark's crimson-on-dark swap (crimson measures only
+   ~2.4:1 on --ink, so the accent becomes the same peach used there
+   instead). Single-column only — no split-grid rules apply since these
+   pages never pass twoColDesktop. */
+.hero-stack--dark { background: var(--ink); }
+.hero-stack--dark .breadcrumb,
+.hero-stack--dark .breadcrumb a { color: rgba(255, 255, 255, 0.75); }
+.hero-stack--dark .breadcrumb a:hover { color: #ffffff; }
+.hero-stack--dark .hero-kicker { color: rgba(247, 241, 228, 0.75); }
+.hero-stack--dark .hero-headline { color: var(--cream); }
+.hero-stack--dark .hero-headline em { color: #f3caa4; }
+.hero-stack--dark .hero-subtext { color: rgba(247, 241, 228, 0.82); }
+/* .page-lagos-rs's own typography rules (further down this file, for the
+   photo-hero pilot pages) reset .hero-kicker/.hero-headline to
+   --hero2-steel at both the base and 1025px+ tiers — same specificity as
+   the rules just above, so being earlier in the file they'd otherwise
+   lose the cascade. The extra .page-lagos-rs qualifier here only adds
+   specificity to win that fight; the colours themselves are identical to
+   the plain .hero-stack--dark rules above. */
+.page-lagos-rs .hero-stack--dark .hero-kicker { color: rgba(247, 241, 228, 0.75); }
+.page-lagos-rs .hero-stack--dark .hero-headline { color: var(--cream); }
+.page-lagos-rs .hero-stack--dark .hero-headline em { color: #f3caa4; }
+@media (min-width: 1025px) {
+  .page-lagos-rs .hero-stack--dark .hero-kicker { color: rgba(247, 241, 228, 0.75); }
+}
+
+/* Swapped from the plain --ink navy to the same steel blue-grey as this
+   page's own CTA band and footer, so the hero doesn't read as a
+   different, older dark blue from the rest of the page's dark sections. */
+.page-lagos-rs .hero-stack--dark {
+  background: var(--hero2-steel);
+}
+
+/* Desktop-only note line + duplicate trust stats — only exist in the
+   markup on pages opted into twoColDesktop (currently the homepage), but
+   still default hidden here and revealed at the desktop breakpoint so
+   mobile/tablet never show them even there. */
+.hero-cta-note { display: none; }
+.hero-trust-inline { display: none; }
+@media (min-width: 1025px) {
+  .hero-cta-note {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--teal-muted);
+    margin: 14px 0 0;
+  }
+  .hero-trust-inline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--stone);
+  }
+  .hero-trust-inline .stat { padding-right: 16px; border-right: 1px solid var(--stone); }
+  .hero-trust-inline .stat:last-child { border-right: none; padding-right: 0; }
+  .hero-trust-inline .v { display: block; font-family: var(--ui); font-weight: 800; color: var(--ink); font-size: 1.05rem; }
+  .hero-trust-inline .l { font-family: var(--body); font-size: 0.76rem; color: var(--teal-muted); }
+}
+
+/* Real two-column layout (hippo.co.za-style) at desktop widths: text stack
+   in a left column, image filling the right column's full height. Grid
+   (not flex) so the image column can stretch to match whatever height the
+   text column naturally ends up being, via align-items: stretch. */
+@media (min-width: 1025px) {
+  .hero-stack--split .container {
+    display: grid;
+    /* 60/40 — the text column leads, the image reads as a supporting,
+       tightly-framed shot rather than competing equally for width. */
+    grid-template-columns: 1.5fr 1fr;
+    align-items: stretch;
+    gap: 56px;
+  }
+  .hero-stack--split .hero-stack-text {
+    max-width: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  /* The general desktop rule truncates subtext to one line, tuned for a
+     full-width single-column hero. In the narrower split-layout column
+     that risks clipping mid-word, so let it wrap normally instead. */
+  .hero-stack--split .hero-subtext {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+  /* The btn-lg sizing was tuned for a full-width single-column hero where
+     the button had a wide, empty band to itself. In the narrower 60%
+     text column it read as oversized — the largest thing on the page
+     after the headline — so scale it back to feel prominent, not dominant. */
+  .hero-stack--split .btn-lg {
+    padding: 14px 26px;
+    font-size: 1.05rem;
+  }
+}
+
+.hero-stack-media { margin-top: 32px; }
+@media (min-width: 1025px) { .hero-stack-media { margin-top: 12px; } }
+.hero-stack-media .placeholder,
+.hero-stack-media picture img {
+  aspect-ratio: unset;
+  min-height: 0;
+  /* Sized so kicker + headline + subtext + CTA + the full image fit within
+     one mobile screen with no scroll: 100svh minus the header, hero-stack's
+     own top/bottom padding, the measured text-block height and the media's
+     top margin (~463px), with a little breathing room. Floors/ceilings via
+     clamp() keep it sane on unusually short or tall phones. */
+  height: clamp(160px, calc(100svh - 480px), 420px);
+  border-radius: 18px;
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .hero-stack-media .placeholder,
+  .hero-stack-media picture img { height: clamp(460px, 62vh, 660px); }
+}
+@media (min-width: 1025px) {
+  /* Fixed, flat height (roughly a 2.8:1 wide-banner shape at the
+     container's max content width) instead of a viewport-height-driven
+     box, so the full image sits within the fold alongside the text above
+     it on typical laptop screens, without needing to shrink the headline. */
+  .hero-stack-media .placeholder,
+  .hero-stack-media picture img { height: 340px; aspect-ratio: unset; }
+}
+/* object-position comes through as a --hero-obj-pos custom property set
+   inline per image (see heroIntro's image.objectPosition) rather than a
+   plain inline style, so a class-based override (below, for the desktop
+   split layout's differently-cropped image) can still win on specificity —
+   a plain inline style would otherwise always beat any stylesheet rule. */
+.hero-stack-media img { width: 100%; height: 100%; object-fit: cover; object-position: var(--hero-obj-pos, 50% 50%); display: block; border-radius: inherit; }
+.hero-stack-media picture { display: block; }
+
+@media (min-width: 1025px) {
+  /* In split mode the media column fills the grid row's full height (set
+     by the text column's natural height) rather than a fixed flat banner. */
+  .hero-stack--split .hero-stack-media { margin-top: 0; height: 100%; }
+  .hero-stack--split .hero-stack-media .placeholder,
+  .hero-stack--split .hero-stack-media picture,
+  .hero-stack--split .hero-stack-media picture img {
+    height: 100%;
+    min-height: 460px;
+    max-height: 640px;
+  }
+  /* The desktop image asset is now its own tight crop (see home.js), not
+     the same photo repositioned — so it wants a plain centered position
+     rather than the mobile crop's tuned offset. */
+  .hero-stack--split .hero-stack-media picture img { object-position: 50% 50%; }
+}
+
+/* -------------------------------------------------------------------------
+   Reassurance band — a short callout addressing hesitation directly, right
+   after the hero/CTA. Distinct from the standard section-head pattern so it
+   reads as a callout, not another content block.
+   ------------------------------------------------------------------------- */
+.reassurance-band {
+  background: var(--ink);
+  padding: 32px 0;
+  text-align: center;
+}
+.reassurance-band h2 { font-size: clamp(1.25rem, 2.6vw, 1.6rem); margin-bottom: 0.45em; color: var(--cream); }
+.reassurance-band p { color: rgba(247, 241, 228, 0.78); margin: 0; }
+
+.hero-trust-band { background: var(--sand); }
+/* On pages using the full-bleed hero, the stats move inline into the text
+   column at every breakpoint now (see .hero-trust-inline, and the
+   max-width:1024px full-bleed block near the end of this file for the
+   mobile/tablet display rule) — this separate full-width band is now
+   unused on the homepage entirely (it's still the only stats markup on
+   every other page's hero, which never sets --split). Used to only hide
+   at 1025px+, back when mobile/tablet still used the old card hero. */
+.hero-trust-band--split { display: none; }
+.hero-trust-band .container { display: grid; grid-template-columns: repeat(3, 1fr); }
+.hero-trust-band .stat { padding: 22px 16px; text-align: center; border-right: 1px solid var(--stone); }
+.hero-trust-band .stat:last-child { border-right: none; }
+.hero-trust-band .v { display: block; font-family: var(--ui); font-weight: 800; color: var(--ink); font-size: clamp(0.95rem, 2.4vw, 1.15rem); }
+.hero-trust-band .l { font-family: var(--body); font-size: 0.78rem; color: var(--teal-muted); }
+/* Stays a horizontal 3-up row at every width, including mobile — labels
+   are free to wrap to a second line within their own column rather than
+   the stats stacking on top of one another. */
+@media (max-width: 480px) {
+  .hero-trust-band .stat { padding: 14px 6px; }
+  .hero-trust-band .v { font-size: 0.82rem; }
+  .hero-trust-band .l { font-size: 0.62rem; line-height: 1.25; }
+}
+/* Extra breathing room around the trust band on mobile, where the hero,
+   trust band and reassurance band otherwise sit flush against each other. */
+@media (max-width: 767px) {
+  .hero-trust-band { margin-top: 24px; margin-bottom: 24px; }
+  .reassurance-band { padding: 48px 0; }
+}
+
+/* -------------------------------------------------------------------------
+   Placeholder panels (non-hero) — clearly marked, unobtrusive, plain.
+   ------------------------------------------------------------------------- */
+.placeholder {
+  position: relative;
+  background: var(--placeholder-fill);
+  border: 1px dashed rgba(15, 50, 56, 0.3);
+  border-radius: 14px;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+}
+.placeholder .ph-label {
+  font-family: var(--body); font-size: 0.78rem; color: rgba(15, 50, 56, 0.6);
+}
+.placeholder.ratio-tall { aspect-ratio: 4 / 5; min-height: 0; }
+.placeholder.ratio-wide { aspect-ratio: 16 / 9; min-height: 0; }
+.placeholder.ratio-square { aspect-ratio: 1 / 1; min-height: 0; }
+
+/* Real-photography counterpart to .placeholder above (see photo() in
+   layout.js) — same rounded-frame shape and ratio classes, a real image
+   filling it instead of the dashed placeholder box. */
+.photo-frame { display: block; border-radius: 14px; overflow: hidden; }
+.photo-frame.ratio-tall { aspect-ratio: 4 / 5; }
+.photo-frame.ratio-wide { aspect-ratio: 16 / 9; }
+.photo-frame.ratio-square { aspect-ratio: 1 / 1; }
+.photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* -------------------------------------------------------------------------
+   Two-column — plain contained layout, no bleed, no per-page alternation.
+   ------------------------------------------------------------------------- */
+.two-col { display: grid; gap: 40px; grid-template-columns: 1fr; align-items: center; }
+@media (min-width: 860px) { .two-col { grid-template-columns: 1.05fr 0.95fr; } }
+.two-col.reverse { grid-template-columns: 1fr; }
+@media (min-width: 860px) { .two-col.reverse { grid-template-columns: 0.95fr 1.05fr; } }
+.two-col.reverse .two-col-text { order: 2; }
+.two-col.reverse .two-col-media { order: 1; }
+.two-col-text .btn { margin-top: 8px; }
+
+/* Service pages' "What's Included" section, mobile only (below the 768px
+   tablet threshold used elsewhere on this site) — image shows above the
+   heading/text instead of below it. Why It Matters already shows
+   image-first at every breakpoint (see .two-col.reverse above) since its
+   markup puts the image first in the DOM; Included uses the default
+   text-then-media DOM order, so only it needs the `order` swap here.
+   Every service is a minimal-images page (see SERVICE_MINIMAL_IMAGES_SLUGS
+   in service.js), so Scenarios and In Detail have no media column at all
+   and need no rule. Scoped to <768px only so tablet/desktop keep the
+   existing side-by-side layout. */
+@media (max-width: 767px) {
+  .page-exterior-house-painting #included .two-col-media,
+  .page-interior-painting #included .two-col-media,
+  .page-villa-pool-area-painting #included .two-col-media,
+  .page-render-crack-repair #included .two-col-media,
+  .page-wood-shutter-treatment #included .two-col-media,
+  .page-metalwork-railing-painting #included .two-col-media,
+  .page-waterproof-roof-coating #included .two-col-media {
+    order: 1;
+  }
+  .page-exterior-house-painting #included .two-col-text,
+  .page-interior-painting #included .two-col-text,
+  .page-villa-pool-area-painting #included .two-col-text,
+  .page-render-crack-repair #included .two-col-text,
+  .page-wood-shutter-treatment #included .two-col-text,
+  .page-metalwork-railing-painting #included .two-col-text,
+  .page-waterproof-roof-coating #included .two-col-text {
+    order: 2;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Trust grid — three equal cards, centered heading above. Direct.
+   ------------------------------------------------------------------------- */
+.trust-grid, .card-grid { display: grid; gap: 22px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .trust-grid, .card-grid.cols-2 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 720px) { .card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 960px) { .trust-grid { grid-template-columns: repeat(4, 1fr); } }
+
+.card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 28px 24px;
+  box-shadow: 0 10px 28px rgba(15, 50, 56, 0.07);
+}
+.card .icon-dot {
+  width: 40px; height: 40px; border-radius: 10px; background: var(--teal-tint);
+  margin-bottom: 16px; display: flex; align-items: center; justify-content: center;
+  color: var(--ink-700); flex-shrink: 0;
+}
+.card .icon-dot svg { width: 20px; height: 20px; }
+.card .placeholder { margin: -28px -24px 20px; border-radius: 16px 16px 0 0; min-height: 0; }
+.card h3 { margin-bottom: 8px; }
+.card p:last-child { margin-bottom: 0; }
+.card-link { display: inline-block; margin-top: 14px; font-family: var(--ui); font-weight: 700; color: var(--teal-muted); font-size: 0.88rem; }
+.card:hover .card-link { color: var(--ink); }
+a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
+.card.flagship { border: 1.5px solid var(--teal-muted); }
+.card .badge {
+  display: inline-block; font-family: var(--ui); font-weight: 700; font-size: 0.66rem;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-700);
+  background: var(--teal-tint); border-radius: 999px; padding: 4px 10px; margin-bottom: 12px;
+}
+
+/* -------------------------------------------------------------------------
+   Directory — region-grouped town list (kept: simple, clear, not a chip wall)
+   ------------------------------------------------------------------------- */
+.directory { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.directory-col .head { font-family: var(--ui); font-weight: 700; font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-700); padding-bottom: 10px; margin-bottom: 6px; border-bottom: 1px solid var(--stone); }
+.directory-col a { display: block; font-family: var(--body); font-weight: 500; font-size: 0.98rem; color: var(--ink-700); padding: 8px 0; border-bottom: 1px solid var(--stone); }
+.directory-col a:hover { color: var(--teal-muted); }
+.directory-col a:last-child { border-bottom: none; }
+@media (max-width: 780px) { .directory { grid-template-columns: 1fr; gap: 24px; } }
+
+.link-line { display: flex; flex-wrap: wrap; gap: 0; font-family: var(--body); font-weight: 500; }
+.link-line.center { justify-content: center; }
+.link-line a { padding: 6px 14px 6px 0; color: var(--teal-muted); }
+.link-line a:hover { color: var(--ink); }
+.link-line span.sep { color: var(--stone); padding-right: 14px; }
+
+.service-list { display: grid; gap: 1px; background: var(--stone); border: 1px solid var(--stone); border-radius: 14px; overflow: hidden; }
+.service-list a { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 16px; background: var(--white); padding: 20px 22px; }
+.service-list a:hover { background: var(--sand-alt); }
+.service-list a h3 { font-size: 1.02rem; margin-bottom: 4px; }
+.service-list a p { font-size: 0.86rem; margin: 0; }
+.service-list a .arrow { font-family: var(--ui); color: var(--teal-muted); font-size: 1.1rem; }
+
+/* -------------------------------------------------------------------------
+   Check list
+   ------------------------------------------------------------------------- */
+.check-list li { position: relative; padding-left: 28px; margin-bottom: 12px; color: var(--teal-muted); }
+.check-list li::before { content: '\2713'; position: absolute; left: 0; top: 0; color: var(--teal-muted); font-weight: 700; }
+
+.breadcrumb { font-family: var(--body); font-size: 0.76rem; color: var(--teal-muted); margin-bottom: 16px; }
+.breadcrumb a { color: var(--teal-muted); }
+.breadcrumb a:hover { color: var(--ink); }
+
+/* -------------------------------------------------------------------------
+   Table of contents — jump-links bar under the hero on longer service pages
+   ------------------------------------------------------------------------- */
+.toc { background: var(--sand-alt); border-bottom: 1px solid var(--stone); padding: 16px 0; }
+.toc .container { display: flex; align-items: center; gap: 8px 18px; flex-wrap: wrap; }
+.toc-label { font-family: var(--ui); font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal-muted); white-space: nowrap; }
+.toc-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.toc-links a { font-family: var(--ui); font-weight: 600; font-size: 0.82rem; color: var(--ink-700); background: var(--white); border: 1px solid var(--stone); border-radius: 999px; padding: 6px 14px; white-space: nowrap; }
+.toc-links a:hover { color: var(--teal-muted); border-color: var(--teal-muted); }
+
+/* -------------------------------------------------------------------------
+   CTA band — simple, centered, no imagery
+   ------------------------------------------------------------------------- */
+.cta-band { background: var(--ink); text-align: center; }
+.cta-band h2, .cta-band .eyebrow { color: var(--cream); }
+.cta-band h2 em { color: #f3caa4; }
+.cta-band .lede { color: rgba(247, 241, 228, 0.82); margin: 12px auto 26px; }
+
+/* -------------------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------------------- */
+.site-footer { background: var(--ink); color: rgba(247, 241, 228, 0.75); }
+.footer-masthead { padding: 44px 0; border-bottom: 1px solid rgba(247, 241, 228, 0.14); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; }
+.footer-masthead .wordmark { font-size: clamp(1rem, 5vw, 1.3rem); color: var(--cream); }
+.footer-masthead .wordmark span.accent { color: #f3caa4; }
+.footer-masthead p { margin: 6px 0 0; max-width: 42ch; font-size: 0.92rem; color: rgba(247, 241, 228, 0.65); }
+.footer-grid { display: grid; gap: 32px; grid-template-columns: 1fr; padding: 44px 0; }
+@media (min-width: 720px) { .footer-grid { grid-template-columns: repeat(4, 1fr); } }
+.footer-col h4 { font-family: var(--ui); text-transform: uppercase; letter-spacing: 0.07em; font-size: 0.68rem; color: #f3caa4; margin-bottom: 14px; }
+.footer-col ul li { margin-bottom: 9px; }
+.footer-col a { font-size: 0.9rem; color: rgba(247, 241, 228, 0.7); }
+.footer-col a:hover { color: var(--cream); }
+.footer-bottom { padding: 22px 0; border-top: 1px solid rgba(247, 241, 228, 0.14); display: flex; flex-direction: column; gap: 10px; }
+@media (min-width: 900px) { .footer-bottom:last-child { padding-bottom: 22px; } }
+@media (min-width: 720px) { .footer-bottom { flex-direction: row; justify-content: space-between; align-items: center; } }
+.footer-bottom p { font-size: 0.78rem; color: rgba(247, 241, 228, 0.55); margin: 0; }
+.footer-disclaimer { font-size: 0.8rem; color: rgba(247, 241, 228, 0.6); max-width: 74ch; margin: 0 0 16px; }
+
+/* -------------------------------------------------------------------------
+   Floating WhatsApp + sticky mobile call bar
+   ------------------------------------------------------------------------- */
+.whatsapp-float {
+  position: fixed; right: 18px; bottom: 18px; z-index: 55;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--whatsapp);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 10px 24px rgba(15, 50, 56, 0.3);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.whatsapp-float:hover { background: var(--whatsapp-dark); transform: scale(1.05); }
+.whatsapp-float svg { width: 28px; height: 28px; }
+@media (min-width: 900px) { .whatsapp-float { bottom: 24px; } }
+
+/* -------------------------------------------------------------------------
+   Contact — call/WhatsApp only, no form (no inbox to send one to). Centered
+   and the primary focus of the section rather than half of a two-column
+   layout, since there's nothing to sit alongside it.
+   ------------------------------------------------------------------------- */
+.contact-direct { display: flex; flex-direction: column; gap: 20px; max-width: 640px; margin: 0 auto; }
+@media (min-width: 640px) {
+  .contact-direct { flex-direction: row; }
+  .contact-direct-card { flex: 1; }
+}
+.contact-direct-card { padding: 28px; border: 1px solid var(--stone); border-radius: 16px; background: var(--white); box-shadow: 0 10px 28px rgba(15, 50, 56, 0.06); }
+.contact-direct-card h3 { margin-bottom: 6px; }
+.contact-direct-card .big-phone { font-family: var(--ui); font-weight: 800; font-size: 1.4rem; color: var(--terracotta); display: block; margin: 6px 0 14px; }
+
+/* -------------------------------------------------------------------------
+   FAQ — simple, always-expanded list (no JS, good for SEO/accessibility)
+   ------------------------------------------------------------------------- */
+.faq-list { display: flex; flex-direction: column; max-width: 800px; margin: 0 auto; }
+.faq-item { padding: 22px 0; border-top: 1px solid var(--stone); }
+.faq-item:first-child { border-top: none; padding-top: 0; }
+.faq-item h3 { font-size: 1.05rem; margin-bottom: 8px; }
+.faq-item p { margin: 0; font-size: 0.94rem; }
+
+/* -------------------------------------------------------------------------
+   About page pillars — simple numbered list
+   ------------------------------------------------------------------------- */
+.pillar-list { display: flex; flex-direction: column; }
+.pillar { display: grid; grid-template-columns: 48px 1fr; gap: 18px; padding: 22px 0; border-top: 1px solid var(--stone); }
+.pillar:first-child { border-top: none; padding-top: 0; }
+.pillar .num { font-family: var(--ui); font-weight: 800; font-size: 1.1rem; color: var(--ink-700); }
+.pillar h3 { margin-bottom: 4px; }
+.pillar p { margin: 0; font-size: 0.94rem; }
+
+/* -------------------------------------------------------------------------
+   Utility
+   ------------------------------------------------------------------------- */
+.text-center { text-align: center; }
+.narrow { max-width: 720px; }
+.mt-32 { margin-top: 32px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ==========================================================================
+   Homepage restyle — scoped entirely under .page-home, which is applied
+   only to the homepage's <main> element (see home.js / renderPage's
+   mainClass param). Nothing here can affect the header, footer, nav
+   drawer, or any of the other 32 pages, which all still use the design
+   system above unchanged. Tokens are prefixed --rs- (not --ink/--sand/etc)
+   specifically so they can't collide with or silently override the
+   existing site-wide tokens those other pages depend on; when this look
+   is rolled out further, these are the values to promote/rename.
+   ========================================================================== */
+:root {
+  --rs-bg: #f4f6f8;
+  --rs-surface: #ffffff;
+  --rs-ink: #1a1f26;
+  --rs-muted: #5a6472;
+  --rs-dark: var(--ink);          /* reuses the existing header charcoal/navy */
+  --rs-accent: var(--terracotta); /* reuses the existing crimson — buttons only */
+
+  --rs-font: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --rs-h1-size: 56px;
+  --rs-h1-size-mobile: 36px;
+  --rs-h2-size: 40px;
+  --rs-h2-size-mobile: 28px;
+  --rs-h3-size: 26px;
+  --rs-h3-size-mobile: 22px;
+  --rs-body-size: 19px;
+  --rs-body-size-mobile: 17px;
+  --rs-body-lh: 1.65;
+  --rs-body-lh-mobile: 1.6;
+  --rs-small-size: 16px; /* the floor — nothing on the page goes below this */
+  --rs-max-line: 68ch;
+
+  --rs-radius-block: 28px;
+  --rs-radius-card: 16px;
+  --rs-radius-btn: 999px;
+  --rs-card-padding: 32px;
+  --rs-card-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  --rs-block-padding: 40px 24px;
+  --rs-block-padding-desktop: 64px 48px;
+
+  /* Round 4: the hero image panel's radius is slightly larger than the
+     standard block radius so it reads as a touch more rounded than the
+     rest of the page, per this round's explicit instruction. The wrapper
+     card behind the whole hero area uses the standard --rs-radius-block. */
+  --rs-radius-hero-img: 34px;
+  /* Same white surface as the plain .rs-block sections (e.g. "The Algarve,
+     in Practice") — was a barely-there pale grey, read as washed out next
+     to that section's clean white block. */
+  --rs-hero-wrap-bg: var(--rs-surface);
+  /* Was 12px — read as too close to the viewport edge (H1, subline, CTA
+     and the hero image are all plain-flow children of .hero-stack
+     .container, the card this token pads, so they all inherited that
+     tight inset from this one value). 20px matches the sitewide
+     .container class's own side padding (~line 114), the same inset
+     used everywhere else on the page outside the hero. */
+  --rs-hero-wrap-padding-mobile: 20px;
+
+  --rs-section-gap: 56px;
+  --rs-section-gap-desktop: 96px;
+
+  --rs-btn-height: 56px;
+  --rs-btn-maxwidth: 320px;
+  --rs-btn-font-size: 18px;
+
+  /* Round 2 introduced this as a light blue (#a9cce3); round 3 swaps it
+     for the same dark navy already used by the header/CTA, for cohesion —
+     so it now equals --rs-dark/--ink exactly. Kept as its own variable
+     (not merged into --rs-dark) because the two still mean different
+     things structurally: --rs-dark is reserved for the one CTA block,
+     --rs-block is the repeatable emphasis-block fill. */
+  --rs-block: var(--ink);
+
+  /* Was var(--ink), #0f3238 — the old dark-teal frame around the hero photo
+     at mobile/tablet (desktop's split hero overrides this away entirely,
+     so it only ever renders below 1025px). Missed by the earlier desktop-
+     only dark-blue sweep for exactly that reason; caught in this round's
+     mobile/tablet audit and brought to the same steel used everywhere else
+     for blocks/panels. */
+  --rs-hero-panel: #475569;
+}
+
+.page-home { background: var(--rs-bg); font-family: var(--rs-font); }
+/* Typography test, homepage only: redirect every font token this page's
+   content actually uses (--serif for h1-h4, --body for running text,
+   --ui for buttons/labels/stats, --rs-font as this page's own base) to
+   Nunito Sans. Because these are custom properties, redefining them here
+   cascades to every descendant of .page-home that references var(--ui)
+   etc. — h2/h3 headings, the CTA button, stats row, cards, FAQs, town
+   list — without needing to touch each of those component rules
+   individually. .hero-kicker (the H1) is overridden back to Nunito
+   specifically, below, since it's one of the two exceptions.
+   header/nav-drawer/footer are siblings of .page-home, not descendants
+   (an established constraint in this file — see the .page-home ~
+   .whatsapp-float rule further down), so this redefinition can't reach
+   them; the header wordmark and the footer are handled by their own
+   rules elsewhere for exactly that reason. */
+.page-home {
+  --serif: var(--font-nunito-sans);
+  --body: var(--font-nunito-sans);
+  --ui: var(--font-nunito-sans);
+  --rs-font: var(--font-nunito-sans);
+}
+
+/* ---- Typography -----------------------------------------------------
+   Heading TAGS and hierarchy are untouched (h1 is still the small,
+   crawlable kicker; h2 is still the large visual headline's sibling
+   heading level; h3 is still card/subsection headings) — only their
+   size/weight changes. The one exception: .hero-headline is technically
+   an <h2> (by design, so the real keyword-bearing <h1> stays the small
+   kicker) but is the page's dominant visual heading, so it gets the
+   "H1" treatment from the brief; standard <h2>s get the "H2" treatment. */
+.page-home h1,
+.page-home h2,
+.page-home h3,
+.page-home h4,
+.page-home p,
+.page-home li,
+.page-home .lede,
+.page-home .hero-subtext,
+.page-home .btn {
+  font-family: var(--rs-font);
+}
+
+/* Mobile/tablet now mirror desktop's structure (see the 1025px+ block
+   further down, which already carries the equivalent small/steel/regular-
+   weight treatment): .hero-headline is the small supporting line under
+   the big H1, not the dominant heading. Was 800-weight/near-black/H1-size
+   here — that visual hierarchy is now on .hero-kicker instead, below. */
+.page-home .hero-headline {
+  font-size: var(--rs-body-size-mobile);
+  font-weight: 400;
+  line-height: var(--rs-body-lh-mobile);
+  letter-spacing: normal;
+  color: var(--hero2-steel);
+}
+@media (min-width: 768px) {
+  .page-home .hero-headline { font-size: var(--rs-body-size); line-height: var(--rs-body-lh); }
+}
+/* Crimson is buttons-only in this pass — the emphasis word keeps its
+   italic but drops the accent color it had in an earlier round. */
+.page-home .hero-headline em { color: inherit; font-style: italic; }
+
+.page-home h2 {
+  font-size: var(--rs-h2-size-mobile);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--rs-ink);
+}
+@media (min-width: 768px) {
+  .page-home h2 { font-size: var(--rs-h2-size); }
+}
+
+.page-home h3 {
+  font-size: var(--rs-h3-size-mobile);
+  font-weight: 700;
+  color: var(--rs-ink);
+}
+@media (min-width: 768px) {
+  .page-home h3 { font-size: var(--rs-h3-size); }
+}
+
+.page-home p,
+.page-home li,
+.page-home .lede,
+.page-home .hero-subtext {
+  font-size: var(--rs-body-size-mobile);
+  line-height: var(--rs-body-lh-mobile);
+  color: var(--rs-ink); /* no grey body copy */
+  max-width: var(--rs-max-line);
+}
+@media (min-width: 768px) {
+  .page-home p,
+  .page-home li,
+  .page-home .lede,
+  .page-home .hero-subtext {
+    font-size: var(--rs-body-size);
+    line-height: var(--rs-body-lh);
+  }
+}
+/* Removed everywhere now, not just desktop — the hero subtext
+   home systems..." doesn't exist on desktop and shouldn't on mobile/
+   tablet either, per request. Was display:none only inside the 1025px+
+   block further down; that declaration is now redundant with this one
+   and left in place rather than removed, to avoid disturbing the rest of
+   that block's diff. */
+.page-home .hero-subtext { display: none; }
+/* The general desktop rule truncates the hero subtext to one line at
+   1025px+ — fine at the old sizes, but risks clipping at 19px in a
+   768px-wide column. Let it wrap instead. */
+@media (min-width: 1025px) {
+  .page-home .hero-subtext {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    max-width: var(--rs-max-line);
+  }
+}
+
+/* Captions / labels use --rs-muted, and every one of them is bumped to
+   the 16px floor — several were as small as 10–13px before. */
+.page-home .eyebrow,
+.page-home .card-link,
+.page-home .directory-col .head,
+.page-home .directory-col a {
+  color: var(--rs-muted);
+  font-size: var(--rs-small-size);
+}
+/* Structure now matches desktop (see the 1025px+ block further down,
+   which this mirrors): .hero-kicker (the <h1>, "Painting & Decorating
+   in the Algarve") is the dominant heading — big, bold,
+   steel — with .hero-headline as its small supporting line underneath.
+   Was 13px/muted/uppercase/small-caps-style here (the "quiet label"
+   treatment referenced in the old comment below) — that visual role has
+   moved to .hero-headline above. */
+.page-home .hero-kicker {
+  color: var(--hero2-steel);
+  font-size: var(--rs-h1-size-mobile);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  /* One of the two Nunito (rounded) exceptions — everything else on this
+     page inherited the Nunito Sans redirect above via var(--ui)/var(--serif)
+     etc.; the H1 specifically overrides back to the rounded family. */
+  font-family: var(--font-nunito);
+}
+@media (min-width: 768px) {
+  .page-home .hero-kicker { font-size: var(--rs-h1-size); }
+}
+/* Desktop only, from here down: the H1/headline sizing above already
+   matches this shape at every width now — this block only adds what's
+   still desktop-specific (the exact clamp() scale, the two-line forced
+   break, the widened text column, the tightened top/bottom padding).
+   Originally written as "restructured from three lines to two"; mobile/
+   tablet now use the same two-line shape by default (see above), so this
+   comment describes what's unique to 1025px+, not the restructure itself.
+   The H1 (still an <h1> tag, text and tag unchanged — only its visual
+   size/position move) takes the large/bold treatment the emotional
+   headline used to have. The emotional headline (still an <h2>) drops
+   into the small supporting-text treatment the subtext line used to
+   have, right below the H1. The
+   subtext line itself is hidden here — kept and unchanged on mobile/
+   tablet, where all three lines still show in their original styling.
+   .hero-kicker-break defaults to hidden (declared here, before the media
+   query, so the 1025px+ override below actually wins at that width —
+   a same-specificity rule declared after a media block always beats it,
+   so the base "off" state has to come first). */
+.page-home .hero-kicker-break { display: none; }
+@media (min-width: 1025px) {
+  .page-home .hero-kicker {
+    text-transform: none;
+    /* 38px -> 45px cap (+7px), but via clamp() rather than a flat value:
+       at the narrow end of desktop (1025px) even the widened text column
+       below isn't quite wide enough for a flat 45px to fit "...Installation"
+       on one line, so this scales from 38px up to the 45px cap as the
+       viewport grows — reaches the full 45px by ~1180px (this hero's own
+       content max-width, where extra viewport width stops changing the
+       column size anyway). Every value in the clamp() range was checked
+       against the actual column width it pairs with, not estimated. */
+    font-size: clamp(38px, 2.6vw + 6px, 45px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    /* near-black -> the same --hero2-steel used on "No pressure, no hard
+       sell..." (and already on the supporting line below this H1) — an
+       exact match, per this round's request. */
+    color: var(--hero2-steel);
+    margin-bottom: 0.14em;
+  }
+  /* Text column widened (1.5fr -> 2.6fr, media stays 1fr) so the larger
+     H1 fits on one line. minmax(0, Nfr), not a bare Nfr: without the
+     explicit 0 floor, each track defaults to auto's content-based
+     minimum, and the stats row's unwrappable ~617px width (white-space:
+     nowrap on each stat) was silently pinning the text column at that
+     exact size regardless of this ratio — the fr split never actually
+     engaged. minmax(0, ...) removes that floor so the ratio drives real
+     width at every viewport. Narrowing the media column this much also
+     required making the image's own size column-relative instead of a
+     flat 520px (see .hero-stack--split .hero-stack-media below) — a flat
+     520px image anchored to a much narrower column pushed it past the
+     viewport edge at 1025-1180px, confirmed via measurement. */
+  .page-home .hero-stack--split .container { grid-template-columns: minmax(0, 2.6fr) minmax(0, 1fr); }
+  .page-home .hero-headline {
+    /* 21px -> 23px (+2px) — still far below the 45px H1. */
+    font-size: 23px;
+    font-weight: 400;
+    line-height: var(--rs-body-lh);
+    letter-spacing: normal;
+    margin-bottom: 0;
+  }
+  .page-home .hero-subtext { display: none; }
+  /* Colors follow the swap: the H1 (now the big headline) is near-black,
+     the emotional headline (now the small supporting line) is steel
+     blue-grey — exactly the two colors this pair already used, just
+     reassigned to match their new roles. */
+  .page-home .hero-headline { color: var(--hero2-steel); }
+  /* Forces the H1 onto exactly two lines ("...Installation" / "in the
+     Algarve") — hidden by default (mobile/tablet keep natural wrapping,
+     unaffected by this rule) and only shown at this breakpoint. */
+  .page-home .hero-kicker-break { display: block; }
+  /* The text column's own top/bottom whitespace was never actual padding
+     — .hero-stack-text is a flex column with justify-content: center
+     (base rule above), stretched (default align-items: stretch on the
+     grid row) to match whatever height the tall bleeding image forces
+     the row to. The excess space above the H1 and below the stats row
+     was that centering gap, which grows automatically as the image gets
+     taller — exactly backwards from controllable. align-self: start
+     stops the text column from stretching to the row's height at all, so
+     it's sized to its own content, and flex-start + explicit padding
+     gives fixed, predictable top/bottom space that no longer moves when
+     the image's height changes. 75px/68px (measured, pre-fix) -> 38px is
+     a ~48% reduction, within the requested 40-50%. */
+  .page-home .hero-stack--split .hero-stack-text {
+    align-self: start;
+    justify-content: flex-start;
+    padding-top: 38px;
+    padding-bottom: 38px;
+  }
+}
+.page-home .card .badge { font-size: var(--rs-small-size); }
+.page-home .faq-item p,
+.page-home .pillar p { font-size: var(--rs-body-size-mobile); color: var(--rs-ink); max-width: var(--rs-max-line); }
+@media (min-width: 768px) {
+  .page-home .faq-item p,
+  .page-home .pillar p { font-size: var(--rs-body-size); }
+}
+/* Round 4: numbers bumped again to 22px/800 (from round 2's 20px/700) for
+   more visual presence — scannable at a glance, not small print. Labels
+   stay at round 2's 15px. !important still needed since both have their
+   own mobile-shrink rules elsewhere in this file (down to ~10px). */
+.page-home .hero-trust-band .l,
+.page-home .hero-trust-inline .l,
+.page-lagos-rs .hero-trust-inline .l { font-size: 15px !important; color: var(--rs-muted); }
+.page-home .hero-trust-band .v,
+.page-home .hero-trust-band .vs,
+.page-home .hero-trust-inline .v,
+.page-lagos-rs .hero-trust-inline .v { font-size: 22px !important; font-weight: 800; color: var(--rs-ink); }
+/* .vs (tablet+'s single combined-line format, e.g. "100% English-
+   Speaking") only ever shows at 768px+ — see the max-width:767px block
+   further down, which hides it and shows .v/.l instead. Hidden by
+   default here so mobile never renders it even before that block
+   applies. */
+.page-home .hero-trust-band .vs { display: none; }
+@media (min-width: 768px) {
+  .page-home .hero-trust-band .v,
+  .page-home .hero-trust-band .l { display: none; }
+  .page-home .hero-trust-band .vs { display: block; }
+}
+/* Divider removed entirely per request — was steel (#475569, previously
+   fixed from the old ink navy), now none. The gap below (mobile: bumped
+   to 36px; tablet: unchanged 32px) is the only separation between stats
+   now that there's no rule line to lean on. */
+.page-home .hero-trust-band .stat { border-right: none; }
+/* Desktop only: the inline version's dividers (top rule + between-item
+   separators) go back to a light neutral grey instead of navy — much
+   thinner-reading against the now-white header/hero, not a heavy accent
+   line. Trust-point text (both the bold value and its label) also drops
+   to the exact steel blue-grey from the client palette, per instruction —
+   the value no longer reads near-black/bold-emphasised against the label. */
+@media (min-width: 1025px) {
+  .page-home .hero-trust-inline,
+  .page-lagos-rs .hero-trust-inline { border-top-color: var(--hero2-soft-grey); }
+  .page-home .hero-trust-inline .stat,
+  .page-lagos-rs .hero-trust-inline .stat { border-right-color: var(--hero2-soft-grey); }
+  .page-home .hero-trust-inline .l,
+  .page-home .hero-trust-inline .v,
+  .page-lagos-rs .hero-trust-inline .l,
+  .page-lagos-rs .hero-trust-inline .v { color: var(--hero2-steel); }
+  /* Latest pass: single combined-text stats (no separate value/label) —
+     no wrapping within a stat regardless of column width. */
+  .page-home .hero-trust-inline .v,
+  .page-lagos-rs .hero-trust-inline .v { white-space: nowrap; }
+  /* Fix for visibly uneven gaps: the base rule (non-page-home, ~line 483)
+     lays this row out as display:grid with three EQUAL-width columns
+     (repeat(3, 1fr)). Each stat is left-anchored in its own column, so any
+     leftover width in a column (from a shorter label) just became extra
+     blank space before the next item — "Locally Based" sat in the same
+     column width as "100% English-Speaking", so the gap after it read as
+     much larger. Flex + a fixed gap sizes each stat to its own text, so
+     the visual gap between every pair is identical regardless of label
+     length. */
+  .page-home .hero-trust-inline,
+  .page-lagos-rs .hero-trust-inline { display: flex; align-items: baseline; gap: 38px; }
+}
+/* Round 4: an actual 32px gap for the mobile/tablet trust band, replacing
+   the old 16px padding-based spacing — the divider borders stay as the
+   visual separator, the gap gives them real breathing room either side. */
+.page-home .hero-trust-band .container { gap: 32px; }
+.page-home .hero-trust-inline .stat,
+.page-lagos-rs .hero-trust-inline .stat { padding-right: 0; }
+.page-home .hero-trust-band .stat { padding-left: 0; padding-right: 0; }
+
+/* Hero stats-row icons: each .stat becomes its own small flex column so
+   the icon sits centred above its text, independent of how the outer
+   row (.hero-trust-inline / .hero-trust-band .container) aligns the
+   .stat items themselves. */
+.page-home .hero-trust-inline .stat,
+.page-lagos-rs .hero-trust-inline .stat,
+.page-home .hero-trust-band .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* align-items only centers each .stat's text block as a whole (sized to
+     its longest line) within the flex column — a wrapped multi-line label
+     like "100% English-Speaking" still left-hangs inside that block by
+     default, reading off-center under its icon. text-align centers each
+     line within the block itself, fixing that regardless of how many
+     lines a label wraps to. */
+  text-align: center;
+  /* Round 5: .hero-trust-band's parent grid (repeat(3, 1fr)) leaves each
+     .stat's default min-width: auto, which grid resolves against its
+     content's own natural sizing — same class of bug as the reassurance-
+     band overflow fixed earlier this session. Only surfaced now that each
+     stat is one single-line combined string (see .hero-trust-band's new
+     markup): with three tracks of very different natural widths ("100%
+     English-Speaking" vs "Fast Response"), the 1fr distribution let the
+     shortest track render fully unwrapped while its siblings wrapped,
+     and the total overflowed the container by ~5px at 360px width
+     (confirmed via measurement). min-width: 0 removes that auto floor so
+     every stat wraps to fit its actual 1fr share, same fix as before. */
+  min-width: 0;
+}
+.page-home .hero-trust-inline .stat svg,
+.page-lagos-rs .hero-trust-inline .stat svg,
+.page-home .hero-trust-band .stat svg {
+  margin-bottom: 8px;
+}
+/* .hero-trust-inline's own align-items: baseline (above) aligns each
+   .stat by text baseline, which no longer applies now that .stat's
+   first child is an icon rather than text — switched to flex-end so the
+   row still reads as evenly seated on one line rather than baseline-
+   aligning against a non-text first child. */
+@media (min-width: 1025px) {
+  .page-home .hero-trust-inline,
+  .page-lagos-rs .hero-trust-inline { align-items: flex-end; }
+}
+
+/* Mobile/tablet (<=1024px) vs desktop (1025px+) stat text: heroIntro()
+   renders both a shortened .v-mobile span ("100% English") and the fuller
+   original .v-desktop span ("100% English-Speaking") for every stat when
+   a mobile-specific variant is supplied (currently the homepage only —
+   see home.js's mobileStatsText) — toggled here by breakpoint rather than
+   swapping the underlying data, so desktop's copy stays byte-identical
+   regardless of what mobile/tablet show. Both share the plain .v class
+   too, so the existing per-breakpoint font-size rules below apply to
+   whichever one is actually visible without needing their own copies. */
+.page-home .hero-trust-inline .v-desktop,
+.page-lagos-rs .hero-trust-inline .v-desktop { display: none; }
+.page-home .hero-trust-inline .v-mobile,
+.page-lagos-rs .hero-trust-inline .v-mobile { display: block; }
+@media (min-width: 1025px) {
+  .page-home .hero-trust-inline .v-desktop,
+  .page-lagos-rs .hero-trust-inline .v-desktop { display: block; }
+  .page-home .hero-trust-inline .v-mobile,
+  .page-lagos-rs .hero-trust-inline .v-mobile { display: none; }
+}
+
+/* In-prose links: ink with an underline, not a color-based affordance —
+   crimson is reserved for buttons only in this pass. */
+.page-home p a { color: var(--rs-ink); text-decoration: underline; text-underline-offset: 2px; }
+.page-home p a:hover { text-decoration-thickness: 2px; }
+.page-home :focus-visible { outline-color: var(--rs-ink); }
+
+/* ---- Page background / section rhythm --------------------------------- */
+.page-home section {
+  padding: var(--rs-section-gap) 0;
+}
+@media (min-width: 768px) {
+  .page-home section { padding: var(--rs-section-gap-desktop) 0; }
+}
+/* Desktop only (1025px+): tighter section rhythm than tablet's 96px.
+   --rs-section-gap-desktop is also read by the >=768px rule just above, so
+   it covers tablet as well as desktop — changing its value directly would
+   have silently retuned tablet too. This explicit 48px override, scoped to
+   >=1025px and placed after that rule so it wins the tie at this width,
+   leaves --rs-section-gap-desktop (and therefore tablet, 768-1024px)
+   exactly as it was. */
+@media (min-width: 1025px) {
+  .page-home section { padding: 48px 0; }
+}
+
+/* The mobile/tablet trust-stats strip (hidden at desktop in favor of the
+   inline column version) no longer reads as a distinct band — it blends
+   into the one flat page background instead of standing out in sand. */
+.page-home .hero-trust-band { background: transparent; }
+
+/* ---- Reassurance band: plain text, no banner --------------------------
+   Rounds 1-2 tried a white block, then a filled --rs-block navy block;
+   this round drops the coloured box entirely — just the line itself,
+   centred on the page's own --rs-bg, same vertical rhythm as before. */
+.page-home .reassurance-band {
+  background: transparent;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--rs-block-padding);
+}
+@media (min-width: 768px) {
+  .page-home .reassurance-band { padding: var(--rs-block-padding-desktop); }
+}
+/* Tablet-only bespoke value. Root cause of the 64px/48px this was
+   overriding: this section had no tablet-specific tuning of its own — it
+   was just inheriting --rs-block-padding-desktop (64px 48px) straight
+   from the >=768px rule above, the same shared token .page-home .rs-block
+   uses for most other sections' desktop padding. Desktop (1025px+, below)
+   got its own hand-tuned 44px/56px override; mobile (max-width:767px,
+   further down) got its own 20px/24px; tablet was the one width band left
+   on the raw shared default, which is why it read higher than desktop's
+   deliberately-trimmed value instead of sitting between mobile and
+   desktop. 40px sits at the midpoint of mobile (20px) and desktop
+   (44/56px) — confirmed via measurement it doesn't crowd the heading at
+   its new 28px tablet size (see .reassurance-band h2 below): 40px top/
+   bottom leaves the same visual breathing room around the taller text as
+   20px did around the old 20px text, scaled proportionally. */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-home .reassurance-band { padding-top: 40px; padding-bottom: 40px; }
+}
+/* Steel block (mobile/tablet) — same treatment as desktop's, just without
+   the nowrap/fit-content flex workarounds desktop needed for its specific
+   .hero-viewport flex-column layout (mobile/tablet's .hero-viewport is a
+   normal block — see below — so .container's own width: fit-content +
+   margin: 0 auto centers it correctly with no extra help needed). Existing
+   outer .reassurance-band padding (above) is untouched — this round is
+   colour/typography, not spacing (see the spacing-audit item). */
+.page-home .reassurance-band .container {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  background: var(--hero2-steel);
+  border-radius: var(--rs-radius-block);
+  padding: 16px 24px;
+}
+/* Tablet-only bespoke value, sitting between mobile's 16px/24px above and
+   desktop's 20px/40px further below (was inheriting mobile's unscoped
+   value, same gap this round's other two fixes address). */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-home .reassurance-band .container { padding: 18px 32px; }
+}
+/* White text now that it sits on the steel block rather than the page
+   background — was var(--rs-ink) (near-black), which would be unreadable
+   here. Font-size still pinned explicitly (not the generic 28px mobile H2
+   scale) — this is a compact callout, not a section heading, and at 28px
+   it wrapped tall enough on mobile to push itself past the fold. */
+.page-home .reassurance-band h2 { color: #ffffff; margin: 0; font-size: 20px; text-shadow: none; }
+@media (min-width: 768px) {
+  .page-home .reassurance-band h2 { font-size: 26px; }
+}
+/* Tablet-only bespoke value (26px -> 28px), between mobile's 20px and
+   desktop's clamp(38px, ..., 40px) further below. Wins over the 26px
+   rule immediately above via source order — both media queries are
+   active at 820px, and this one is declared later. */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-home .reassurance-band h2 { font-size: 28px; }
+}
+/* Desktop only: larger again (32px -> 36px), forced onto one line (the
+   .narrow wrapper's 720px cap was wrapping it to two at 32px+, so it's
+   widened here specifically), pulled higher via a further-trimmed top
+   padding. */
+@media (min-width: 1025px) {
+  .page-home .reassurance-band h2 {
+    /* 36px -> 40px cap, but via clamp() rather than a flat value: at a
+       flat 40px this line's fixed nowrap text was measured overflowing
+       past the viewport's right edge at 1025px specifically (real
+       clipped, unreadable text, not just decorative bleed — caught via
+       measurement, not assumed). clamp(38px, ...) keeps it safely within
+       the viewport at 1025px (38px measured with 31px to spare) and
+       still reaches the full 40px by ~1350px, comfortably below where
+       the block's own max-width stops mattering. */
+    font-size: clamp(38px, 1.3vw + 24px, 40px);
+    white-space: nowrap;
+  }
+  /* Top padding normalised to the same 96px every other homepage section
+     uses (see .page-home section) — this used to be an asymmetric 48/64px
+     tuned only to compensate for the old image-bleed layout, long gone now.
+     Bottom stays at 56px rather than following to 96: matching it there
+     would've pushed the hero+reassurance stack past the hard no-scroll
+     budget (reassurance-band's bottom edge must still be visible without
+     scrolling at a 900px-tall viewport — the same requirement several
+     earlier rounds tuned the hero split-layout around). The next section
+     already carries its own 96px top padding regardless, so the visual gap
+     to "What We Install" (56+96=152px) still reads generous — the 56px
+     specifically just needed to recover the ~13-32px this block's new top
+     padding and background added, confirmed back within budget at
+     1025/1440/1920x900 (7-27px to spare) via direct measurement. */
+  /* The visible block now hugs its own text (see .container below) rather
+     than spanning a fixed width, so the band itself just needs to shrink
+     to match and center that block — the band's own horizontal padding
+     (inherited from the >=768px rule, still 48px each side for tablet) is
+     zeroed out here so it doesn't add invisible extra width on top of the
+     container's own padding, which would both throw off centering math and
+     reintroduce the horizontal overflow described below. */
+  .page-home .reassurance-band {
+    padding-top: 44px;
+    padding-bottom: 56px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .page-home .reassurance-band .narrow { max-width: none; }
+  /* Wider padding than the mobile/tablet default above (40px horizontal vs
+     24px) — everything else about the block (fit-content sizing, steel
+     background, radius) is already covered by the unscoped rule.
+     .hero-viewport is a column flex container at this breakpoint (see
+     below), and a flex item's default automatic minimum size is its
+     content's min-content width when overflow is visible — combined with
+     the nowrap h2 text, that's exactly the "hug the text" sizing this
+     needs, so no extra width override is required here (unlike an earlier
+     round, when the band's OWN now-removed horizontal padding pushed that
+     min-content width past the viewport and had to be worked around). */
+  .page-home .reassurance-band .container {
+    padding: 20px 40px;
+  }
+}
+
+/* ---- Emphasis blocks: contained rounded panels replace the old
+   full-bleed alternating section backgrounds. The page itself is one
+   flat --rs-bg color throughout; a block is the only way a section
+   reads as visually distinct now. ---------------------------------- */
+.page-home .rs-block {
+  background: var(--rs-surface);
+  border-radius: var(--rs-radius-block);
+  padding: var(--rs-block-padding);
+}
+@media (min-width: 768px) {
+  .page-home .rs-block { padding: var(--rs-block-padding-desktop); }
+}
+.page-home .rs-block .narrow { max-width: var(--rs-max-line); }
+
+/* Exactly one dark block on the page — the closing CTA. The .page-home
+   heading/lede color rules above (var(--rs-ink), near-black) would
+   otherwise win here on source order and render dark text on a dark
+   background — these overrides restore light-on-dark, matching what
+   .cta-band's own rules already do for every other page's dark bands. */
+.page-home .rs-block--dark {
+  background: var(--rs-dark);
+  text-align: center;
+}
+.page-home .rs-block--dark h2,
+.page-home .rs-block--dark .eyebrow,
+.page-home .rs-block--dark .lede,
+.page-home .rs-block--dark p {
+  /* Was var(--cream) — the old warm palette's light-on-dark tone, still
+     tuned for the pre-restyle navy background. Now on steel, matching the
+     white already used on the reassurance band and overhang block below. */
+  color: #ffffff;
+}
+.page-home .rs-block--dark h2 em { color: #ffffff; }
+
+/* Cards spill past the block's bottom edge instead of sitting flush
+   inside it — the one section here that actually has .card elements to
+   overhang with. Filled with --rs-block (now dark navy), with the white
+   cards — untouched, still their own light surface — overhanging its
+   bottom edge as before. */
+.page-home .rs-block--overhang {
+  background: var(--rs-block);
+  overflow: visible;
+  padding-bottom: 24px;
+}
+/* The block's own heading text needs light-on-dark now that --rs-block is
+   navy — the cards inside stay as they were, they're a separate white
+   surface with their own already-correct dark-on-white text. */
+/* Same old-cream leftover as .rs-block--dark above — updated to white to
+   match the rest of the steel-background text on this page. */
+.page-home .rs-block--overhang .section-head h2 { color: #ffffff; }
+.page-home .rs-block--overhang .section-head .eyebrow,
+.page-home .rs-block--overhang .section-head .lede { color: rgba(255, 255, 255, 0.82); }
+.page-home .rs-block--overhang .trust-grid { margin-bottom: -56px; }
+
+/* Round 2 fix: at the old 4-column desktop layout, card headings like
+   "Supplied & Installed as One System" wrapped 3–4 lines and, once the
+   grid stretched every card to match the tallest, left large empty gaps
+   under the shorter ones. 2 columns gives each card roughly double the
+   width, which keeps every heading here to at most 2 lines and shrinks
+   the height variance between cards enough that the equal-height stretch
+   no longer reads as empty space. */
+@media (min-width: 960px) {
+  .page-home .rs-block--overhang .trust-grid { grid-template-columns: repeat(2, 1fr); }
+}
+/* Explicit, defensive fix for the reported heading/body indent and loose
+   line-height — measured this section and found the two already sharing
+   a left edge with 1.6/1.65 line-height, but pinning both explicitly here
+   removes any doubt and guarantees the exact values requested. */
+.page-home .rs-block--overhang .card h3,
+.page-home .rs-block--overhang .card p {
+  margin-left: 0;
+  padding-left: 0;
+}
+.page-home .rs-block--overhang .card p { line-height: 1.6; }
+
+/* ---- Cards -------------------------------------------------------------- */
+.page-home .card {
+  border-radius: var(--rs-radius-card);
+  padding: var(--rs-card-padding);
+  box-shadow: var(--rs-card-shadow);
+}
+.page-home .card .placeholder { margin: calc(-1 * var(--rs-card-padding)); margin-bottom: 20px; border-radius: var(--rs-radius-card) var(--rs-radius-card) 0 0; }
+
+/* ---- "What We Install" service cards -----------------------------------
+   Icon-block/pill-button rebuild — originally desktop-only, now applies at
+   every breakpoint so mobile/tablet match (this round's brief). Not a
+   layout copy: mobile/tablet keep their existing single-column stack, this
+   only brings colours/blocks/buttons in line.
+   Flagship treatment removed entirely: every card in #services must be
+   visually identical, so the flagship card's border and the badge/placeholder
+   markup it (and every other card) still carries in the DOM are all
+   hidden/reset back to plain .card styling. */
+.page-home #services .card.flagship { border: none; }
+.page-home #services .card .placeholder,
+.page-home #services .card .badge { display: none; }
+/* Card background: was mobile-only (reusing the desktop Services nav
+   dropdown's own hover token, var(--hero2-panel-grey) / #e8eef2 — see
+   .home-header-dropdown a:hover, ~line 500), now applies at every
+   breakpoint so tablet/desktop's plain 3-column grid matches mobile's
+   carousel cards. Unscoped here (no media query) instead of duplicating
+   the declaration inside the max-767px block below, which still owns the
+   carousel-specific background/width/gap trio — background just no
+   longer needs to be one of the three things scoped there. */
+.page-home #services .card { background: var(--hero2-panel-grey); }
+
+.page-home #services .card-icon-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 20px;
+  border-radius: var(--rs-radius-card);
+  background: var(--hero2-steel);
+}
+.page-home #services .card-icon-block svg { width: 38px; height: 38px; }
+
+/* Heading centred under the icon block; body copy stays left-aligned
+   (only the h3 gets the override, not the whole card). */
+.page-home #services .card h3 { text-align: center; }
+
+.page-home #services .card-link-arrow-text { display: none; }
+.page-home #services .card-link-icon { display: inline-flex; flex-shrink: 0; }
+
+/* Solid crimson by default (not just on hover) — was the lowest-contrast
+   element in each card (light-grey pill, dark-grey text). Reuses
+   var(--terracotta), the same token the hero phone CTA button's own
+   background is built from (~line 183) and this codebase's own designated
+   "CTA buttons and phone links only" color — not a new, merely-similar
+   red. White text/icon (the chevron SVG uses stroke="currentColor", so it
+   follows this rule's color automatically, no separate icon rule needed)
+   against var(--terracotta) measures 5.68:1 via the WCAG formula, clear
+   of the 4.5:1 AA floor for this button's 0.88rem/700 text, so the base
+   red itself (not the darker hover shade) is the right base color. Size/
+   padding/border-radius/placement all unchanged — only background, text
+   color and the hover treatment below are new. */
+.page-home #services .card-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 999px;
+  background: var(--terracotta);
+  color: var(--white);
+  font-weight: 700;
+  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* ---- Mobile-only swipeable carousel (max-width:767px) -------------------
+   Desktop/tablet (768px+) keep the plain grid completely untouched — this
+   block only exists inside the max-767px query, and .card-grid.cols-3
+   itself is never touched outside it. The card's own internals (icon
+   block, heading, body copy, pill button) aren't touched anywhere here —
+   this is a container/interaction change only, same markup and same
+   .page-home #services .card rules above still style each card.
+   Native scroll-snap, not a JS drag library, per instruction — the only
+   JS involved (main.js) just reads scroll position to drive the progress
+   bar's fill width, it never moves the carousel itself.
+   Default hidden here, BEFORE the max-767px block below — a same-
+   specificity rule declared after a media block always beats it, so this
+   "off" state has to come first for the mobile block's display:block to
+   actually win at that width (the exact ordering bug this file's roof-
+   mark rule hit earlier in this project; not repeating it here). */
+.page-home #services .carousel-progress { display: none; }
+@media (max-width: 767px) {
+  /* Overrides the grid entirely: .card-grid's own base rule (~line 716)
+     is display:grid, and .cols-3 additionally goes 3-up at min-width:720px
+     (~line 718) — both same specificity as this selector, so source order
+     decides, and this block is later in the file, winning throughout
+     0-767px including the 720-767px sliver that would otherwise still be
+     3-column under the old rule. */
+  .page-home #services .card-grid.cols-3 {
+    display: flex;
+    /* Explicit, not relied-on-as-default: flex's own default IS stretch,
+       so every card already matched the track's own height before this —
+       the actual bug was one level down (see .card below), this is just
+       made explicit per the request rather than left implicit. */
+    align-items: stretch;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    /* 4px, not 0: cards are no longer full-width below (see .card next),
+       so consecutive cards now sit edge-adjacent within the track. A
+       small explicit gap keeps that seam from reading as one continuous
+       shape — the cards' own box-shadow and 16px border-radius do most of
+       the separating work already, this is just enough extra breathing
+       room that the peeking next card unmistakably reads as another card
+       rather than a clipped edge. Sized deliberately small (not this
+       file's usual 22px grid gap) so it eats as little as possible into
+       the ~18-20% peek fraction below. */
+    gap: 4px;
+    /* Scrollbar hidden — the progress bar below is the position
+       indicator; a native scrollbar on top of it would be redundant. */
+    scrollbar-width: none;
+  }
+  .page-home #services .card-grid.cols-3::-webkit-scrollbar { display: none; }
+  /* Narrowed from flex:0 0 100% (which filled the whole scroll container,
+     no peek at all) to 80% + a 4px gap above — leaves ~18-19% of the next
+     card visible on the right of whichever card is snapped active,
+     confirmed via Playwright across 320-767px-wide tracks (padding-
+     adjusted): consistently ~17.6-19% depending on viewport, i.e. inside
+     the requested "approximately 18-20%" band. 80% (not 82%) chosen so
+     there's real room left for that 4px gap without the peek shrinking
+     below the requested range. scroll-snap-align: start unchanged — each
+     snap still aligns a card's left edge to the track's left edge, so the
+     mechanics are identical to before, just at a narrower card width. */
+  .page-home #services .card-grid.cols-3 .card {
+    flex: 0 0 80%;
+    width: 80%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    /* Matches desktop's own equal-height treatment (flex column + margin-
+       top: auto on the button, ~line 1801) rather than inventing a
+       different technique — mobile just reaches it a different way
+       (stretched by the track's align-items: stretch above, vs. desktop's
+       explicit min-height on the row). Without this, the track already
+       stretched every card's own box to the tallest card's height (flex's
+       default align-items is stretch, so that part was never actually
+       broken), but the card's CONTENTS still laid out top-down as plain
+       block flow — the extra height just became dead space below an
+       already-positioned button instead of being absorbed above it, which
+       is why descriptions of different lengths still made the buttons
+       land at different distances from the top (though not from a
+       shrunk-card bottom). display: flex here turns the card into a
+       column its own children (icon/heading/copy/button) stack inside,
+       so the auto margin below on .card-link has a flex context to push
+       against. */
+    display: flex;
+    flex-direction: column;
+  }
+  /* Pushes the button to the bottom of its now-flex-column card, same
+     mechanism desktop already uses (margin-top: auto inside a flex
+     column) — mobile just needed the column context above first. Card
+     content/copy, the icon block, and every other card style are
+     untouched; only vertical placement of this one element changes. */
+  .page-home #services .card-link {
+    margin-top: auto;
+  }
+  /* Thin fill bar, not 7 dots — track + a single fill element whose width
+     the scroll-driven JS (main.js) sets to (current card index + 1) / 7,
+     so it reads as "progress through the 7 cards" rather than a
+     position-of-7 dot indicator. Hidden by default (see the unscoped
+     display:none above this block) and only shown here, inside
+     max-767px — desktop/tablet render the same markup (kept in the DOM
+     unconditionally, consistent with this file's established "render
+     once, toggle via CSS" pattern elsewhere) but never see it. */
+  .page-home #services .carousel-progress {
+    display: block;
+    height: 4px;
+    margin-top: 24px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    overflow: hidden;
+  }
+  .page-home #services .carousel-progress-fill {
+    height: 100%;
+    width: 14.2857%;
+    border-radius: 999px;
+    background: var(--hero2-crimson);
+    transition: width 0.15s ease-out;
+  }
+}
+
+@media (min-width: 1025px) {
+  /* Body copy length differs card to card, so without a forced height each
+     grid row sizes to its own tallest card and different rows end up
+     different heights. flex + a shared min-height keeps all 7 identical;
+     margin-top: auto on the link keeps the pill pinned to the same bottom
+     edge regardless of how many lines the body copy above it wraps to.
+     460px (down from an earlier 480px) is sized to the tallest card's
+     natural content at 1025px — the narrowest, highest-wrap column width —
+     plus the shorter pill button, trimming the leftover space beneath the
+     shortest cards' body copy without clipping the longest one. Mobile/
+     tablet skip this — a single-column stack has no row alignment to
+     solve, so cards there just size to their own content, and the pill's
+     margin-top: 14px (above) is enough space instead of the auto-pinned
+     version this needs alongside align-self: stretch. */
+  .page-home #services .card {
+    display: flex;
+    flex-direction: column;
+    min-height: 460px;
+  }
+  .page-home #services .card-link {
+    align-self: stretch;
+    margin-top: auto;
+  }
+  /* Hover only enhances an already-fully-styled crimson button (the base
+     rule above is already solid var(--terracotta) with white text/icon at
+     rest, no hover needed to reach that state) — darkens to
+     var(--terracotta-dark), this design system's own existing "hover /
+     pressed" shade for this exact color (~line 18), roughly a 10% darkening
+     already, not a newly-invented value. Small lift (translateY + a soft
+     crimson-tinted shadow) on top, desktop-only via this file's existing
+     1025px+ breakpoint — tablet/mobile never trigger a hover state here.
+     Keyed off .card:hover (the whole card is one <a>, see home.js), not
+     .card-link:hover, matching this rule's own pre-existing hover pattern
+     one level up. */
+  .page-home #services .card:hover .card-link {
+    background: var(--terracotta-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(156, 23, 45, 0.32);
+  }
+}
+
+/* Tablet (768-1024px): was missing the same bottom-alignment fix mobile and
+   desktop both already had. .card-grid.cols-3 is plain CSS Grid at this
+   width (3-up, ~line 783) and grid's own default align-items is stretch, so
+   each card's outer BOX already matched the tallest card in its row before
+   this fix (confirmed via measurement: 3 cards in one row all rendered at
+   the same 518px height at 820px) — the bug was one level down, same as
+   mobile's pre-fix bug: the card's CONTENTS still laid out top-down as
+   plain block flow, so the extra height became dead space below an
+   already-positioned button instead of being absorbed above it (measured:
+   32px/32px/63px from the bottom across one row, depending on copy length).
+   Fix mirrors mobile's mechanism exactly (rely on the track's own default
+   stretch for equal card heights, only add flex-column + margin-top: auto
+   here) rather than desktop's explicit min-height — tablet's grid already
+   provides the equal-height half of the job for free. */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-home #services .card {
+    display: flex;
+    flex-direction: column;
+  }
+  .page-home #services .card-link {
+    margin-top: auto;
+  }
+}
+
+/* ---- Buttons: capped width, fixed height, never full-width ------------- */
+.page-home .btn-lg {
+  height: var(--rs-btn-height);
+  max-width: var(--rs-btn-maxwidth);
+  padding: 0 32px;
+  border-radius: var(--rs-radius-btn);
+  font-size: var(--rs-btn-font-size);
+  font-weight: 700;
+}
+/* Round 2 fix — the real reason max-width:320px wasn't visibly "enforced"
+   last round: .hero-stack-text is a column flex container (for vertical
+   centering in the tall desktop hero), and flex's default align-items:
+   stretch was forcing the button to actually BE 320px wide — filling the
+   cross-axis up to the cap — rather than shrinking to its own content
+   (~230px). align-self here reverts it to its natural content width, with
+   max-width still capping it if the content ever got longer. */
+.page-home .hero-stack-text .btn { align-self: flex-start; }
+/* Exact crimson from the client palette (flat, not the design system's
+   default terracotta gradient) for the hero and lower-page CTA buttons —
+   now applies at every breakpoint (was desktop-only; mobile/tablet were
+   still showing the old gradient). Sizing stays as-is at mobile/tablet
+   (already a solid touch target via the shared, unscoped .btn-lg rule —
+   56px tall, 999px pill radius); the bump to 60px/36px-padding/20px-text
+   below is desktop-only, kept as its own deliberate refinement rather than
+   applied everywhere. */
+.page-home .hero-stack-text .btn,
+.page-home .cta-band .btn {
+  background: var(--hero2-crimson);
+}
+.page-home .hero-stack-text .btn:hover,
+.page-home .cta-band .btn:hover {
+  background: var(--hero2-crimson);
+  filter: brightness(0.92);
+}
+/* Tablet-only bespoke values, between mobile's unscoped 56px/32px-padding/
+   18px-text (the shared .btn-lg default, comment above) and desktop's
+   60px/36px/20px further below — was inheriting mobile's values verbatim,
+   same gap the reassurance-band fixes above address. */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-home .hero-stack-text .btn {
+    height: 58px;
+    padding: 0 34px;
+    font-size: 19px;
+    margin-top: 8px;
+  }
+  .page-home .cta-band .btn {
+    height: 58px;
+    padding: 0 34px;
+    font-size: 19px;
+  }
+}
+@media (min-width: 1025px) {
+  .page-home .hero-stack-text .btn {
+    /* Latest pass: slightly bigger — height/padding both up a few px,
+       text +2px — and pulled down from the subtext line above it (that
+       gap was 10px, all from hero-subtext's own margin-bottom; adding
+       margin-top here instead of touching that shared, non-page-home
+       rule keeps it scoped to this one button). Deliberately no change
+       to spacing below the button — the gap down to the stats row is
+       governed entirely by hero-trust-inline's own margin/padding,
+       untouched here, so it stays as it was. */
+    height: 60px;
+    padding: 0 36px;
+    font-size: 20px;
+    margin-top: 16px;
+  }
+
+  /* Lower CTA button ("Ready to secure your property?") matched to the
+     hero's exactly at this size too — border-radius (999px) and
+     font-weight (700) were already identical via the shared .btn/.btn-lg
+     rules, so only height/padding/font-size needed restating here. */
+  .page-home .cta-band .btn {
+    height: 60px;
+    padding: 0 36px;
+    font-size: 20px;
+  }
+}
+
+/* ---- Old dark-blue cleanup (#0f3238 / #1b4750) --------------------------
+   Audit (Playwright, rendered homepage) found the old navy/teal "ink"
+   family still painting three homepage backgrounds and one text colour,
+   all still wired to the pre-steel tokens:
+     #0f3238 (var(--ink), via --rs-block / --rs-dark) — background on
+       .rs-block--overhang ("A local installer..."), .rs-block--dark (the
+       lower CTA band), and .site-footer.
+     #1b4750 (var(--ink-700)) — text colour on .pillar .num (the 01/02/03
+       process-step numbers in "How It Works").
+   --rs-block/--rs-dark are shared tokens also read elsewhere, and .pillar
+   is shared markup used by 4 other templates, so these are overridden
+   directly here (not by changing the tokens) — .page-home scoping keeps
+   every other page's .pillar untouched. Originally desktop-only; now
+   applies at every breakpoint so mobile/tablet match (this round's brief). */
+.page-home .rs-block--overhang { background: #475569; }
+.page-home .rs-block--dark { background: #475569; }
+.page-home .pillar .num { color: #475569; }
+
+/* ---- Full-bleed hero (branch: claude/hero-fullbleed-desktop, desktop
+   only, 1025px+). Replaces the old vertically-centered/padding-driven
+   hero-viewport entirely — a fixed-height full-bleed layout needs a
+   deterministic total height for the fold-budget requirement (see
+   .hero-stack--split below), not viewport-relative centering that grows
+   or shrinks the total unpredictably. Mobile/tablet never had a rule
+   here at all (plain top-anchored block flow), so removing the
+   min-height/centering treatment brings desktop in line with the same
+   plain block behaviour structurally — only the hero-stack contents
+   inside now look completely different (see below). ---- */
+@media (min-width: 1025px) {
+  .page-home .hero-viewport { min-height: 0; }
+}
+
+/* ---- Hero wrapper: one subtle card behind the whole hero area (text
+   column + image together, not each separately) — background is barely
+   distinct from the page's own --rs-bg, just enough for a soft edge. */
+.page-home .hero-stack .container {
+  background: var(--rs-hero-wrap-bg);
+  border-radius: var(--rs-radius-block);
+  padding: var(--rs-hero-wrap-padding-mobile);
+}
+@media (min-width: 768px) {
+  .page-home .hero-stack .container { padding: var(--rs-card-padding); }
+}
+/* Desktop only: the white card is gone entirely for the full-bleed
+   layout below — no background/radius/padding/margin left to tighten.
+   Mobile/tablet keep the card exactly as built (the rules above, both
+   unscoped and the >=768px override, are untouched). */
+@media (min-width: 1025px) {
+  .page-home .hero-stack .container {
+    background: transparent;
+    border-radius: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+  }
+}
+
+/* ---- Full-bleed hero (branch: claude/hero-fullbleed-desktop, desktop
+   only, 1025px+) — replaces the old card-relative bleed mechanism (a
+   calc(100% + Npx) height/width plus negative margins, tuned against a
+   white card's own edges) entirely. There's no card left to bleed past:
+   the image is now a genuine full-bleed background layer, positioned
+   absolute + inset:0 against .hero-stack--split itself (the nearest
+   POSITIONED ancestor — .container in between is deliberately left
+   position:static, so it can't become the containing block and clip the
+   image down to its own padded/max-width box).
+   margin-top: calc(-1 * var(--header-h)) pulls the whole hero-stack up
+   by exactly the sticky header's own height, so its top edge lines up
+   with the very top of the page instead of starting below the header —
+   sliding the image in behind it. The header's own z-index (60,
+   unscoped rule, untouched) keeps it painted on top of the image
+   without anything extra needed here; .hero-stack-media's z-index: -1
+   (below) keeps the image+scrim behind the header AND behind this
+   hero's own in-flow text content, using default stacking order rather
+   than fighting it with a high z-index on the text.
+   height fills exactly the viewport space below the header
+   (calc(100vh - var(--header-h))) rather than a flat px value — this
+   round's fix #3 (reassurance-band pushed below the fold): a fixed
+   height can't guarantee the reassurance band lands off-screen at every
+   possible viewport height the way a vh-relative one can, confirmed via
+   direct measurement this way rather than assumed. Mobile/tablet never
+   read any selector in this block (all of it lives inside this one
+   1025px+ query, targeting only .hero-stack--split and its descendants;
+   mobile/tablet's own image/card rules elsewhere in the file are
+   completely unedited). ---- */
+@media (min-width: 1025px) {
+  .page-home .hero-stack--split {
+    position: relative;
+    /* z-index:0 (not just position:relative on its own) is what actually
+       makes this establish its OWN stacking context — without a numeric
+       z-index here, .hero-stack-media's z-index:-1 below doesn't stay
+       scoped to this element at all; it bubbles up to the nearest real
+       stacking context further up the tree and paints behind far more
+       than intended (confirmed: without this, the image render
+       disappeared behind the page background entirely). */
+    z-index: 0;
+    overflow: hidden;
+    /* 500px flat -> 100vh (not 100vh - header height): the negative
+       margin-top above already "donates" the header's own 76px of flow
+       space back to whatever comes after this element (confirmed via
+       measurement: with calc(100vh - header height), the reassurance
+       band's top landed 76px INSIDE the initial viewport, not below it —
+       the negative margin cancels the header's flow contribution once,
+       so subtracting the header height again here double-counts it). A
+       flat 100vh puts the reassurance band's top exactly at the
+       viewport's own bottom edge at every screen height, out of view
+       until the user scrolls, per this round's fix #3. */
+    height: 100vh;
+    margin-top: calc(-1 * var(--header-h));
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .page-home .hero-stack--split .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+  .page-home .hero-stack--split .hero-stack-text {
+    align-self: auto;
+    justify-content: flex-start;
+    /* Wide enough that "Painting & Decorating in the Algarve" (the text
+       before the forced <br>) still fits on one line at the H1's
+       clamp(38px..45px) size, matching the original 2-line wrap exactly
+       — a narrower column wrapped it to a 3rd line, confirmed via
+       measurement, not assumed. */
+    max-width: 780px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .page-home .hero-stack--split .hero-stack-media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    margin: 0;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+  }
+  .page-home .hero-stack--split .hero-stack-media picture,
+  .page-home .hero-stack--split .hero-stack-media picture img {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    object-fit: cover;
+    border-radius: 0;
+  }
+  /* Desktop's own image (terracotta wall, grey shutters and front door,
+     home.js's desktopWebp/Jpg — a wide 1900x1069 crop, distinct from
+     mobile/tablet's own dedicated portrait image below 1025px) needs its
+     own object-position, not the mobile/tablet-tuned inline
+     --hero-obj-pos value — overridden here with a plain value (higher
+     specificity than the unscoped var()-based rule). This source asset is
+     already at the hero box's own 16:9 aspect ratio at desktop widths, so
+     cropping is minimal either way and centred keeps the whole facade —
+     door, shutters and roofline — comfortably in frame. */
+  .page-home .hero-stack--split .hero-stack-media picture img {
+    object-position: 50% 50%;
+  }
+  /* Scrim, this round's fix #2. First attempt (0.58 -> 0.34 -> 0 @
+     0/30/68%) was measured via real WCAG contrast sampling (see
+     verification notes) to fail badly — as low as 2.2:1 under the H1 and
+     2.5-2.7:1 under the stats row, against required 3:1/4.5:1. Lightening
+     the ORIGINAL (0.82 -> 0.5 -> 0 @ 0/40/75%) that far was overcorrecting.
+     Rebuilt around where real text actually sits, measured directly (not
+     guessed): the stats row's rightmost label ends at ~55% of the hero's
+     width, the H1's own widest line at ~66% — both need to stay under a
+     background luminance that keeps 4.5:1 (stats) / 3:1 (H1, large bold
+     text) against white, confirmed by resampling after each change.
+     Result: still measurably lighter than the ORIGINAL through the first
+     ~35% (0.82 -> 0.74 peak) — the actual complaint — but holds
+     real darkness (0.6+) out to 58% to cover the stats row and most of
+     the H1, only properly clearing after 80% instead of 68%, so the
+     rightmost ~1/5 of the frame (past all real text) reads at full
+     brightness. */
+  .page-home .hero-stack--split .hero-stack-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      to right,
+      rgba(17, 24, 39, 0.74) 0%,
+      rgba(17, 24, 39, 0.66) 35%,
+      rgba(17, 24, 39, 0.55) 58%,
+      rgba(17, 24, 39, 0.22) 72%,
+      rgba(17, 24, 39, 0) 85%
+    );
+  }
+  /* Text moves onto the scrim: light on dark, replacing the near-black-
+     on-white the card used. The CTA's own background and the reassurance
+     band below are deliberately untouched here (see their own rules) —
+     the stat icons' stroke colour DOES change this round (fix #1, see
+     below), reversing the previous round's "icons stay as built" call
+     now that the lighter scrim above made steel-grey icons hard to see
+     against it. */
+  .page-home .hero-stack--split .hero-kicker { color: #ffffff; }
+  /* Subline hierarchy pass: 23px/400 -> 27px/600 — was reading closer to
+     body copy than a supporting headline against the H1 above it; a
+     modest size and weight bump (not a full jump to H1-scale) gives it
+     real visual hierarchy without competing with the H1 or the CTA.
+     Color/line-height untouched. */
+  .page-home .hero-stack--split .hero-headline {
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 27px;
+    font-weight: 600;
+  }
+  .page-home .hero-stack--split .hero-trust-inline { border-top-color: rgba(255, 255, 255, 0.28); }
+  /* Fix #4: divider spacing. The mobile/tablet-tuned base rule
+     (.page-home .hero-trust-inline .stat, ~line 1300) zeroes out
+     padding-right entirely, so the border-right sat flush against each
+     stat's own text with no gap on either side (the flex row's 38px gap
+     covered space on the OTHER side of the divider, toward the next
+     stat, but not this side). Restored here, full-bleed-desktop only,
+     so mobile/tablet's own tuned spacing is untouched. */
+  .page-home .hero-stack--split .hero-trust-inline .stat { border-right-color: rgba(255, 255, 255, 0.28); padding-right: 20px; }
+  .page-home .hero-stack--split .hero-trust-inline .stat:last-child { padding-right: 0; }
+  /* Trust badge prominence pass: label 22px -> 25px (needs !important —
+     the mobile/tablet-shared rule at ~line 1254 that this overrides is
+     itself !important, so a plain override can't win regardless of
+     specificity or source order). A small, low-opacity text-shadow adds
+     real separation from busy areas of the photo without changing the
+     white colour itself. */
+  .page-home .hero-stack--split .hero-trust-inline .v,
+  .page-home .hero-stack--split .hero-trust-inline .l {
+    color: #ffffff;
+    font-size: 25px !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  }
+  /* Fix #1 (earlier round): stat icons to white, matching the label text.
+     This round: also sized up (26x26 -> 32x32, via a plain CSS override —
+     the SVG's width/height are hardcoded attributes in layout.js's
+     heroStatIcons, which a stylesheet rule beats) and given the same
+     subtle drop-shadow as the label text (filter, not text-shadow, since
+     these are SVG strokes) so the whole badge reads as one unit at the
+     larger size. The crimson accent dot inside each icon (fill, not
+     stroke — see layout.js) is untouched, same as before. */
+  .page-home .hero-stack--split .hero-trust-inline .stat svg {
+    stroke: #ffffff;
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
+  }
+}
+
+/* ---- Mobile: tighten the budget above the image so the reassurance band
+   (right after the hero+trust-band) lands above the fold at 390x844 —
+   round 4 shrinks the image itself too, on top of round 2's spacing
+   trims, since that's the biggest lever left in this budget. ------------- */
+@media (max-width: 767px) {
+  /* Round 9: tightened 16px -> 8px, part of reclaiming vertical space so
+     the stats row's bottom edge sits well within an initial 390x844
+     viewport (measured before this round: 802px, 41px of buffer — this
+     round targets a larger margin to also cover real mobile browser
+     chrome, which eats into the visible viewport height Playwright's own
+     viewport number doesn't account for). */
+  /* Round 12: 8px -> 12px, part of this round's "add breathing room
+     between header, H1..." request — reopening some of round 9's
+     tightening now that fix 5 (a shorter hero image, further down) frees
+     up more room than this alone costs. */
+  .page-home .hero-stack { padding-top: 12px; padding-bottom: 8px; }
+  /* Card's own top/bottom padding, split off from --rs-hero-wrap-padding-
+     mobile (still 20px, unchanged — left/right stay exactly as they are,
+     per instruction) so vertical can shrink independently of horizontal.
+     Top: 12px -> 14px this round, same "breathing room above H1" request
+     as the .hero-stack change above. Bottom stays 12px — unrelated to
+     this round's asks. */
+  .page-home .hero-stack .container { padding-top: 14px; padding-bottom: 12px; }
+  /* Round 5: the H1/headline size swap above (matching desktop's
+     structure — H1 now the big dominant line) uses --rs-h1-size-mobile
+     (36px) by default, same as .hero-headline used before it. That broke
+     the no-scroll budget this block exists to protect: at 36px bold, the
+     H1's own text (on the sister site, "Security & Smart Home Installation
+     in the Algarve") wrapped to 4 lines in this column width (measured 158px
+     tall, vs ~66px at the size below), pushing the reassurance band well
+     past 844px. 30px was the first size, tested down from 36 in 2px
+     steps, where the line count actually drops from 4 to 2 — a real
+     cliff, not a gradual shrink — and confirmed via measurement to still
+     clear 390x844 with margin to spare (792px bottom, 52px of buffer)
+     and 360x740. Desktop's own H1 is similarly bespoke-sized
+     (clamp(), not the shared token) for the same reason: shared H1 tokens
+     assume shorter heading text than this specific line. */
+  /* Round 11: 30px -> 26px. WebKit couldn't be verified directly in this
+     environment (download blocked at the network level — see the audit
+     this round), but re-measuring the 30px line's actual margin in
+     Chromium explained why a real-device 3-line report was plausible
+     regardless: at 30px, the wrapped second line ("Installation in the
+     Algarve") rendered at 347.8px inside its 350px column — 2.2px of
+     slack, under 1%. Any cross-engine difference in this font's metrics
+     (kerning, hinting, even sub-pixel rounding) could tip that line over
+     and force a 3rd. 26px was chosen from measuring the margin at each
+     step down (28px: 25.4px/7.3% slack; 26px: 48.6px/13.9%; 24px:
+     71.8px/20.5%) — 26px was the first size with a genuinely comfortable
+     double-digit-percent buffer rather than a token few extra pixels,
+     while still reading as a strong, dominant heading (see screenshot
+     comparison against 28px). */
+  /* Round 12: margin-top (10px, new) so the H1 doesn't sit flush against
+     the header/card edge above it — stacks with the .hero-stack and
+     .hero-stack .container padding-top increases above for the full
+     "header to H1" gap. margin-bottom 6px -> 10px, opening up the H1-to-
+     subline gap too — both part of this round's "too tightly packed"
+     request. */
+  /* Bumped 26px -> 29px (+11.5%, within the requested 10-15% range) —
+     re-verified via Playwright that "Installation in the Algarve" (the
+     wrapped 2nd line) still fits the 350px text column and the H1 still
+     breaks to exactly 2 lines, not 3, at 390px (see the old 26px-vs-28px
+     comment above for the margin history this re-checks). */
+  .page-home .hero-kicker { font-size: 29px; margin-top: 10px; margin-bottom: 10px; }
+  /* Subline (the smaller "Stop wondering..." line, .hero-headline) was
+     inheriting the shared --rs-body-size-mobile token (17px) used by
+     ordinary body copy sitewide — bumping that token directly would have
+     changed paragraph text on all 33 pages, not just this hero. Scoped
+     override instead: 17px -> 18px (+5.9%, proportionally less than the
+     H1's +11.5%, keeping the H1/subline size hierarchy intact). */
+  /* 19px was already the max size that keeps this line on one row within
+     its 350px column (confirmed via Playwright: 19.9px is the actual wrap
+     ceiling, 19.95px+ forces 2 lines) — too tight a ceiling for a real
+     "make it bigger" bump, since even maxing out only gets +5%. Accepted
+     the 2-line wrap instead: 22px (+15.8%, in the same 10-15%-ish range
+     this file has used for other deliberate size bumps) wraps naturally
+     at "Stop wondering if your property is okay." / (line break) with no
+     awkward mid-word break. Re-verified there's room for the extra ~40px
+     this adds: the stats row's bottom edge still lands with ~360px of
+     clearance above the fixed 844px (100vh) hero's bottom edge, nowhere
+     close to the CTA/stats overlapping or the hero clipping content. */
+  .page-home .hero-stack--split .hero-headline { font-size: 22px; }
+  /* Now near its practical size ceiling (see above — going bigger still
+     means either a 3rd wrapped line or eating further into the hero's
+     vertical budget), so readability from here comes from weight instead
+     of more size: 400 (regular, inherited from the shared .page-home
+     .hero-headline rule) -> 600. Checked which weight is actually
+     available before picking one: the Google Fonts request for this
+     element's real font-family (Nunito Sans, not Figtree — this page's
+     typography-test override, see --font-nunito-sans) only fetches
+     400/600/700 (see the <link> in layout.js), so 500 would have silently
+     fallen back to whatever weight the browser substitutes rather than
+     rendering as requested. 600 is both an actually-loaded weight and
+     what this exact element (.hero-stack--split .hero-headline) already
+     uses at the 1025px+ desktop breakpoint (~line 2039), so mobile now
+     matches desktop's own choice for this line instead of introducing a
+     third, unloaded weight value. */
+  .page-home .hero-stack--split .hero-headline { font-weight: 600; }
+  .page-home .hero-headline { margin-bottom: 0.2em; }
+  .page-home .hero-subtext { margin-bottom: 12px; }
+  /* Was the shared, non-page-home .hero-stack .btn { margin-top: 4px; }
+     (~line 523, used by every page's hero, not homepage-specific) —
+     overridden here instead of changing that shared rule, opening up
+     the subline-to-CTA gap for this round's "too tightly packed"
+     request without touching the other 32 pages. */
+  .page-home .hero-stack-text .btn { margin-top: 8px; }
+  /* Round 7: was max-width:200px + auto margins, centering a small box
+     with ~83px of empty space on each side inside the card's 366px
+     content area (390px card - 12px padding x2). Removed the cap so the
+     image spans that full content width instead — flush with the card's
+     own 12px padding, not bleeding past it, matching how tablet's image
+     already runs the full width of its container. */
+  /* margin-top 12px -> 8px, part of this round's vertical tightening. */
+  .page-home .hero-stack-media { margin-top: 8px; max-width: none; margin-left: 0; margin-right: 0; }
+  /* Round 9: aspect-ratio 1/1 (a true square, matching the source photo
+     exactly) made the box tall enough on its own that it was the single
+     biggest contributor to the stats row landing near the bottom edge of
+     an initial 390x844 viewport. Switched to 4/3 (350px wide -> ~263px
+     tall, was 350px tall) — still a substantial, clearly-legible crop
+     (the cup, glasses and folded newspaper all sit in the lower-middle
+     of the source composition, well within this shorter box at the
+     existing 50%/45% object-position — confirmed via screenshot, not
+     assumed), not the "thin strip" this round's instruction explicitly
+     ruled out. No longer literally the source's own 1:1 ratio, but nothing
+     stretches — object-fit: cover (unscoped, unchanged) still crops
+     rather than distorts at any ratio.
+     Round 12: shortened again, 4/3 -> 8/5 (350px wide -> ~219px tall),
+     specifically to offset fixes 3-4's added spacing above (roughly
+     +24px across the header/H1/subline/CTA gaps) and still net-improve
+     the stats row's clearance rather than just cancel it out. Re-checked
+     legibility at this height via screenshot before finalizing — cup,
+     glasses and newspaper still clearly read, not a thin strip. */
+  .page-home .hero-stack-media picture img {
+    aspect-ratio: 8 / 5;
+    height: auto;
+  }
+  /* margin-top 24px -> 16px, part of this round's vertical tightening —
+     still real breathing room between the image and the stats row, just
+     less than last round's value.
+     margin-top 16px -> 8px, moved slightly higher per request.
+     margin-top 8px -> 4px, moved slightly higher again per request.
+     margin-top 4px -> 0px, moved slightly higher again per request. */
+  .page-home .hero-trust-band { margin-top: 0; margin-bottom: 0; }
+  .page-home .hero-trust-band .stat { padding-top: 12px; padding-bottom: 12px; }
+  /* Round 12: reverted to the two-tier bold-value + caption-label format
+     (.v/.l), per request — the single combined-line format (.vs, still
+     used at tablet+ — see the unscoped .vs display toggle above) is what
+     all of rounds 6-8's wrapping fixes here existed to rescue ("100%
+     English-Speaking" as one 22px-bold string genuinely cannot fit 3
+     equal columns at 390px without the specific padding/gap/font-size
+     combination those rounds worked out). Splitting back into
+     value+label sidesteps that problem entirely — .v is now just
+     "100%"/"Local"/"Fast", short enough that none of that tuning is
+     load-bearing anymore. .v stays at the shared 22px/800 size (see the
+     unscoped rule above) rather than the 15px this rule used to force;
+     .l inherits the shared 15px caption size from that same unscoped
+     rule, unchanged. */
+  /* Round 8: padding-left/right raised again, 12px -> 20px, now matching
+     --rs-hero-wrap-padding-mobile above exactly — this section has its
+     own separate .container (a sibling of .hero-stack, not a descendant
+     of the card that token pads), so it needed its own matching update
+     for the two to actually line up. Gap trimmed again, 24px -> 16px, to
+     give back the column width the extra padding takes away — re-verified
+     via screenshot that "100% English-Speaking" still breaks at its
+     confirmed 2 lines, not assumed. */
+  .page-home .hero-trust-band .container { gap: 16px; padding-left: 20px; padding-right: 20px; }
+  /* margin-top added — the band's own 20px top padding (unchanged) sits
+     inside its background, not between it and the stats row above; there
+     was no actual gap between the two before this. */
+  /* Horizontal padding 24px -> 20px — was already clear of the edge, but
+     4px off from the H1/subline/stats inset above; brought in line so
+     every hero element shares the exact same 20px, not just "close". */
+  /* margin-top 24px -> 12px, moved slightly higher per request.
+     margin-top 12px -> 20px, moved slightly lower per request. */
+  .page-home .reassurance-band { padding: 20px 20px; margin-top: 20px; }
+}
+
+/* The WhatsApp float is shared chrome rendered outside <main> (a sibling,
+   not a descendant), so it can't be reached by the .page-home ancestor
+   scope everywhere else in this file — General sibling combinator instead:
+   matches only when it follows a .page-home element in the DOM, which is
+   only ever true on this page.
+
+   Explicit position/right/z-index restated here (not just relying on the
+   base .whatsapp-float rule, ~line 820, which already sets position/right
+   to the same values) so this element's pinned-to-viewport behaviour is
+   fully self-evident from this homepage-specific block too, and so its
+   stacking order is guaranteed above ordinary page content. z-index 65
+   sits above the header (60) but below the nav-drawer overlay (70) on
+   purpose — the drawer should still cover this button while open.
+
+   Bottom/right settled at a standard 20px/20px corner offset, not tuned
+   against any specific viewport height. Several rounds tried to find a
+   fixed px value that keeps this button clear of the hero stats row at
+   every real phone height — confirmed structurally unsolvable: `position:
+   fixed` measures from the browser's visible viewport edge, which itself
+   changes size as the address bar collapses/expands on scroll, while the
+   stats row is ordinary page content at a fixed position that doesn't
+   move with it. No single offset can clear both a short first-load
+   viewport and a taller scrolled one at once — pushing the button up
+   enough to clear a short viewport pushes it back into the stats row on
+   a taller one, and vice versa (confirmed both directions via direct
+   measurement across several rounds). Accepted as final: a floating chat
+   button sitting near nearby content at some viewport heights is normal
+   across the web, not a bug to keep chasing with a bigger number. */
+.page-home ~ .whatsapp-float { position: fixed; right: 20px; bottom: 20px; z-index: 65; }
+@media (min-width: 768px) { .page-home ~ .whatsapp-float { bottom: 24px; right: 18px; } }
+/* bottom 20px -> 12px, mobile only, moved slightly lower per request. Placed
+   after the unscoped bottom:20px rule above (not inside the earlier
+   max-width:767px block) so this same-specificity override actually wins in
+   source order — the same ordering issue documented elsewhere in this file
+   (see the roof-mark ordering bug note). */
+@media (max-width: 767px) {
+  .page-home ~ .whatsapp-float { bottom: 12px; }
+}
+
+/* Typography test: the footer is also shared chrome (a sibling of
+   .page-home, same reasoning as .whatsapp-float above — general sibling
+   combinator, only ever matches on the homepage). Redirecting --ui/--body
+   here (not --font-nunito directly) means the footer's own component
+   rules (h4 headings via var(--ui), the wordmark and paragraph via
+   var(--ui)/var(--body)) all pick it up through ordinary inheritance,
+   same mechanism as .page-home's own redirect above — including the
+   footer's own wordmark instance, which correctly becomes Nunito Sans
+   here rather than the rounded Nunito used only by the header's. */
+.page-home ~ .site-footer {
+  --ui: var(--font-nunito-sans);
+  --body: var(--font-nunito-sans);
+}
+
+/* ---------------------------------------------------------------------
+   Full-bleed hero — mobile/tablet (branch: claude/hero-fullbleed-mobile-
+   tablet, extends claude/hero-fullbleed-desktop to <=1024px). Same core
+   mechanism as the 1025px+ block above: the image becomes an absolute,
+   inset:0 layer behind .hero-stack--split (the nearest POSITIONED
+   ancestor — .container stays position:static so it can't clip the image
+   to its own padded box), margin-top: -header-h slides the whole hero up
+   behind the sticky header, height:100vh fills the initial viewport so
+   only the hero is visible on load (reassurance band lands just past the
+   bottom edge, revealed on scroll — same intentional behaviour as
+   desktop's own fix #3, not a bug).
+   Deliberately a SEPARATE block rather than folding into the 1025px+ one
+   above: mobile/tablet needs a single full-width text column (no two-
+   column split ever existed here) and a TOP-TO-BOTTOM scrim instead of
+   desktop's left-right one — full-width text needs coverage across the
+   top edge under the header, not down one side, so the gradient axis has
+   to differ, not just its stops. Placed at the very end of the file on
+   purpose: several of these selectors tie on specificity with older
+   mobile-only card-tuning rules earlier in the file (e.g. .page-home
+   .hero-stack .container, ~line 1831, is the exact same specificity as
+   .page-home .hero-stack--split .container below) — a later source
+   position is what lets this block win those ties, on top of the ones it
+   already wins outright via the extra --split class. ------------------ */
+@media (max-width: 1024px) {
+  .page-home .hero-stack--split {
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    height: 100vh;
+    margin-top: calc(-1 * var(--header-h));
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  /* Card removed entirely (background/radius/padding/margin) — same as
+     desktop, there's no card left to bleed past once the image is its
+     own full-bleed layer. Single flex column, text anchored near the top
+     (not centered — the scrim below is darkest near the header/text and
+     eases toward the image, so the image itself needs to read clearly in
+     the lower two-thirds rather than being pushed into a thin sliver by
+     centered text). */
+  .page-home .hero-stack--split .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    border-radius: 0;
+    padding-top: calc(var(--header-h) + 20px);
+    /* 24px -> 96px: now that fix 3 (below) stretches the text column to
+       this container's full height and space-between pins the last flex
+       item (the stats row) to its bottom edge, 24px put the stats row's
+       own bottom edge right underneath the fixed WhatsApp float (56px
+       circle, bottom:12px mobile / 24px tablet — see .page-home ~
+       .whatsapp-float) instead of clear of it. 96px covers the float's
+       tallest real placement (tablet: 24+56=80px) with margin to spare. */
+    padding-bottom: 96px;
+    margin-top: 0;
+  }
+  /* Fix 3 (vertical distribution): was a plain block, sized to its own
+     content and left to whatever the individual elements' own margins
+     added up to — the leftover height in the 100vh container (whatever
+     the content block didn't use) landed entirely below the stats row as
+     bare image, since nothing was set up to claim it. Turning this into a
+     flex column stretched to the container's full available height (via
+     the parent's own height:100% + this being its only flex child) and
+     distributing with space-between spreads that same leftover height
+     out BETWEEN kicker/H1/subline/CTA/stats instead, so the whole run
+     reads as spanning the hero rather than bunched at the top with a
+     dead stretch of image below it. Scales automatically per breakpoint
+     since it's driven by each viewport's own actual leftover height, not
+     a fixed px value — same mechanism at mobile and tablet, just a
+     different result because the two have different heights/content. */
+  .page-home .hero-stack--split .hero-stack-text {
+    max-width: none;
+    align-self: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .page-home .hero-stack--split .hero-stack-media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    margin: 0;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+  }
+  .page-home .hero-stack--split .hero-stack-media picture,
+  .page-home .hero-stack--split .hero-stack-media picture img {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    aspect-ratio: unset;
+    object-fit: cover;
+    border-radius: 0;
+  }
+  /* This is now a dedicated portrait (1632x2048) image composed for this
+     aspect ratio, not a crop of the desktop photo — see home.js's image
+     config and the single 1025px <picture> breakpoint in layout.js's
+     heroIntro(). Because the image itself is already taller than any
+     tested container (390x680 through 820x1180 all have a wider aspect
+     ratio than the source's own 0.797), object-fit: cover here only ever
+     crops width, never height — the full vertical extent always renders,
+     so only object-position-x matters.
+     55% sits just right of centre: it keeps the front door and the pair
+     of shuttered openings — the part of the facade that actually reads as
+     "freshly painted" — in frame across the tested widths, while trimming
+     the olive-tree foliage that fills the left edge of the source. The
+     sister site used 90% here to hold a piece of hardware near the right
+     edge in frame; that asset detail is gone from this crop, so the value
+     is retuned to the facade instead of inherited unchanged. */
+    object-position: 55% 50%;
+  }
+  /* Scrim: top-to-bottom (not desktop's left-right) — darkest behind the
+     header/text block at the top, easing out by roughly the point the
+     stats row ends, so the image reads clearly through the lower portion
+     of the frame rather than being darkened edge-to-edge. */
+  .page-home .hero-stack--split .hero-stack-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      to bottom,
+      rgba(17, 24, 39, 0.78) 0%,
+      rgba(17, 24, 39, 0.68) 30%,
+      rgba(17, 24, 39, 0.5) 48%,
+      rgba(17, 24, 39, 0.2) 65%,
+      rgba(17, 24, 39, 0) 80%
+    );
+  }
+  .page-home .hero-stack--split .hero-kicker { color: #ffffff; }
+  .page-home .hero-stack--split .hero-headline {
+    color: rgba(255, 255, 255, 0.88);
+  }
+  /* CTA button itself is untouched (still the standard filled .btn) —
+     only its position shifts naturally with the rest of the text column. */
+  .page-home .hero-stack--split .hero-stack-text .btn { align-self: flex-start; }
+
+  /* Stats move onto the scrim (the separate full-width .hero-trust-band
+     used by the old card layout is hidden everywhere now — see
+     .hero-trust-band--split above) — same vehicle desktop already uses
+     (.hero-trust-inline, rendered inside .hero-stack-text so it inherits
+     the absolute image's stacking automatically), restyled here as a
+     compact 3-up row instead of desktop's wide flex row with dividers. */
+  .page-home .hero-stack--split .hero-trust-inline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .page-home .hero-stack--split .hero-trust-inline .stat {
+    border-right: none;
+    padding-right: 0;
+    min-width: 0;
+  }
+  /* Strengthened from a single 0 1px 4px/0.45 shadow: now that the stats
+     row (mobile) sits with no dark band behind it at all, and tablet's
+     stats already sat past the shared gradient's own fade-to-clear point
+     with nothing behind them either, the words need to carry their own
+     readability rather than lean on a backdrop. Two layers — a tight,
+     fairly opaque contact shadow right against the glyph edges, plus a
+     softer, wider halo — reads as a deliberate "shadow around the word"
+     rather than a blur, and holds up over both the darker roofline/wall
+     areas and the brighter patio areas of the photo behind these stats. */
+  .page-home .hero-stack--split .hero-trust-inline .v,
+  .page-home .hero-stack--split .hero-trust-inline .l {
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7), 0 1px 7px rgba(0, 0, 0, 0.5);
+  }
+  /* Fix 2: dropped from 18px so "100% English-Speaking" (the long label —
+     see site.js's heroStatsDesktop) wraps to 2 natural lines at "100%" /
+     "English-Speaking" instead of 3 (it was breaking a 2nd time, at the
+     compound word's own hyphen, purely because 18px didn't fit "English-
+     Speaking" on one line within an ~110px column at 390px). Same rule
+     also drives "Locally Based" and "Fast Response", so all three shrink
+     together — proportional, not a special case for the long one. */
+  .page-home .hero-stack--split .hero-trust-inline .l { font-size: 12px !important; line-height: 1.25; }
+  .page-home .hero-stack--split .hero-trust-inline .v { font-size: 14px !important; line-height: 1.3; }
+  .page-home .hero-stack--split .hero-trust-inline .stat svg {
+    stroke: #ffffff;
+    width: 22px;
+    height: 22px;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
+  }
+}
+/* Tablet only: a little more breathing room and slightly larger stats/
+   type than the mobile values above (which the max-width:1024px block
+   sets as the shared default for both) — tablet's wider column has room
+   for it and the taller viewport gives the image more space to still
+   read clearly under larger text. */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Fix 2, tablet: same reasoning as mobile above, scaled to tablet's wider
+     ~245px column — 22px still wrapped "100% English-Speaking" a comfortable
+     2 lines, but 17px sits proportionally closer to mobile's own reduction
+     and reads less oversized now that fix 1 centers it correctly. */
+  .page-home .hero-stack--split .hero-trust-inline .l { font-size: 14px !important; }
+  .page-home .hero-stack--split .hero-trust-inline .v { font-size: 17px !important; line-height: 1.3; }
+  .page-home .hero-stack--split .hero-trust-inline .stat svg { width: 28px; height: 28px; }
+}
+/* Mobile only (<=767px): fix 2 of the latest round. The shared max-width:
+   1024px block above sized the label down to 14px specifically to fit
+   "100% English-Speaking" without a 3rd wrap line — now that fix 1
+   shortens that label to "100% English" (site.js's heroStatsShort) for
+   mobile+tablet, mobile has room to size back up, closer to tablet's own
+   17px/28px rather than staying at the old cramped values. All three
+   stats share this one rule, so the bump is uniform across the row, not
+   a special case for the shortened one. */
+@media (max-width: 767px) {
+  .page-home .hero-stack--split .hero-trust-inline .l { font-size: 13px !important; }
+  .page-home .hero-stack--split .hero-trust-inline .v { font-size: 16px !important; line-height: 1.25; }
+  .page-home .hero-stack--split .hero-trust-inline .stat svg {
+    width: 26px;
+    height: 26px;
+    margin-bottom: 7px;
+    /* Icons inherited the shared max-width:1024px block's single-layer
+       drop-shadow (0 1px 3px/.45, ~line 2482) unchanged, but the labels
+       right below them were later strengthened to a two-layer text-shadow
+       (0 1px 3px/.85 + 0 1px 8px/.7, see .v-mobile-value/.v-mobile-label
+       below) — leaving icons on the weaker, single-layer treatment while
+       the text next to them got a stronger one. text-shadow can't reach
+       SVG strokes at all (a separate filter: drop-shadow() is the only
+       equivalent for vector shapes), so this brings the icon filter up to
+       the exact same two values as the label's current text-shadow —
+       same offsets/blur radii/opacities, just expressed as two stacked
+       drop-shadow() layers instead of two text-shadow layers, so icon and
+       label read as one consistent treatment rather than two techniques
+       at two different strengths. */
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.85)) drop-shadow(0 1px 8px rgba(0, 0, 0, 0.7));
+  }
+  /* Label row (the 3rd of the icon/value/label stack — see .v-mobile-
+     value/.v-mobile-label in layout.js) at the shared 16px above still
+     wraps "English-Speaking" to 2 lines: measured via canvas at 134px
+     wide against only a 111px column. 12px measures 100.7px — a genuine
+     ~9.6% safety margin, not just a token few px, matching this file's
+     usual bar for "confirmed via measurement, not assumed" (see the H1
+     sizing history above). Value line (.v-mobile-value) stays at the
+     shared 16px — this creates a deliberate bold-value/smaller-caption
+     hierarchy, matching how the old two-tier .v/.l format read before
+     this round's icon/value/label restructure. Tablet is untouched
+     ("English-Speaking" already fits on one line there at 17px, in a
+     much wider ~245px column) and desktop was never in scope (single-
+     line format, doesn't use this class at all). */
+  .page-home .hero-stack--split .hero-trust-inline .v-mobile-label { font-size: 12px !important; }
+}
+
+/* Mobile only (<=767px): text-shadow pass across the hero's white-on-photo
+   text, plus the H1 wrap cap — both verified by rendering the
+   real page and sampling actual pixel data (Playwright screenshot + PIL),
+   not assumed. Methodology: for each element, the real background image
+   (text hidden) was sampled for its brightest point reachable by a glyph's
+   shadow (within ~2px of actual ink, found via a temporary magenta-text
+   mask pass to locate real glyph pixels, not just the CSS line-box which
+   includes empty leading/leading-edge space no shadow could ever reach).
+   Contrast = the shadowed background luminance vs. white text (#fff),
+   WCAG formula, large-text threshold (3:1) for the H1 (29px/800 — clears
+   the 24px large-text bar on size alone), normal threshold (4.5:1) for
+   the rest.
+   H1 / subline / CTA: brightest reachable point measured at 6.28:1 /
+   7.02:1 / 4.99:1 respectively even with NO shadow at all (each sits over
+   a shaded wall/door area at this crop, not the bright sky) — the
+   requested starting value (0 1px 4px rgba(0,0,0,.55)) was applied as-is
+   since it only improves on an already-passing baseline (re-verified with
+   the shadow rendered: 6.74:1 / 7.29:1 / 4.99:1 — CTA's is unchanged since
+   it sits on its own opaque crimson pill, not the photo, so a shadow
+   behind it is float polish, not a legibility requirement). */
+@media (max-width: 767px) {
+  .page-home .hero-stack--split .hero-kicker,
+  .page-home .hero-stack--split .hero-headline,
+  .page-home .hero-stack--split .hero-stack-text .btn {
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+  }
+  /* Stats row: the ONE spot in this pass that does NOT clean-pass AA at
+     its literal brightest reachable pixel. That point sits in the gap
+     directly below "100%"/"Locally"/"Fast" (and the equivalent gap above
+     each label) — a sunlit door-trim edge that runs vertically right
+     through the stats column, exactly at the seam between the value and
+     label lines. Tested from the existing 2-layer shadow up through
+     several deliberately extreme candidates (stacked 0-offset layers at
+     full #000 opacity, blur up to 9px) — contrast at that exact pixel
+     never moved past ~2:1, because the point is >2px from any actual
+     glyph ink (it's in the natural inter-line gap, not inside a letter),
+     and text-shadow's blur has no reach beyond a few px regardless of
+     opacity. Strengthened here anyway (was 0 1px 2px/.7 + 0 1px 7px/.5)
+     since it measurably improves the general case — most of the row sits
+     over darker wall/shutter, not this one bright seam — but this single
+     worst-case point is a real, reported residual: ~1.2-2:1 there even at
+     max reasonable shadow strength, a genuine text-shadow limit rather
+     than a tuning miss. Fixing it fully would need a stronger local scrim
+     over the image itself, out of scope for a text-shadow pass. */
+  .page-home .hero-stack--split .hero-trust-inline .v-mobile-value,
+  .page-home .hero-stack--split .hero-trust-inline .v-mobile-label {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 1px 8px rgba(0, 0, 0, 0.7);
+  }
+  /* Mobile H1 wrap control. Inherited from the sister site, where this
+     capped the H1's line length to keep its 2nd line clear of a piece of
+     hardware baked into the hero photo. That photo constraint no longer
+     applies here (the hero image is a clean villa facade and the H1 text
+     is shorter), but the cap is kept because it also serves the
+     no-scroll budget this block exists to protect: it forces a
+     predictable wrap rather than letting the line run to the viewport
+     edge. Confirmed safe for an extra line — this layout uses
+     justify-content: space-between (see .hero-stack-text above) to
+     distribute leftover vertical space between kicker/H1/subline/CTA/
+     stats, so an extra line's height comes out of that slack rather than
+     pushing anything off-screen. 320px chosen with real margin below the
+     335-345px range where wrapping is unstable. */
+  .page-home .hero-stack--split .hero-kicker { max-width: 320px; }
+}
+
+/* Mobile only (<=767px): fix 4, a partial pullback from the previous
+   round's justify-content: space-between (see .page-home .hero-stack--
+   split .hero-stack-text in the max-width:1024px block above), which
+   distributed 100% of the hero's leftover vertical space between kicker/
+   H1/subline/CTA/stats — correct for killing the old "dead stretch of
+   image below the stats row" problem, but read as spread thin rather
+   than one cohesive block on shorter mobile screens.
+   First attempt here used justify-content: center, which was worse, not
+   better: centering a short block inside the tall 100%-height column just
+   moved ALL the leftover space into two single gaps (a dead zone above
+   the kicker and another below the stats row) instead of distributing it
+   between elements — confirmed via measurement, the gap above the kicker
+   alone came out to ~210px. flex-start + a fixed, moderate gap is the
+   actual middle ground: elements stay anchored right under the header
+   (like the original, pre-space-between layout) but with a deliberate,
+   real gap between each one instead of that layout's near-zero margins —
+   "one cohesive block, not cramped" — while whatever's left over after
+   the block's own height just stays as ordinary image below it, same as
+   any hero image, rather than being force-distributed either to zero
+   (original) or to the full remaining height (previous round). Tablet
+   (768-1024px, more vertical room to begin with) keeps the previous
+   round's space-between untouched, as does desktop. */
+@media (max-width: 767px) {
+  .page-home .hero-stack--split .hero-stack-text {
+    justify-content: flex-start;
+    /* 18px measured out too close to the old cramped-original spacing —
+       kicker-to-trust span only ~286px of the 844px viewport, barely
+       different from before space-between existed. 40px lands the block
+       around ~450px (~53% of an initial 390x844 viewport, confirmed via
+       measurement) — real, deliberate room between every element without
+       stretching to claim the full leftover height the way space-between
+       did. */
+    gap: 40px;
+  }
+  /* The individual elements' own margins below predate this gap (tuned
+     for the old top-anchored, no-gap layout) and would otherwise stack on
+     top of it, re-creating the "spread thin" look this fix removes.
+     Trimmed down so the fixed 14px gap above is the primary source of
+     space between elements, with just a little of each element's own
+     margin remaining for its own internal rhythm (e.g. the H1's tighter
+     margin-top than margin-bottom, so it sits closer to the header above
+     it than to the subline below). */
+  .page-home .hero-kicker { margin-top: 4px; margin-bottom: 2px; }
+  .page-home .hero-headline { margin-bottom: 0; }
+  .page-home .hero-subtext { margin-bottom: 0; }
+  .page-home .hero-stack-text .btn { margin-top: 0; }
+  .page-home .hero-stack--split .hero-trust-inline { margin-top: 0; }
+
+  /* Fix 5: H1-to-subline and subline-to-CTA gaps both ride on the 40px
+     flex gap above, uniform across every pair in the column (kicker-
+     headline, headline-btn, btn-stats). Pulling in just these two pairs
+     without touching the btn-stats gap (not part of this request) needs
+     negative margin on the pulled element itself — margin is per-item, so
+     it only affects the gap on that item's own side, unlike the shared
+     `gap` property. -22px on the headline cuts its 42px gap from the H1
+     (2px kicker margin-bottom + 40px gap) down to 20px; -22px on the btn
+     cuts its 40px gap from the subline down to 18px. Both re-verified via
+     measurement (not assumed) after the subline's font-size bump below,
+     since a taller line-box shifts the exact px math. */
+  .page-home .hero-stack--split .hero-headline { margin-top: -22px; }
+  .page-home .hero-stack-text .btn { margin-top: -22px; }
+}
+
+/* Mobile only (<=767px): fix 3 (previous round) added a second band here
+   behind the stats row, on top of the top band behind the header/H1/
+   subline — that round removed the second band (the stats row's
+   readability now comes entirely from the strengthened per-word text-
+   shadow on .v/.l below, not a dark backdrop).
+   This round: fixed a visible hard edge in the remaining top band's
+   fade-out. It was ending in two abrupt jumps (0.62->0.18 over just 4
+   points, then 0.18->0 over another 4) — measured at 0.11 alpha/point,
+   ~4.6x steeper than desktop's own steepest segment (0.024 alpha/point,
+   see the left-right scrim at 1025px+ above) — which read as a visible
+   line rather than a fade. Replaced with 6 evenly-spaced, gradually-
+   shrinking steps (31/35/39/43/47/51%), same kind of decelerating ease
+   desktop uses, just compressed into a shorter run since mobile doesn't
+   need to protect anything past the CTA (the stats row's own text-
+   shadow, not this gradient, is what keeps it readable). Max single-
+   segment rate is now ~0.035/point — still not as gentle as desktop's
+   very long 85-point fade, but a ~3x reduction from the old hard edge,
+   and visibly smooth in a full-hero screenshot at 390px.
+   The plateau (0/9/18/27%) was tied to the measured header/H1/subline
+   positions at 390x844 — but the H1/subline gap-tightening round after
+   this one (negative margin-top pulling the subline up toward the H1)
+   also grew the subline a px, and the combination shifted the subline's
+   own bottom edge DOWN in absolute terms (its margin shrank more than
+   its own height grew): re-measured via Playwright at 215.67-246.06px,
+   i.e. 29.15% of the 844px viewport — past the old 27% plateau end, into
+   what was meant to be the fade-out's first step (down to 0.48, a real
+   drop from the plateau's 0.62). Last plateau stop moved 27% -> 31% (the
+   next value already in the sequence, so no new stop or hand-picked
+   number) and the whole fade-out tail shifted by that same +4 points
+   (31/35/39/43/47/51 -> 35/39/43/47/51/55) — preserves the exact shape
+   already tuned above for smoothness, just delayed enough that the
+   subline's own bottom edge now sits 1.85 points inside the plateau
+   rather than 2.15 points past it. Re-verified via real pixel sampling
+   after this change (not assumed, and not the pre-fix numbers): darkest
+   point under the subline's text box is rgb(46,45,41) — 11.02:1 against
+   the rendered 88%-white text — lightest is rgb(84,88,97) — 5.98:1 —
+   both clear the 4.5:1 AA floor for 19px/400 text with real margin. CTA
+   sits on its own opaque crimson pill (this gradient never reaches its
+   text either way).
+   Next round: the "stats row keeps its own text-shadow treatment"
+   assumption above stopped holding once the H2 grew to 22px/600 and
+   started wrapping to 2 lines (a separate, later round) — the row shifted
+   down into brighter photo area the old 55%-and-done taper no longer
+   reached. Sampling actual rendered pixels (not just the gradient's own
+   math, and not assumed) under the stats row's label line found a real
+   failure: bottom edge of the label at x=111/y=484 in a 390x844 render —
+   a sunlit door-trim highlight (raw rgb ~234,156,104) — sat at 2.22:1
+   against white with the old taper already at ~0.05 alpha there, well
+   under the 4.5:1 small-text floor. This is the exact residual the text-
+   shadow pass elsewhere in this file already flagged as a real shadow
+   limit ("would need a stronger local scrim over the image itself, out
+   of scope for a text-shadow pass") — that scope now includes this rule.
+   Extended the 31%/.62 plateau flat through 48% and 60% (previously it
+   started tapering at 35%) so real darkness now covers the H2's 2nd line,
+   the value row, AND the label row's own lower edge, before the same
+   fade-to-clear shape as before resumes, now finishing by 100% instead of
+   55%. Re-verified at the exact failing pixel after the change: 7.74:1 —
+   clears 4.5:1 with real margin. The lower ~40% of the frame that used to
+   already be fully lit now carries a light fade rather than none. CTA is
+   still untouched (own opaque pill, as above). */
+@media (max-width: 767px) {
+  .page-home .hero-stack--split .hero-stack-media::after {
+    background: linear-gradient(
+      to bottom,
+      rgba(17, 24, 39, 0.72) 0%,
+      rgba(17, 24, 39, 0.68) 9%,
+      rgba(17, 24, 39, 0.64) 18%,
+      rgba(17, 24, 39, 0.62) 31%,
+      rgba(17, 24, 39, 0.62) 48%,
+      rgba(17, 24, 39, 0.6) 60%,
+      rgba(17, 24, 39, 0.35) 75%,
+      rgba(17, 24, 39, 0.12) 90%,
+      rgba(17, 24, 39, 0) 100%
+    );
+  }
+}
+
+/* Footer background + logo match — now applies at every breakpoint (was
+   desktop-only; this round brings mobile/tablet's old #0f3238 background
+   and Nunito Sans wordmark in line with desktop).
+   Background: old #0f3238 -> steel #475569. That's a lighter colour, so
+   the existing low-opacity cream text (tuned for contrast against the
+   much darker navy) dropped below WCAG AA on several elements — links
+   4.25:1, the masthead tagline 3.91:1, the copyright line ~3.3:1, all
+   under the 4.5:1 minimum for normal text (checked via the WCAG relative
+   luminance formula, not eyeballed). Bumped those three to white at 85%+
+   opacity, which clears AA with real margin (6.0:1+).
+   The h4 column headings and the wordmark's accent span both used the old
+   flagged peach (#f3caa4) — not a contrast failure on its own (4.98:1 on
+   the new steel, still passes AA) but explicitly one of the old-palette
+   colours this round's audit calls out, so both move to white too. */
+.page-home ~ .site-footer {
+  background: #475569;
+  color: rgba(255, 255, 255, 0.85);
+}
+.page-home ~ .site-footer .footer-masthead p { color: rgba(255, 255, 255, 0.85); }
+.page-home ~ .site-footer .footer-col a { color: rgba(255, 255, 255, 0.85); }
+.page-home ~ .site-footer .footer-col a:hover { color: #ffffff; }
+.page-home ~ .site-footer .footer-bottom p { color: rgba(255, 255, 255, 0.85); }
+.page-home ~ .site-footer .footer-col h4 { color: #ffffff; }
+
+/* Logo match: same font (rounded Nunito, overriding the Nunito Sans set
+   above for every other piece of footer text) and weight as the header,
+   plus the identical roof-mark SVG (rendered in the HTML whenever isHome
+   is true — see wordmarkHtml() in layout.js). Text colours are kept as the
+   footer's own existing cream/tan rather than copied byte-for-byte from the
+   header, since the header's near-black/steel pairing was tuned for a white
+   background and would be unreadable on this steel one; "match the header"
+   is read here as the typographic treatment (font, weight, roof mark, word
+   grouping), not literal identical RGB values that would go invisible
+   against a different background colour. */
+/* Base "Algarve" text was still inheriting --cream (#f7f1e4, the old warm
+   palette's light-on-dark tone) from .footer-masthead .wordmark — a leftover
+   from before the footer moved to the steel background, missed by the
+   earlier accent-only fix below. White here matches the accent span. */
+.page-home ~ .site-footer .wordmark { font-family: var(--font-nunito); color: #ffffff; }
+/* No steel-on-steel accent span here (unlike the header, whose white
+   background makes a steel accent legible) — steel-on-steel measures
+   1.52:1, unreadable. One uniform white wordmark instead; the accent
+   colour distinction is dropped only in this one spot for that reason. */
+.page-home ~ .site-footer .wordmark span.accent { color: #ffffff; }
+.page-home ~ .site-footer .wordmark-h-wrap { position: relative; display: inline-block; line-height: 1; }
+.page-home ~ .site-footer .wordmark-roof {
+  display: block;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.16em;
+  width: 1.3em;
+  height: 0.45em;
+  overflow: visible;
+}
+
+/* ==========================================================================
+   Lagos design-system pilot — applies the homepage's finalized visual
+   system (colours, typography, buttons, service cards, hero gradient/
+   text-shadow, header/nav chrome) to the /lagos town page ONLY, per
+   explicit request. Scoped entirely under .page-lagos-rs (renderPage's
+   mainClass, set only for this one town — see town.js's
+   DESIGN_SYSTEM_PILOT_SLUG) so every other town page and the homepage
+   itself are byte-for-byte unaffected.
+
+   Deliberately NOT implemented by widening any .page-home selector to
+   also match .page-lagos-rs — every rule below is its own fresh
+   declaration, so nothing here can affect .page-home's behaviour however
+   indirectly, and nothing in the .page-home block above (or anywhere
+   else in this file) needed to change to produce this.
+
+   Reuses the same global tokens the homepage's own system reads
+   (--rs-*, --hero2-*, --terracotta, --font-nunito(-sans)) rather than
+   redefining any colour — those tokens were already global :root values,
+   never homepage-exclusive, so no new colour values are introduced here.
+
+   Header/nav-drawer/dropdown chrome needs NO new rules at all: .site-
+   header--home, .home-header-nav and .nav-panel's white/ice-blue
+   treatment were never actually .page-home-scoped in the first place
+   (confirmed while documenting the design spec this implements) — they
+   key purely off .site-header--home/.home-header-nav/.nav-panel classes.
+   Passing useHomeHeader: true into renderPage() for Lagos (town.js)
+   reuses them as-is; main.js's scroll-transparency selector was widened
+   by one clause to also watch this page's hero (see main.js).
+
+   Two deliberate content-preserving departures from the homepage's own
+   hero CSS, both because Lagos has real per-town copy the homepage's
+   hero doesn't: the subtext line stays VISIBLE here (the homepage hides
+   it entirely — hiding it on Lagos would delete real content, which the
+   request explicitly says to keep), and the hero text column uses a
+   flex-start + fixed-gap distribution rather than the homepage's
+   stats-row-driven space-between (Lagos's hero has no stats row to
+   distribute space around). Everything else mirrors the homepage system
+   as documented.
+   ========================================================================== */
+
+.page-lagos-rs { background: var(--rs-bg); font-family: var(--rs-font); }
+.page-lagos-rs {
+  --serif: var(--font-nunito-sans);
+  --body: var(--font-nunito-sans);
+  --ui: var(--font-nunito-sans);
+  --rs-font: var(--font-nunito-sans);
+}
+
+/* ---- Section rhythm --------------------------------------------------
+   This page never opted into .page-home's tuned section spacing, so its
+   <section> elements were falling back to the sitewide default (56px
+   under 900px, flat 84px from 900px up) instead of matching the
+   homepage's rhythm (56px mobile / 96px tablet from 768px / 48px desktop
+   from 1025px). Mirrored here verbatim so Lagos reads the same as the
+   homepage at every breakpoint. */
+.page-lagos-rs section {
+  padding: var(--rs-section-gap) 0;
+}
+@media (min-width: 768px) {
+  .page-lagos-rs section { padding: var(--rs-section-gap-desktop) 0; }
+}
+@media (min-width: 1025px) {
+  .page-lagos-rs section { padding: 48px 0; }
+}
+
+/* ---- Emphasis blocks ---------------------------------------------------
+   Mirrors .page-home .rs-block: a white rounded panel that gives each
+   section its own contained surface against the flat --rs-bg page
+   background, same as the homepage. The CTA band reuses this shape too —
+   its steel colour already comes from the .page-lagos-rs .cta-band
+   background rule further down, and its light-on-dark text already comes
+   from the sitewide unscoped .cta-band rule, so no separate --dark
+   variant is needed here. */
+.page-lagos-rs .rs-block {
+  background: var(--rs-surface);
+  border-radius: var(--rs-radius-block);
+  padding: var(--rs-block-padding);
+}
+@media (min-width: 768px) {
+  .page-lagos-rs .rs-block { padding: var(--rs-block-padding-desktop); }
+}
+
+/* ---- Table of contents (service pages only — towns have no TOC) -----
+   Re-skinned to sit on the flat --rs-bg page background with chip-style
+   links matching the rest of this system's surfaces/colours, rather than
+   the sitewide .toc's old --sand-alt/--stone palette. */
+.page-lagos-rs .toc-rs {
+  background: var(--rs-bg);
+  border-bottom: none;
+  padding: 20px 0;
+}
+.page-lagos-rs .toc-rs .toc-label {
+  font-family: var(--rs-font);
+  color: var(--rs-muted);
+}
+.page-lagos-rs .toc-rs .toc-links a {
+  font-family: var(--rs-font);
+  font-weight: 700;
+  color: var(--rs-ink);
+  background: var(--rs-surface);
+  border: 1px solid var(--hero2-panel-grey);
+}
+.page-lagos-rs .toc-rs .toc-links a:hover {
+  color: var(--hero2-crimson);
+  border-color: var(--hero2-crimson);
+}
+
+/* ---- Typography ---------------------------------------------------- */
+.page-lagos-rs h1,
+.page-lagos-rs h2,
+.page-lagos-rs h3,
+.page-lagos-rs h4,
+.page-lagos-rs p,
+.page-lagos-rs li,
+.page-lagos-rs .lede,
+.page-lagos-rs .hero-subtext,
+.page-lagos-rs .btn {
+  font-family: var(--rs-font);
+}
+
+.page-lagos-rs .hero-headline {
+  font-size: var(--rs-body-size-mobile);
+  font-weight: 400;
+  line-height: var(--rs-body-lh-mobile);
+  letter-spacing: normal;
+  color: var(--hero2-steel);
+}
+@media (min-width: 768px) {
+  .page-lagos-rs .hero-headline { font-size: var(--rs-body-size); line-height: var(--rs-body-lh); }
+}
+
+.page-lagos-rs h2 {
+  font-size: var(--rs-h2-size-mobile);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--rs-ink);
+}
+@media (min-width: 768px) { .page-lagos-rs h2 { font-size: var(--rs-h2-size); } }
+
+.page-lagos-rs h3 {
+  font-size: var(--rs-h3-size-mobile);
+  font-weight: 700;
+  color: var(--rs-ink);
+}
+@media (min-width: 768px) { .page-lagos-rs h3 { font-size: var(--rs-h3-size); } }
+
+.page-lagos-rs p,
+.page-lagos-rs li,
+.page-lagos-rs .lede,
+.page-lagos-rs .hero-subtext {
+  font-size: var(--rs-body-size-mobile);
+  line-height: var(--rs-body-lh-mobile);
+  color: var(--rs-ink);
+  max-width: var(--rs-max-line);
+}
+@media (min-width: 768px) {
+  .page-lagos-rs p,
+  .page-lagos-rs li,
+  .page-lagos-rs .lede,
+  .page-lagos-rs .hero-subtext {
+    font-size: var(--rs-body-size);
+    line-height: var(--rs-body-lh);
+  }
+}
+/* Matches the homepage's own hero exactly — its subtext line is likewise
+   never shown, with .hero-headline (above) carrying the supporting-copy
+   role instead. */
+.page-lagos-rs .hero-subtext { display: none; }
+
+.page-lagos-rs .eyebrow,
+.page-lagos-rs .card-link {
+  color: var(--rs-muted);
+  font-size: var(--rs-small-size);
+}
+
+.page-lagos-rs .hero-kicker {
+  color: var(--hero2-steel);
+  font-size: var(--rs-h1-size-mobile);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-transform: none;
+  font-family: var(--font-nunito);
+}
+@media (min-width: 768px) { .page-lagos-rs .hero-kicker { font-size: var(--rs-h1-size); } }
+@media (min-width: 1025px) {
+  .page-lagos-rs .hero-kicker {
+    font-size: clamp(38px, 2.6vw + 6px, 45px);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--hero2-steel);
+  }
+  .page-lagos-rs .hero-headline {
+    font-size: 23px;
+    font-weight: 400;
+    line-height: var(--rs-body-lh);
+    letter-spacing: normal;
+    color: var(--hero2-steel);
+  }
+}
+
+/* ---- Buttons --------------------------------------------------------
+   "Learn more" pill: see the Cards section below (#services .card-link)
+   — the site-wide hero/CTA .btn component is handled here instead. */
+.page-lagos-rs .btn-lg {
+  height: var(--rs-btn-height);
+  max-width: var(--rs-btn-maxwidth);
+  padding: 0 32px;
+  border-radius: var(--rs-radius-btn);
+  font-size: var(--rs-btn-font-size);
+  font-weight: 700;
+}
+.page-lagos-rs .hero-stack-text .btn { align-self: flex-start; }
+/* Flat --hero2-crimson (no gradient/darkening) on every CTA button on this
+   page — the hero button, the lower cta-band button, and the "Local to
+   Lagos" button just below the hero (.two-col-text .btn) — so they all
+   read as the exact same red rather than the base .btn rule's terracotta
+   gradient, which rendered visibly darker on the .two-col-text button. */
+.page-lagos-rs .hero-stack-text .btn,
+.page-lagos-rs .cta-band .btn,
+.page-lagos-rs .two-col-text .btn {
+  background: var(--hero2-crimson);
+}
+.page-lagos-rs .hero-stack-text .btn:hover,
+.page-lagos-rs .cta-band .btn:hover,
+.page-lagos-rs .two-col-text .btn:hover {
+  background: var(--hero2-crimson);
+  filter: brightness(0.92);
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-lagos-rs .hero-stack-text .btn { height: 58px; padding: 0 34px; font-size: 19px; margin-top: 8px; }
+}
+@media (min-width: 1025px) {
+  .page-lagos-rs .hero-stack-text .btn { height: 60px; padding: 0 36px; font-size: 20px; margin-top: 16px; }
+  .page-lagos-rs .cta-band .btn { height: 60px; padding: 0 36px; font-size: 20px; }
+}
+
+/* ---- Cards: the "Most Relevant" card-grid, re-skinned to match the
+   homepage's #services cards exactly (icon tile, crimson pill button,
+   bottom-alignment fix at all three breakpoints — including the tablet
+   fix applied to the homepage itself, mirrored here). town.js gives this
+   section id="services" and the homepage's exact card-icon-block/
+   card-link markup only when rendering Lagos — see renderTown(). ------- */
+.page-lagos-rs .card {
+  border-radius: var(--rs-radius-card);
+  padding: var(--rs-card-padding);
+  box-shadow: var(--rs-card-shadow);
+}
+.page-lagos-rs #services .card { background: var(--hero2-panel-grey); }
+/* Matches .page-home #services exactly (same source rule, same reason):
+   the flagship card's outline and "Flagship Service" badge belong on the
+   homepage's own services grid, not repeated on every other page's
+   "Explore"/relevant-services grid that happens to include the flagship card. */
+.page-lagos-rs #services .card.flagship { border: none; }
+.page-lagos-rs #services .card .badge { display: none; }
+.page-lagos-rs #services .card-icon-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 20px;
+  border-radius: var(--rs-radius-card);
+  background: var(--hero2-steel);
+}
+.page-lagos-rs #services .card-icon-block svg { width: 38px; height: 38px; }
+.page-lagos-rs #services .card h3 { text-align: center; }
+.page-lagos-rs #services .card-link-icon { display: inline-flex; flex-shrink: 0; }
+.page-lagos-rs #services .card-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 999px;
+  background: var(--terracotta);
+  color: var(--white);
+  font-weight: 700;
+  font-size: 0.88rem;
+  transition: background-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+@media (max-width: 767px) {
+  .page-lagos-rs #services .card-grid.cols-3 {
+    display: flex;
+    align-items: stretch;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 4px;
+    scrollbar-width: none;
+  }
+  .page-lagos-rs #services .card-grid.cols-3::-webkit-scrollbar { display: none; }
+  .page-lagos-rs #services .card-grid.cols-3 .card {
+    flex: 0 0 80%;
+    width: 80%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    flex-direction: column;
+  }
+  .page-lagos-rs #services .card-link { margin-top: auto; }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-lagos-rs #services .card { display: flex; flex-direction: column; }
+  .page-lagos-rs #services .card-link { margin-top: auto; }
+}
+@media (min-width: 1025px) {
+  .page-lagos-rs #services .card {
+    display: flex;
+    flex-direction: column;
+    min-height: 460px;
+  }
+  .page-lagos-rs #services .card-link {
+    align-self: stretch;
+    margin-top: auto;
+  }
+  .page-lagos-rs #services .card:hover .card-link {
+    background: var(--terracotta-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(156, 23, 45, 0.32);
+  }
+}
+
+/* Thin fill bar tracking scroll position through the mobile carousel above
+   — same markup/mechanism as the homepage's own #services carousel (see
+   main.js, which reads card count off the DOM rather than assuming 7, so
+   no JS changes were needed here). Hidden by default, shown only inside
+   the max-767px carousel block, matching .page-home's own rule pair. */
+.page-lagos-rs #services .carousel-progress { display: none; }
+@media (max-width: 767px) {
+  .page-lagos-rs #services .carousel-progress {
+    display: block;
+    height: 4px;
+    margin-top: 24px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    overflow: hidden;
+  }
+  .page-lagos-rs #services .carousel-progress-fill {
+    height: 100%;
+    width: 14.2857%;
+    border-radius: 999px;
+    background: var(--hero2-crimson);
+    transition: width 0.15s ease-out;
+  }
+}
+
+/* .service-list's hover state used the old warm --sand-alt wash on what
+   is, structurally, a card-surface row — corrected to --hero2-panel-grey,
+   the token this page's own card surfaces already use (see #services
+   .card above). The section-alt class itself is no longer emitted on
+   this page (its former sections now use the shared .rs-block panel
+   system instead — see the Emphasis blocks rule below), so only the
+   hover rule survives here. */
+.page-lagos-rs .service-list a:hover { background: var(--hero2-panel-grey); }
+
+/* ---- Hero: full-bleed image layer + gradient scrim + text-shadow, same
+   mechanism as the homepage's own hero (desktop: left-right gradient,
+   two-column split; mobile/tablet: top-bottom gradient, single column,
+   100vh on load). Lagos has its own dedicated photography (town.js
+   supplies heroIntro's `image` param), so the fill rules below target
+   `picture`/`picture img` directly, same as the homepage's equivalent. */
+@media (min-width: 1025px) {
+  .page-lagos-rs .hero-stack--split {
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    height: 100vh;
+    margin-top: calc(-1 * var(--header-h));
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .page-lagos-rs .hero-stack--split .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+  .page-lagos-rs .hero-stack--split .hero-stack-text {
+    align-self: auto;
+    justify-content: flex-start;
+    max-width: 780px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .page-lagos-rs .hero-stack--split .hero-stack-media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    margin: 0;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+  }
+  .page-lagos-rs .hero-stack--split .hero-stack-media picture,
+  .page-lagos-rs .hero-stack--split .hero-stack-media picture img {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    object-fit: cover;
+    border-radius: 0;
+  }
+  /* Centered crop: the desktop asset is already a tight 2048x1152 crop of
+     the villa (same source as the homepage's own desktop hero image), not
+     the mobile/tablet portrait repositioned, so it wants a plain centered
+     position rather than the mobile crop's tuned offset. */
+  .page-lagos-rs .hero-stack--split .hero-stack-media picture img {
+    object-position: 50% 50%;
+  }
+  /* Rollout towns without their own photography yet (see
+     hasPilotPhotography in town.js) render the standard placeholder box
+     here instead of a <picture> — needs its own explicit full-bleed fill
+     rule since the picture rules above only target picture/img. */
+  .page-lagos-rs .hero-stack--split .hero-stack-media .placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    border-radius: 0;
+    border: none;
+  }
+  .page-lagos-rs .hero-stack--split .hero-stack-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      to right,
+      rgba(17, 24, 39, 0.74) 0%,
+      rgba(17, 24, 39, 0.66) 35%,
+      rgba(17, 24, 39, 0.55) 58%,
+      rgba(17, 24, 39, 0.22) 72%,
+      rgba(17, 24, 39, 0) 85%
+    );
+  }
+  .page-lagos-rs .hero-stack--split .hero-kicker { color: #ffffff; }
+  /* Matches the homepage's own .hero-stack--split .hero-headline size/
+     weight at this breakpoint (27px/600, up from the shared 23px/400
+     .hero-headline rule above) — no other property changed. */
+  .page-lagos-rs .hero-stack--split .hero-headline {
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 27px;
+    font-weight: 600;
+  }
+  .page-lagos-rs .hero-stack--split .hero-subtext {
+    color: rgba(255, 255, 255, 0.82);
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+  .page-lagos-rs .hero-stack--split .breadcrumb,
+  .page-lagos-rs .hero-stack--split .breadcrumb a { color: rgba(255, 255, 255, 0.75); }
+  .page-lagos-rs .hero-stack--split .breadcrumb a:hover { color: #ffffff; }
+  /* Hero stats row, matching the homepage's own .hero-stack--split
+     .hero-trust-inline treatment at this breakpoint verbatim (white
+     text/icons over the photo, thin dividers, larger 25px labels). */
+  .page-lagos-rs .hero-stack--split .hero-trust-inline { border-top-color: rgba(255, 255, 255, 0.28); }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .stat { border-right-color: rgba(255, 255, 255, 0.28); padding-right: 20px; }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .stat:last-child { padding-right: 0; }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .v,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .l {
+    color: #ffffff;
+    font-size: 25px !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .stat svg {
+    stroke: #ffffff;
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
+  }
+}
+
+@media (max-width: 1024px) {
+  .page-lagos-rs .hero-stack--split {
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    height: 100vh;
+    margin-top: calc(-1 * var(--header-h));
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .page-lagos-rs .hero-stack--split .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    border-radius: 0;
+    padding-top: calc(var(--header-h) + 20px);
+    padding-bottom: 96px;
+    margin-top: 0;
+  }
+  .page-lagos-rs .hero-stack--split .hero-stack-text {
+    max-width: none;
+    align-self: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 14px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .page-lagos-rs .hero-stack--split .hero-stack-media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    margin: 0;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+  }
+  .page-lagos-rs .hero-stack--split .hero-stack-media picture,
+  .page-lagos-rs .hero-stack--split .hero-stack-media picture img {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    aspect-ratio: unset;
+    object-fit: cover;
+    border-radius: 0;
+  }
+  /* Same dedicated portrait (1455x1826) mobile/tablet asset as the
+     homepage's own hero, with the same facade composition — reusing the
+     homepage's own tuned 55% 50% crop keeps the door and shuttered
+     openings fully in frame across the tested widths. */
+  .page-lagos-rs .hero-stack--split .hero-stack-media picture img {
+    object-position: 55% 50%;
+  }
+  /* Rollout towns without their own photography yet (see
+     hasPilotPhotography in town.js) render the standard placeholder box
+     here instead of a <picture> — needs its own explicit full-bleed fill
+     rule since the picture rules above only target picture/img. */
+  .page-lagos-rs .hero-stack--split .hero-stack-media .placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    border-radius: 0;
+    border: none;
+  }
+  .page-lagos-rs .hero-stack--split .hero-stack-media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      to bottom,
+      rgba(17, 24, 39, 0.78) 0%,
+      rgba(17, 24, 39, 0.68) 30%,
+      rgba(17, 24, 39, 0.5) 48%,
+      rgba(17, 24, 39, 0.2) 65%,
+      rgba(17, 24, 39, 0) 80%
+    );
+  }
+  .page-lagos-rs .hero-stack--split .hero-kicker { color: #ffffff; }
+  .page-lagos-rs .hero-stack--split .hero-headline { color: rgba(255, 255, 255, 0.88); }
+  .page-lagos-rs .hero-stack--split .hero-subtext { color: rgba(255, 255, 255, 0.82); }
+  .page-lagos-rs .hero-stack--split .hero-stack-text .btn { align-self: flex-start; }
+  .page-lagos-rs .hero-stack--split .breadcrumb,
+  .page-lagos-rs .hero-stack--split .breadcrumb a { color: rgba(255, 255, 255, 0.75); }
+  .page-lagos-rs .hero-stack--split .breadcrumb a:hover { color: #ffffff; }
+  /* Hero stats row, matching the homepage's own .hero-stack--split
+     .hero-trust-inline treatment at this breakpoint verbatim: a compact
+     3-up grid on the photo's scrim instead of desktop's wide flex row. */
+  .page-lagos-rs .hero-stack--split .hero-trust-inline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .stat {
+    border-right: none;
+    padding-right: 0;
+    min-width: 0;
+  }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .v,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .l {
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7), 0 1px 7px rgba(0, 0, 0, 0.5);
+  }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .l { font-size: 12px !important; line-height: 1.25; }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .v { font-size: 14px !important; line-height: 1.3; }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .stat svg {
+    stroke: #ffffff;
+    width: 22px;
+    height: 22px;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
+  }
+}
+/* Tablet only: matches the homepage's own slightly larger stats/type at
+   this breakpoint (see the equivalent .page-home block above). */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .l { font-size: 14px !important; }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .v { font-size: 17px !important; line-height: 1.3; }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .stat svg { width: 28px; height: 28px; }
+}
+
+/* Mobile only (<=767px): text sits directly on the photo, same text-
+   shadow treatment the homepage uses at this breakpoint for the same
+   reason. */
+@media (max-width: 767px) {
+  .page-lagos-rs .hero-stack--split .hero-kicker,
+  .page-lagos-rs .hero-stack--split .hero-headline,
+  .page-lagos-rs .hero-stack--split .hero-subtext,
+  .page-lagos-rs .hero-stack--split .hero-stack-text .btn {
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+  }
+  /* Matches the homepage's own .hero-stack--split .hero-headline size/
+     weight at this breakpoint (22px/600, up from the shared 17px/400
+     .hero-headline rule above) — no other property changed. */
+  .page-lagos-rs .hero-stack--split .hero-headline {
+    font-size: 22px;
+    font-weight: 600;
+  }
+  /* Matches the homepage's own .hero-kicker size at this breakpoint
+     (29px, down from the shared 36px --rs-h1-size-mobile default). */
+  .page-lagos-rs .hero-kicker { font-size: 29px; }
+  /* Spacing pass: matches the homepage mobile hero's actual measured
+     gaps between H1/H2/CTA/stats (20px / 18px / 40px), derived from the
+     homepage's own space-between flex layout — a different mechanism
+     from this page's fixed 14px gap + per-element margin, so the
+     equivalent values here are back-solved to land on the same visible
+     gap rather than copying the homepage's raw margin numbers. */
+  .page-lagos-rs .hero-stack--split .hero-kicker { margin-bottom: 6px; }
+  .page-lagos-rs .hero-stack--split .hero-headline { margin-bottom: 0; }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline { margin-top: 26px; }
+  /* Matches the homepage's own mobile-only hero stats sizing (up from
+     the shared max-width:1024px block's 12px/14px/22px above). */
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .l { font-size: 13px !important; }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .v { font-size: 16px !important; line-height: 1.25; }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .stat svg {
+    width: 26px;
+    height: 26px;
+    margin-bottom: 7px;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.85)) drop-shadow(0 1px 8px rgba(0, 0, 0, 0.7));
+  }
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .v-mobile-label { font-size: 12px !important; }
+}
+
+/* Rollout towns without photography yet still render the placeholder's
+   own .ph-label caption text (small caption, centered) exactly as
+   designed elsewhere on the site — but that reads as stray overlapping
+   text once the placeholder becomes a full-viewport background layer
+   sitting behind the real hero copy. Visually hidden only in this one
+   full-bleed context (every other placeholder on the site keeps its
+   visible label, unchanged) — the alt text is still present via
+   role="img" aria-label for anyone using a screen reader. */
+.page-lagos-rs .hero-stack--split .hero-stack-media .placeholder .ph-label {
+  display: none;
+}
+
+/* The closing CTA band (the dark section directly above the footer) still
+   read as the old --ink navy from the shared, unscoped .cta-band rule —
+   one shade off the homepage's own equivalent block, which was moved to
+   --hero2-steel in an earlier pass (see the "Old dark-blue cleanup" note
+   near .page-home .rs-block--dark) specifically so it reads as one
+   continuous dark zone with the steel footer directly beneath it, rather
+   than a visible seam between two different darks. Matched here so this
+   page's own footer (already steel via useHomeHeader) doesn't sit against
+   a differently-coloured band above it. The reassurance band earlier on
+   the page is deliberately left on --ink — it isn't adjacent to the
+   footer, and every other (non-pilot) town page still uses --ink there
+   too, so leaving it keeps this page consistent with that shared pattern. */
+.page-lagos-rs .cta-band {
+  background: var(--hero2-steel);
+}
+
+/* Both of the page's existing dark sections already have their own
+   correct light-on-dark colours from the shared, unscoped .cta-band and
+   .reassurance-band rules earlier in this file — the blanket typography
+   rules above (.page-lagos-rs h2/.eyebrow/.lede) apply page-wide and
+   unintentionally override them back to the dark --rs-ink tone meant for
+   the page's light sections, since those blanket rules don't know which
+   section they're rendering into. Restated here at higher specificity
+   (two classes + element vs. the blanket rule's one) so both dark
+   sections stay legible regardless of source order. */
+.page-lagos-rs .cta-band h2,
+.page-lagos-rs .cta-band .eyebrow,
+.page-lagos-rs .reassurance-band h2 {
+  color: var(--cream);
+}
+.page-lagos-rs .cta-band .lede {
+  color: rgba(247, 241, 228, 0.82);
+}
+.page-lagos-rs .reassurance-band p {
+  color: rgba(247, 241, 228, 0.78);
+}
+
+/* About page only: its two blue-ish accents (in-prose links and the
+   pillar-list numerals) otherwise inherit the shared --teal-muted /
+   --ink-700 tones used site-wide. Pinned here to the same steel blue-grey
+   as this page's own footer/CTA band, so every blue on the page reads as
+   one deliberate colour rather than several similar-but-different ones. */
+.page-about .rs-block p a {
+  color: var(--hero2-steel);
+}
+.page-about .pillar .num {
+  color: var(--hero2-steel);
+}
+
+/* Same fix as the About page's pillar numerals, applied to the How We
+   Work page's own process-stage numbers (01-04). */
+.page-how-we-work .pillar .num {
+  color: var(--hero2-steel);
+}
+
+/* ---- Footer: renders the same roof-mark wordmark markup as the
+   homepage's footer whenever useHomeHeader is true (see wordmarkHtml()
+   in layout.js) — this positions/colours it the same way, otherwise the
+   roof-mark SVG would render unpositioned. Full steel-background/white-
+   text treatment mirrored alongside it for one consistent system, not
+   just to fix the roof mark. */
+.page-lagos-rs ~ .site-footer {
+  --ui: var(--font-nunito-sans);
+  --body: var(--font-nunito-sans);
+  background: #475569;
+  color: rgba(255, 255, 255, 0.85);
+}
+.page-lagos-rs ~ .site-footer .footer-masthead p { color: rgba(255, 255, 255, 0.85); }
+.page-lagos-rs ~ .site-footer .footer-col a { color: rgba(255, 255, 255, 0.85); }
+.page-lagos-rs ~ .site-footer .footer-col a:hover { color: #ffffff; }
+.page-lagos-rs ~ .site-footer .footer-bottom p { color: rgba(255, 255, 255, 0.85); }
+.page-lagos-rs ~ .site-footer .footer-col h4 { color: #ffffff; }
+.page-lagos-rs ~ .site-footer .wordmark { font-family: var(--font-nunito); color: #ffffff; }
+.page-lagos-rs ~ .site-footer .wordmark span.accent { color: #ffffff; }
+.page-lagos-rs ~ .site-footer .wordmark-h-wrap { position: relative; display: inline-block; line-height: 1; }
+.page-lagos-rs ~ .site-footer .wordmark-roof {
+  display: block;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.16em;
+  width: 1.3em;
+  height: 0.45em;
+  overflow: visible;
+}
