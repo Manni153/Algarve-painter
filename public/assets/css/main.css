@@ -4164,21 +4164,28 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
   /* Mobile and tablet stack text above the strokes, so the veil runs
      top-to-bottom there instead of left-to-right.
 
-     The hold at 0.78 through 52% is what the phone stats row now stands on.
-     It used to sit on a painted band; with the band gone the row lands
-     directly on the strokes, at roughly 41-54% of the frame, right where
-     the old ramp was already down to 0.55 — the labels measured 3.97:1 at
-     360px. Holding the veil a little longer and clearing it slightly later
-     puts them at 7.58:1 and costs only the top of the ochre stroke; the
-     four below it are untouched. */
+     The hold through 52% is what the phone stats row stands on: it used to
+     sit on a painted band, and with the band gone the row lands directly on
+     the strokes at roughly 41-54% of the frame.
+
+     The alphas are lower than the ratio that band-removal first called for.
+     That tuning was done against the old portrait art, which was the
+     landscape photograph laid low on a flat synthetic ground — the veil's
+     strongest passes fell on empty canvas, so they cost nothing. The
+     portrait photograph that replaced it is painted edge to edge, and the
+     same veil erased the ochre, rose and orange completely, leaving a hero
+     that was two strokes on white. Backing the ramp off to 0.86/0.72/0.60
+     brings all five back while still carrying the text: measured 7.69:1 on
+     the kicker, 4.72:1 on the stats and 3.78:1 on the tagline, the last of
+     which is 24px+ script and so held to the 3:1 floor. */
   .page-home .hero-stack--split .hero-stack-media::before,
   .page-lagos-rs .hero-stack--split .hero-stack-media::before,
   .page-home .hero-stack--split .hero-stack-media::after,
   .page-lagos-rs .hero-stack--split .hero-stack-media::after {
     background: linear-gradient(to bottom,
-      rgba(var(--hero-canvas-rgb), 0.95) 0%,
-      rgba(var(--hero-canvas-rgb), 0.92) 40%,
-      rgba(var(--hero-canvas-rgb), 0.78) 52%,
+      rgba(var(--hero-canvas-rgb), 0.86) 0%,
+      rgba(var(--hero-canvas-rgb), 0.72) 32%,
+      rgba(var(--hero-canvas-rgb), 0.60) 52%,
       rgba(var(--hero-canvas-rgb), 0.10) 64%,
       rgba(var(--hero-canvas-rgb), 0) 74%) !important;
   }
@@ -4189,18 +4196,18 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
    labels wrap to two lines: the row runs 54-68% of a 320x700 frame where it
    runs 41-51% of a 390x844 one, so a veil that covers it there has already
    cleared here and the labels fall to 1.00:1. Only at this width is the
-   trade worth it — px stops hold the veil where the row actually is (8.54:1
-   measured at 320x568 and 320x700) at the cost of washing out most of the
-   strokes, which on a 320px screen are a thin sliver anyway. */
+   trade worth it — px stops hold the veil where the row actually is. The
+   alphas match the block above, for the same reason: against edge-to-edge
+   photographic art a heavier ramp leaves the top of the frame blank. */
 @media (max-width: 359px) {
   .page-home .hero-stack--split .hero-stack-media::before,
   .page-lagos-rs .hero-stack--split .hero-stack-media::before,
   .page-home .hero-stack--split .hero-stack-media::after,
   .page-lagos-rs .hero-stack--split .hero-stack-media::after {
     background: linear-gradient(to bottom,
-      rgba(var(--hero-canvas-rgb), 0.95) 0px,
-      rgba(var(--hero-canvas-rgb), 0.92) 340px,
-      rgba(var(--hero-canvas-rgb), 0.80) 500px,
+      rgba(var(--hero-canvas-rgb), 0.86) 0px,
+      rgba(var(--hero-canvas-rgb), 0.74) 340px,
+      rgba(var(--hero-canvas-rgb), 0.62) 500px,
       rgba(var(--hero-canvas-rgb), 0.10) 590px,
       rgba(var(--hero-canvas-rgb), 0) 680px) !important;
   }

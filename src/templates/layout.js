@@ -148,22 +148,32 @@ function renderBreadcrumb(items) {
 // used by the homepage only. Every other page keeps the single-column,
 // stacked-then-image layout at every breakpoint. Mobile/tablet are
 // unaffected either way: the split only activates at the desktop breakpoint.
-// Hero art ships in two sizes (see tools/paint/hero_from_photo.py); the larger is
-// the same name with an @2x suffix before the extension, so the srcset can be
-// derived rather than threaded through every call site.
+// Hero art ships in several sizes per orientation (see
+// tools/paint/hero_from_photo.py); each is the same name with a suffix before
+// the extension, so the srcset can be derived rather than threaded through
+// every call site. Only the paint hero goes through here — every page on the
+// site shares it, so there is no other asset that would need the variants.
 //
 // Width descriptors, not DPR descriptors. The hero is full-bleed, so what the
 // browser needs is viewport-width x DPR: a 390px phone at DPR 3 needs 1170px
-// and is served the small portrait file, while a 1024px tablet at DPR 2 needs
-// 2048px and is served the large one. A `2x` descriptor would instead hand
+// and is served the 1250px portrait file, while a 1024px tablet at DPR 2 needs
+// 2048px and is served the largest one. A `2x` descriptor would instead hand
 // that phone the largest file purely because of its pixel density.
-const HERO_WIDTHS = { desktop: [1500, 2048], mobile: [1250, 1650] };
-function x2(src) {
-  return src.replace(/(\.[a-z0-9]+)$/i, '@2x$1');
+//
+// The portrait side carries three candidates rather than two. Its source is a
+// photograph edge to edge, so it costs roughly three times what the old
+// synthetic-ground art did at the same width, and it is the LCP image on the
+// platform least able to afford it: the 850px candidate takes the DPR-2
+// phones, which is most of them, and leaves 1250px to DPR 3.
+const HERO_WIDTHS = {
+  desktop: [['', 1500], ['@2x', 2048]],
+  mobile: [['@sm', 850], ['', 1250], ['@2x', 1632]],
+};
+function heroVariant(src, suffix) {
+  return suffix ? src.replace(/(\.[a-z0-9]+)$/i, suffix + '$1') : src;
 }
 function heroSrcset(src, kind) {
-  const [a, b] = HERO_WIDTHS[kind];
-  return `${src} ${a}w, ${x2(src)} ${b}w`;
+  return HERO_WIDTHS[kind].map(([suffix, w]) => `${heroVariant(src, suffix)} ${w}w`).join(', ');
 }
 
 function heroIntro({ alt, breadcrumb, h1Text, h1Html, headlineHtml, subtext, ctaNote, trustStats, desktopStatsText, mobileStatsText, image, twoColDesktop, noMedia, dark }) {
