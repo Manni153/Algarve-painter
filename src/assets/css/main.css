@@ -2082,7 +2082,7 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
    family still painting three homepage backgrounds and one text colour,
    all still wired to the pre-steel tokens:
      #0f3238 (var(--ink), via --rs-block / --rs-dark) — background on
-       .rs-block--overhang ("A local installer..."), .rs-block--dark (the
+       .rs-block--overhang ("A local decorator..."), .rs-block--dark (the
        lower CTA band), and .site-footer.
      #1b4750 (var(--ink-700)) — text colour on .pillar .num (the 01/02/03
        process-step numbers in "How It Works").

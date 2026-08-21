@@ -14,7 +14,7 @@ const pillars = [
   },
   {
     heading: 'Preparation Is Quoted, Not Skipped',
-    text: 'Washing down, scraping back, filling cracks, treating salt bloom or growth and priming bare patches is where a paint job is won or lost. It is priced as part of the work rather than left out to make a number look smaller.',
+    text: 'Washing down, scraping back, filling cracks, treating salt bloom or growth and priming bare patches is where a paint job is won or lost. Your painter prices it as part of the work rather than leaving it out to make a number look smaller.',
   },
   {
     heading: 'An Honest Answer About What Needs Doing',
@@ -50,8 +50,8 @@ function renderAbout() {
       <div class="rs-block"><div class="narrow" style="margin: 0 auto;">
         <span class="eyebrow">Who We Are</span>
         <h2>Painting and decorating for English-speaking property owners in the Algarve</h2>
-        <p>${rich('Algarve Painter handles <a href="/exterior-house-painting">exterior house painting</a>, <a href="/interior-painting">interior painting</a>, <a href="/villa-pool-area-painting">villa and pool area painting</a>, <a href="/render-crack-repair">render and crack repair</a>, <a href="/wood-shutter-treatment">wood and shutter treatment</a>, <a href="/metalwork-railing-painting">metalwork and railing painting</a> and <a href="/waterproof-roof-coating">waterproof and roof coating</a> for property owners across the Algarve — many of whom split their time between Portugal and the UK, Ireland, the Netherlands or Germany.')}</p>
-        <p>Alongside villas, apartments and holiday homes, we take on commercial painting: apartment-block common areas and stairwells, hotel and rental turnarounds, restaurants, shops and offices. Those jobs are planned around opening hours or a changeover window rather than a standard working day, which is usually the constraint that matters most on commercial work.</p>
+        <p>${rich('Algarve Painter connects you with a local painter who handles <a href="/exterior-house-painting">exterior house painting</a>, <a href="/interior-painting">interior painting</a>, <a href="/villa-pool-area-painting">villa and pool area painting</a>, <a href="/render-crack-repair">render and crack repair</a>, <a href="/wood-shutter-treatment">wood and shutter treatment</a>, <a href="/metalwork-railing-painting">metalwork and railing painting</a> and <a href="/waterproof-roof-coating">waterproof and roof coating</a> for property owners across the Algarve — many of whom split their time between Portugal and the UK, Ireland, the Netherlands or Germany. See <a href="/how-we-work">how we work</a> for exactly how that fits together.')}</p>
+        <p>Alongside villas, apartments and holiday homes, that covers commercial painting too: apartment-block common areas and stairwells, hotel and rental turnarounds, restaurants, shops and offices. Those jobs are planned around opening hours or a changeover window rather than a standard working day, which is usually the constraint that matters most on commercial work.</p>
         <p>Owning a property here and not living in it full-time makes ordinary maintenance harder than it should be — problems go unnoticed for months, and a short visit is not the moment you want to spend arranging trades. That is why the service is built the way it is: clear English from the first call, work carried out while you are away with photographs as it goes, and one number to call afterwards rather than a new search every time something needs attention.</p>
       </div></div>
     </div>
@@ -89,7 +89,7 @@ function renderAbout() {
     bodyHtml: body,
     schema: [breadcrumbSchema],
     title: 'About Algarve Painter | Local English-Speaking Painters',
-    metaDescription: 'Algarve Painter handles exterior and interior painting, render repair and woodwork for English-speaking property owners across the Algarve, with one point of contact throughout.',
+    metaDescription: 'Algarve Painter connects English-speaking property owners across the Algarve with a local painter for exterior and interior work, render repair and woodwork — one point of contact throughout.',
     mainClass: 'page-lagos-rs page-about',
     useHomeHeader: true,
   });

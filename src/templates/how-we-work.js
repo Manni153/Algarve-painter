@@ -6,15 +6,15 @@ const { esc, rich, heroIntro, renderPage, breadcrumbListSchema } = require('./la
 const stages = [
   {
     heading: 'Get in Touch',
-    text: 'Call or message on WhatsApp and the first conversation happens entirely in English. It covers the basics — what the property is, roughly what needs painting, and what condition the surfaces are in — so there is a clear idea of next steps before anything is booked in. Photos of the walls, woodwork or any cracking tell us considerably more than a description does.',
+    text: 'Call or message on WhatsApp and you are straight through to our painter — the same person whose team surveys, prepares and paints your property. Whichever way you get in touch there is no call centre and no waiting for a callback, and the whole conversation happens in English. It covers the basics: what the property is, roughly what needs painting, and what condition the surfaces are in. Photos of the walls, woodwork or any cracking tell us considerably more than a description does.',
   },
   {
     heading: 'Survey & Quote',
-    text: 'What gets quoted comes from looking at the property rather than a rate per square metre. Render is checked for cracking, hollow patches and salt bloom; woodwork and metalwork for rot and corrosion; and existing coatings for whether they can be overpainted or have to come off. The quote separates preparation from painting so it is clear what is actually being paid for, and it breaks a large exterior down elevation by elevation rather than giving one number for everything.',
+    text: 'From that first conversation, our painter and their team work out what the property actually needs — rather than pricing it at a rate per square metre. Render is checked for cracking, hollow patches and salt bloom; woodwork and metalwork for rot and corrosion; and existing coatings for whether they can be overpainted or have to come off. Depending on the job that might happen on the call, from photos you send over, or on a site visit. The quote separates preparation from painting so it is clear what is actually being paid for, and breaks a large exterior down elevation by elevation rather than giving one number for everything.',
   },
   {
     heading: 'Preparation',
-    text: 'Everything that is not being painted gets masked and sheeted first — windows, shutters, terraces, pool surrounds, planting, furniture and floors. Then the surfaces are washed down, scraped back, filled and primed. It is the least visible part of the job and the part that decides whether the result lasts years or seasons.',
+    text: 'Everything that is not being painted gets masked and sheeted first — windows, shutters, terraces, pool surrounds, planting, furniture and floors. Then the surfaces are washed down, scraped back, filled and primed. Our painter\u2019s own team does this work, so the people who scoped the job are the ones carrying it out. It is the least visible part of the job and the part that decides whether the result lasts years or seasons.',
   },
   {
     heading: 'Painting',
@@ -22,11 +22,19 @@ const stages = [
   },
   {
     heading: 'Walkthrough & Aftercare',
-    text: 'The job finishes with a walkthrough while the team is still on-site, so anything you want looked at again gets picked up then rather than after everyone has packed up. If you are not in Portugal, that happens over a video call. Leftover paint is labelled and left with you for touch-ups, and the same number used to arrange the work is the number to call afterwards.',
+    text: 'The job finishes with a walkthrough while the team is still on-site, so anything you want looked at again gets picked up then rather than after everyone has packed up. If you are not in Portugal, that happens over a video call. Leftover paint is labelled and left with you for touch-ups, and the same number used to arrange the work is the number to call afterwards — Algarve Painter stays the point of contact even after the on-site work is finished.',
   },
 ];
 
 const faqs = [
+  {
+    q: 'Do I need to contact the local painter separately?',
+    a: 'No. Whether you call or message on WhatsApp, you are speaking with our painter and their team from the first message through to support afterwards — there is no separate decorator to loop in.',
+  },
+  {
+    q: 'Does this change how the work is actually carried out?',
+    a: 'No. The survey, the preparation, the materials and the painting itself are what you would expect from a dedicated local painter — coordinating through Algarve Painter just means one consistent point of contact across the whole process.',
+  },
   {
     q: 'Do I need to be at the property for the survey?',
     a: 'Not necessarily. For a straightforward job, photos and a description are often enough to scope it. For a larger property, or where there is cracking or damp involved, looking at it in person gives a considerably more accurate quote — and that can be arranged with whoever holds keys locally rather than waiting for your next visit.',
@@ -84,6 +92,17 @@ function renderHowWeWork() {
   <section>
     <div class="container">
       <div class="rs-block"><div class="narrow" style="margin: 0 auto;">
+        <span class="eyebrow">What Algarve Painter Does</span>
+        <h2>A marketing service, connecting you to a local painter</h2>
+        <p><strong>Algarve Painter is a marketing service connecting Algarve property owners with a local, experienced painter.</strong> In practice, that means Algarve Painter is your first point of contact — the phone number and WhatsApp link on this site — and the team that actually surveys, prepares and paints your property is a local painter working across the region.</p>
+        <p>That does not change what happens on the ground: the same conversation about your property, the same survey, the same preparation and the same work carried out properly. It just means there is one consistent number to call, whether you are getting a quote, arranging the work, or following up with a question afterwards.</p>
+      </div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="rs-block"><div class="narrow" style="margin: 0 auto;">
         <span class="eyebrow">The Short Version</span>
         <h2>Preparation is the job, and it is quoted as such</h2>
         <p><strong>New paint bonds to whatever is underneath it.</strong> That single fact explains almost everything about how this work is organised. A coating over a chalking wall, over damp, over active rust or over unrepaired render is bonded to a failing surface, so it lifts within a season or two regardless of how good the paint itself is. That is why the quote separates preparation from painting, and why a cheaper quote for what looks like the same job is usually cheaper because it is leaving that part out.</p>
@@ -110,7 +129,7 @@ function renderHowWeWork() {
       <div class="rs-block"><div class="narrow" style="margin: 0 auto;">
         <span class="eyebrow">Why It's Set Up This Way</span>
         <h2>One number, coverage across the whole region</h2>
-        <p>One number and one WhatsApp cover the whole Algarve, from Sagres to Vila Real de Santo António. For owners with more than one property in the region — which is common enough — that means several jobs can be scheduled as a single run of work rather than arranged separately with different trades in different towns.</p>
+        <p>One number and one WhatsApp both connect you straight to our painter and their team, the same people who cover the whole Algarve themselves, from Sagres to Vila Real de Santo António. There is no network of different subcontractors depending on where your property is. For owners with more than one property in the region — which is common enough — that means several jobs can be scheduled as a single run of work rather than arranged separately with different trades in different towns.</p>
         <p>It also means the answer you get about what your property needs is not shaped by what happens to be convenient to sell. Sometimes a wall needs washing rather than painting; sometimes one elevation is due and the rest will hold another season; sometimes a coating is the wrong fix entirely and the honest answer is that the problem is a leak, a threshold or a plumbing run. You get told which of those it is.</p>
       </div></div>
     </div>

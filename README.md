@@ -50,7 +50,7 @@ Each URL is served as a clean directory (`/exterior-house-painting/index.html`),
 Also worth confirming before launch:
 
 - **Domain.** `baseUrl` in `src/data/site.js` is `https://www.algarvepainter.com`, which drives every canonical tag and every `sitemap.xml` entry.
-- **Business model copy.** `/how-we-work` describes the working process (survey → preparation → painting → walkthrough). Unlike the sister site, it does *not* assert any particular company structure — if Algarve Painter operates as a marketing service connecting owners to an installation partner, that disclosure needs adding to `src/templates/how-we-work.js`.
+- **Business model copy.** `/how-we-work` states that Algarve Painter is a marketing service connecting property owners with a **local painter**, mirroring the sister site's own disclosure. `/about` is worded to match. If that is not how the business actually operates, both need changing together — `src/templates/how-we-work.js` and `src/templates/about.js`.
 
 ## Deploying
 
