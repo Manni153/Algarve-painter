@@ -4,7 +4,7 @@ const site = require('../data/site');
 const services = require('../data/services');
 const { towns, regionGroups } = require('../data/towns');
 
-const whatsappIcon = `<svg viewBox="0 0 24 24" fill="#0f3238" aria-hidden="true"><path d="M12.01 2C6.48 2 2 6.48 2 12.01c0 1.98.55 3.83 1.5 5.42L2 22l4.7-1.47a9.96 9.96 0 0 0 5.3 1.52h.01c5.53 0 10.01-4.48 10.01-10.02C22 6.48 17.53 2 12.01 2zm5.86 14.3c-.25.7-1.44 1.34-1.98 1.4-.5.06-1.02.28-3.42-.72-2.88-1.2-4.73-4.1-4.87-4.3-.14-.2-1.16-1.55-1.16-2.95 0-1.4.73-2.09 1-2.37.26-.28.57-.35.76-.35.19 0 .38 0 .55.01.18.01.42-.07.65.5.25.6.85 2.08.92 2.23.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.36 1.46.3.15.48.13.65-.08.18-.2.75-.87.95-1.17.2-.3.4-.25.66-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.08.13.08.75-.17 1.45z"/></svg>`;
+const whatsappIcon = `<svg viewBox="0 0 24 24" fill="#3A241A" aria-hidden="true"><path d="M12.01 2C6.48 2 2 6.48 2 12.01c0 1.98.55 3.83 1.5 5.42L2 22l4.7-1.47a9.96 9.96 0 0 0 5.3 1.52h.01c5.53 0 10.01-4.48 10.01-10.02C22 6.48 17.53 2 12.01 2zm5.86 14.3c-.25.7-1.44 1.34-1.98 1.4-.5.06-1.02.28-3.42-.72-2.88-1.2-4.73-4.1-4.87-4.3-.14-.2-1.16-1.55-1.16-2.95 0-1.4.73-2.09 1-2.37.26-.28.57-.35.76-.35.19 0 .38 0 .55.01.18.01.42-.07.65.5.25.6.85 2.08.92 2.23.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.36 1.46.3.15.48.13.65-.08.18-.2.75-.87.95-1.17.2-.3.4-.25.66-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.08.13.08.75-.17 1.45z"/></svg>`;
 
 // Small, consistent-style line-icon set for feature/trust cards (the
 // .icon-dot slot) — simple stroke icons on a 24x24 grid, not illustrative,
@@ -45,11 +45,11 @@ const heroStatIcons = [
   // 21). Tail stays a short, separate stroke sitting just below the body
   // with a visible gap — "slightly detached" — just pulled further down
   // to match the taller body. Crimson dot sits inside the body.
-  `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="1.5" y="3" width="21" height="12.5" rx="6"/><path d="M6.6 17.4C5.7 19 4.2 20.4 2.3 21.3"/><circle cx="12" cy="9.25" r="1.5" fill="#DC143C" stroke="none"/></svg>`,
+  `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#6E5647" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="1.5" y="3" width="21" height="12.5" rx="6"/><path d="M6.6 17.4C5.7 19 4.2 20.4 2.3 21.3"/><circle cx="12" cy="9.25" r="1.5" fill="#C25A38" stroke="none"/></svg>`,
   // 2. Map pin (Locally-Based): same single closed teardrop shape, widened
   // and lengthened to reach much closer to the viewBox edges (was 13x18
   // of 24 units, now 15x20). Crimson dot centred in the rounded head.
-  `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.3C7.7 2.3 4.3 5.8 4.3 10c0 5.9 7.7 12.7 7.7 12.7s7.7-6.8 7.7-12.7c0-4.2-3.4-7.7-7.7-7.7Z"/><circle cx="12" cy="9.7" r="1.6" fill="#DC143C" stroke="none"/></svg>`,
+  `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#6E5647" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 2.3C7.7 2.3 4.3 5.8 4.3 10c0 5.9 7.7 12.7 7.7 12.7s7.7-6.8 7.7-12.7c0-4.2-3.4-7.7-7.7-7.7Z"/><circle cx="12" cy="9.7" r="1.6" fill="#C25A38" stroke="none"/></svg>`,
   // 3. Paint brush (Clean, Tidy Finish): replaces the sister site's
   // lightning bolt, which read as "fast" — the wrong idea for this stat.
   // Same construction rules as the two above: one stroked outline drawn
@@ -57,7 +57,7 @@ const heroStatIcons = [
   // ~19 of 24 units vertically), a single crimson detail, no fill on the
   // stroked shape. The stroke below the brush is the painted line it
   // leaves, which is what "finish" actually refers to.
-  `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#475569" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 1.6v5.2"/><rect x="7.4" y="6.8" width="9.2" height="4.4" rx="1.4"/><path d="M8.9 11.2v3.1c0 1.7 1.4 3.1 3.1 3.1s3.1-1.4 3.1-3.1v-3.1"/><path d="M2.6 22.2c3.1-1.4 15.7-1.4 18.8 0" stroke="#DC143C"/></svg>`,
+  `<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#6E5647" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 1.6v5.2"/><rect x="7.4" y="6.8" width="9.2" height="4.4" rx="1.4"/><path d="M8.9 11.2v3.1c0 1.7 1.4 3.1 3.1 3.1s3.1-1.4 3.1-3.1v-3.1"/><path d="M2.6 22.2c3.1-1.4 15.7-1.4 18.8 0" stroke="#C25A38"/></svg>`,
 ];
 
 // Service-card icons (desktop-only card rebuild) — hand-drawn, redrawn as a
@@ -305,10 +305,15 @@ function renderHomeHeaderNav() {
 // relatively-positioned wrapper around just the "P" glyph, so it floats
 // above without affecting line height/layout in either context.
 function wordmarkHtml(isHome) {
-  return isHome
-    ? `Algarve <span class="accent"><span class="wordmark-h-wrap">P<svg class="wordmark-roof" viewBox="0 0 28 11" fill="none" aria-hidden="true" focusable="false"><path d="M2.2 8.9C8 2.6 20 2.6 25.8 8.9" stroke="#DC143C" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>ainter</span>`
-    : `Algarve <span class="accent">Painter</span>`;
+  // Hand-painted treatment: "Algarve" in the rounded display face, "Painter"
+  // set in the brush-script face and underscored with a rough, tapered
+  // brushstroke drawn as a filled path (not a stroked line, so the ends and
+  // the belly of the stroke can carry real bristle-loaded weight variation).
+  // The stroke is absolutely positioned out of flow inside .wordmark-h-wrap,
+  // so it never affects line height or wrapping in the header or footer.
+  return `Algarve <span class="accent"><span class="wordmark-h-wrap">Painter<svg class="wordmark-brush" viewBox="0 0 120 16" fill="none" aria-hidden="true" focusable="false" preserveAspectRatio="none"><path d="M2.5 10.2c14-3.4 30.6-5.1 49.8-5.1 19.2 0 39.3 1.9 60.3 5.7-6.6.4-13.6.6-21 .6-16.1 0-33.6-.9-52.5-2.7-13.3-1.3-25.5-1.8-36.6-1.5Z" fill="#C25A38"/></svg></span></span>`;
 }
+
 
 
 // isHome adds a site-header--home class so the homepage's white-header
@@ -509,7 +514,7 @@ function renderPage({ path, bodyHtml, schema, mainClass, useHomeHeader, title, m
   // nothing else about this block, or the CSS that consumes it, needs to
   // move or be duplicated per page.
   const homeFontsLink = useHeaderChrome
-    ? '<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">'
+    ? ''
     : '';
   return `<!doctype html>
 <html lang="en">
@@ -527,9 +532,6 @@ ${title ? `<title>${esc(title)}</title>\n` : ''}${metaDescription ? `<meta name=
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="${site.baseUrl}/assets/icons/icon-512.png">
 <meta name="theme-color" content="#fbf6ec">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;700&family=Syne:wght@600;700;800&family=Figtree:wght@400;500;700;800&display=swap" rel="stylesheet">
 ${homeFontsLink}
 <link rel="stylesheet" href="/assets/css/main.css">
 ${schemaHtml}

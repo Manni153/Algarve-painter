@@ -1,56 +1,107 @@
+/* -------------------------------------------------------------------------
+   Self-hosted type — latin subset, variable weight axis
+   -------------------------------------------------------------------------
+   Fredoka     — rounded display face: headlines, wordmark, buttons, labels.
+   Nunito Sans — running text.
+   Caveat      — brush script, used only for the wordmark's "Painter" and the
+                 hero tagline, so it reads as a signature not as decoration.
+
+   Served from /assets/fonts rather than Google's CDN: no third-party font
+   dependency, no extra DNS/TLS hop before first paint, and the faces are
+   guaranteed to render. Each file is the variable font, so a single
+   download covers the whole weight range declared below.
+   ------------------------------------------------------------------------- */
+@font-face { font-family: 'Fredoka';     font-style: normal; font-weight: 300 700; font-display: swap; src: url('/assets/fonts/Fredoka-var.woff2') format('woff2'); }
+@font-face { font-family: 'Nunito Sans'; font-style: normal; font-weight: 200 900; font-display: swap; src: url('/assets/fonts/NunitoSans-var.woff2') format('woff2'); }
+@font-face { font-family: 'Caveat';      font-style: normal; font-weight: 400 700; font-display: swap; src: url('/assets/fonts/Caveat-var.woff2') format('woff2'); }
+
 /* ==========================================================================
-   Algarve Painter — Design System v3
-   Warm, bright, trust-first, photography-led. Direct structure over
-   asymmetric composition — a local-service brand, not a tech showcase.
-   Inherited wholesale from the sister site (AlgarveSecure) and retuned for
-   painting: same tokens, type scale, components and breakpoints, with the
-   page-scoped rules rekeyed to this site's own service slugs.
+   Algarve Painter — Design System v4 "paint-craft"
+   ==========================================================================
+   Warm, tactile and pigment-led: sun-baked Algarve colour (terracotta,
+   ochre, dusty pink, deep brown on cream), a rounded display face, a brush
+   script used as a signature, and real impasto brushstrokes carrying the
+   section marks, the hero and the wordmark.
+
+   Structurally this is still the sister site's system — same layout, grid,
+   components, breakpoints and measured hero budgets. v4 changes the visual
+   language only: the token values at the top of this file, and the
+   PAINT-CRAFT RESTYLE block at the very bottom, which holds everything the
+   token swap cannot express. Token NAMES are deliberately unchanged so the
+   ~4000 lines of component CSS between them keep resolving; where a name
+   now reads oddly (--teal-muted is a warm brown) its comment says so.
    ========================================================================== */
 
 :root {
-  --sand: #f5ecd8;      /* base background — warm paper, deepened for more contrast against the accent */
-  --sand-alt: #eee0c2;  /* alternating section wash — shifted down with --sand to keep the same relative gap */
-  --stone: #e7d9bc;     /* borders / dividers — warm neutral, not gray */
-  --white: #fffdf9;     /* card surfaces */
+  /* ---- Paint-craft palette -------------------------------------------
+     Sun-baked Algarve pigments rather than the inherited navy/crimson.
+     Five hues carry the whole site: terracotta (the accent and every
+     CTA), ochre, dusty pink, deep brown (text and dark surfaces) and
+     cream (ground). Token NAMES are kept from the previous system so the
+     ~4000 lines of component CSS below keep resolving — only the values
+     change. Where a name now reads oddly (--teal-muted is a warm brown,
+     --teal-tint an ochre wash) the comment says what it actually is. */
+  --sand: #fbf4e8;      /* base background — warm cream paper */
+  --sand-alt: #f3e7d3;  /* alternating section wash */
+  --stone: #e4d2b7;     /* borders / dividers — warm sand, never gray */
+  --white: #fffdf7;     /* card surfaces — off-white, faintly warm */
 
-  --ink: #0f3238;       /* headings, primary text, header/footer */
-  --ink-700: #1b4750;
-  --teal-muted: #3f565a; /* secondary body text on light backgrounds — deepened from a washed-out teal for a more grounded feel */
+  --ink: #3a241a;       /* deep brown — headings, primary text, header/footer */
+  --ink-700: #4e3325;
+  --teal-muted: #6e5647; /* NOT teal: warm mid-brown, secondary body text on light grounds */
 
-  --terracotta: #c81e3a;      /* crimson — reserved for CTA buttons and phone links only */
-  --terracotta-dark: #9c172d; /* hover / pressed */
-  --terracotta-tint: #ecb0ba; /* light accent wash, used sparingly alongside the accent itself */
+  --terracotta: #c25a38;      /* the accent — painted marks, swatches, script wordmark */
+  --terracotta-btn: #b85132;  /* the same hue, one step deeper: used wherever the accent
+                                 sits behind text. #c25a38 with the cream label on top
+                                 measures 4.29:1, just under AA for a 16px bold button;
+                                 this measures 4.85:1. Decorative uses keep the brighter
+                                 hue, which carries no text and so has no such floor. */
+  --terracotta-dark: #9e4127; /* hover / pressed */
+  --terracotta-tint: #f0cdbd; /* light accent wash */
 
-  --teal-tint: #d3eaee; /* pale teal wash — secondary-accent surfaces (badges, icon dots) and a section-rhythm background */
+  --ochre: #d9a02b;      /* mustard — secondary accent blocks and swatches */
+  --ochre-deep: #b27f16;
+  --ochre-tint: #f5e2b4;
+  --blush: #d9a08c;      /* dusty pink — third swatch hue */
+  --blush-tint: #f1d9cf;
 
-  --cream: #f7f1e4; /* text on dark (ink) backgrounds */
+  --teal-tint: #f5e2b4; /* NOT teal: ochre wash — badge/icon-dot surfaces */
 
-  --placeholder-fill: #ded2b6; /* flat, unobtrusive image-slot fill */
+  --cream: #faf1e2; /* text on dark (brown) backgrounds */
+
+  --placeholder-fill: #e8d5b8; /* flat, unobtrusive image-slot fill */
 
   /* Homepage-only white header variant (.site-header--home, desktop) —
      neutral pure white + true light grey, distinct from --white (an
      off-white/cream) and --stone (a warm beige border), which read wrong
      against a pure-white bar. */
-  --header-home-bg: #ffffff;
-  --header-home-border: #e6e8eb;
-  --header-home-hamburger-bg: #f4f5f6;
+  --header-home-bg: #fffcf5;
+  --header-home-border: #eadcc4;
+  --header-home-hamburger-bg: #f5e9d6;
 
   /* Exact client-specified palette for this hero pass — kept as its own
      token set (not merged into --rs-* or --header-home-*) since these are
      literal signed-off hex values, not derived design-system colours. */
-  --hero2-crimson: #dc143c;
-  --hero2-steel: #475569;
-  --hero2-steel-tint: rgba(71, 85, 105, 0.13); /* image panel bg — within the requested 12-15% range */
-  --hero2-near-black: #111827;
-  --hero2-soft-grey: #f8fafc;
-  --hero2-panel-grey: #e8eef2; /* light-grey panel bg/border — the client's own "soft alternative" to the blue-tinted panel */
+  --hero2-crimson: #b85132;  /* NOT crimson any more: the AA-safe terracotta used behind button labels */
+  --hero2-steel: #6e5647;    /* NOT steel: warm mid-brown */
+  --hero2-steel-tint: rgba(110, 86, 71, 0.13); /* image panel bg */
+  --hero2-near-black: #3a241a;
+  --hero2-soft-grey: #fbf4e8;
+  --hero2-panel-grey: #f1e3cc; /* warm sand panel bg/border */
 
   --whatsapp: #25d366;
   --whatsapp-dark: #1ebc59;
 
-  --serif: 'DM Serif Display', Georgia, serif;
-  --body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --ui: 'Syne', var(--body);
+  /* Bold, rounded, confident display face for headlines and the wordmark;
+     a warm humanist sans for running text; a brush-script for taglines and
+     the painted marks. --serif/--ui keep their old names (widely referenced
+     below) but both now resolve to the rounded display face — there is no
+     serif anywhere in this design. */
+  --display: 'Fredoka', 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --script: 'Caveat', 'Segoe Script', cursive;
+  --serif: var(--display);
+  --body: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ui: var(--display);
 
   /* Homepage typography test (see .page-home below for where these
      actually get applied — defining them here is inert on its own).
@@ -58,8 +109,8 @@
      and the hero H1. Nunito Sans: neutral, used for everything else on
      the homepage. Global tokens so re-using them on other pages later
      (if this test is approved) doesn't require re-declaring anything. */
-  --font-nunito: 'Nunito', var(--body);
-  --font-nunito-sans: 'Nunito Sans', var(--body);
+  --font-nunito: var(--display);        /* kept as a name; now the rounded display face */
+  --font-nunito-sans: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   --header-h: 76px;
   --container: 1180px;
@@ -217,7 +268,7 @@ h3 { font-size: clamp(1.15rem, 2.2vw, 1.4rem); }
 /* Header sits on an ink-dark bar (not the sand nav-panel), so its wordmark
    needs the light-on-dark treatment already used in the footer/CTA band. */
 .site-header .wordmark { color: var(--cream); }
-.site-header .wordmark span.accent { color: #f3caa4; }
+.site-header .wordmark span.accent { color: #e9b978; }
 
 /* Inline service links — hidden by default (mobile/tablet rely on the
    hamburger drawer for everything), shown from the desktop breakpoint up.
@@ -246,7 +297,7 @@ h3 { font-size: clamp(1.15rem, 2.2vw, 1.4rem); }
     color: var(--cream);
     white-space: nowrap;
   }
-  .header-nav a:hover { color: #f3caa4; }
+  .header-nav a:hover { color: #e9b978; }
   /* Explicit :visited guard — a link a browser has in its history (e.g.
      Waterproof & Roof Coating, if that page was opened separately) would
      otherwise be free to pick up the browser's own visited-link colour on
@@ -337,7 +388,7 @@ h3 { font-size: clamp(1.15rem, 2.2vw, 1.4rem); }
   /* Soft, low-opacity shadow beneath the bar — just enough separation
      from the content below to read as sitting slightly above the page
      (Hippo-style), not a heavy drop shadow. */
-  box-shadow: 0 4px 12px rgba(17, 24, 39, 0.06);
+  box-shadow: 0 4px 12px rgba(58, 36, 26, 0.06);
 }
 /* Logo: near-black wordmark, steel blue-grey accent span — the exact
    client palette, replacing the old --ink/--teal-muted-on-dark pairing. */
@@ -435,7 +486,7 @@ h3 { font-size: clamp(1.15rem, 2.2vw, 1.4rem); }
   background: #ffffff;
 }
 /* The roof-mark SVG above the "H" keeps its own hardcoded crimson stroke
-   (#DC143C) unchanged — already a bright accent that reads clearly
+   (#C25A38) unchanged — already a bright accent that reads clearly
    against a dark image, same reasoning as leaving the CTA and stat
    icons untouched below. */
 
@@ -643,7 +694,7 @@ body.nav-open { overflow: hidden; }
 .hero-stack--dark .breadcrumb a:hover { color: #ffffff; }
 .hero-stack--dark .hero-kicker { color: rgba(247, 241, 228, 0.75); }
 .hero-stack--dark .hero-headline { color: var(--cream); }
-.hero-stack--dark .hero-headline em { color: #f3caa4; }
+.hero-stack--dark .hero-headline em { color: #e9b978; }
 .hero-stack--dark .hero-subtext { color: rgba(247, 241, 228, 0.82); }
 /* .page-lagos-rs's own typography rules (further down this file, for the
    photo-hero pilot pages) reset .hero-kicker/.hero-headline to
@@ -654,7 +705,7 @@ body.nav-open { overflow: hidden; }
    the plain .hero-stack--dark rules above. */
 .page-lagos-rs .hero-stack--dark .hero-kicker { color: rgba(247, 241, 228, 0.75); }
 .page-lagos-rs .hero-stack--dark .hero-headline { color: var(--cream); }
-.page-lagos-rs .hero-stack--dark .hero-headline em { color: #f3caa4; }
+.page-lagos-rs .hero-stack--dark .hero-headline em { color: #e9b978; }
 @media (min-width: 1025px) {
   .page-lagos-rs .hero-stack--dark .hero-kicker { color: rgba(247, 241, 228, 0.75); }
 }
@@ -976,7 +1027,7 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
    ------------------------------------------------------------------------- */
 .cta-band { background: var(--ink); text-align: center; }
 .cta-band h2, .cta-band .eyebrow { color: var(--cream); }
-.cta-band h2 em { color: #f3caa4; }
+.cta-band h2 em { color: #e9b978; }
 .cta-band .lede { color: rgba(247, 241, 228, 0.82); margin: 12px auto 26px; }
 
 /* -------------------------------------------------------------------------
@@ -985,11 +1036,11 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 .site-footer { background: var(--ink); color: rgba(247, 241, 228, 0.75); }
 .footer-masthead { padding: 44px 0; border-bottom: 1px solid rgba(247, 241, 228, 0.14); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px; }
 .footer-masthead .wordmark { font-size: clamp(1rem, 5vw, 1.3rem); color: var(--cream); }
-.footer-masthead .wordmark span.accent { color: #f3caa4; }
+.footer-masthead .wordmark span.accent { color: #e9b978; }
 .footer-masthead p { margin: 6px 0 0; max-width: 42ch; font-size: 0.92rem; color: rgba(247, 241, 228, 0.65); }
 .footer-grid { display: grid; gap: 32px; grid-template-columns: 1fr; padding: 44px 0; }
 @media (min-width: 720px) { .footer-grid { grid-template-columns: repeat(4, 1fr); } }
-.footer-col h4 { font-family: var(--ui); text-transform: uppercase; letter-spacing: 0.07em; font-size: 0.68rem; color: #f3caa4; margin-bottom: 14px; }
+.footer-col h4 { font-family: var(--ui); text-transform: uppercase; letter-spacing: 0.07em; font-size: 0.68rem; color: #e9b978; margin-bottom: 14px; }
 .footer-col ul li { margin-bottom: 9px; }
 .footer-col a { font-size: 0.9rem; color: rgba(247, 241, 228, 0.7); }
 .footer-col a:hover { color: var(--cream); }
@@ -1066,14 +1117,14 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
    is rolled out further, these are the values to promote/rename.
    ========================================================================== */
 :root {
-  --rs-bg: #f4f6f8;
-  --rs-surface: #ffffff;
-  --rs-ink: #1a1f26;
-  --rs-muted: #5a6472;
+  --rs-bg: #f7eedf;
+  --rs-surface: #fffcf5;
+  --rs-ink: #3a241a;
+  --rs-muted: #6e5647;
   --rs-dark: var(--ink);          /* reuses the existing header charcoal/navy */
-  --rs-accent: var(--terracotta); /* reuses the existing crimson — buttons only */
+  --rs-accent: var(--terracotta-btn); /* buttons only — the AA-safe step of the accent */
 
-  --rs-font: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --rs-font: var(--body);
 
   --rs-h1-size: 56px;
   --rs-h1-size-mobile: 36px;
@@ -1120,7 +1171,7 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
   --rs-btn-maxwidth: 320px;
   --rs-btn-font-size: 18px;
 
-  /* Round 2 introduced this as a light blue (#a9cce3); round 3 swaps it
+  /* Round 2 introduced this as a light blue (#f5e2b4); round 3 swaps it
      for the same dark navy already used by the header/CTA, for cohesion —
      so it now equals --rs-dark/--ink exactly. Kept as its own variable
      (not merged into --rs-dark) because the two still mean different
@@ -1128,13 +1179,13 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
      --rs-block is the repeatable emphasis-block fill. */
   --rs-block: var(--ink);
 
-  /* Was var(--ink), #0f3238 — the old dark-teal frame around the hero photo
+  /* Was var(--ink), #3a241a — the old dark-teal frame around the hero photo
      at mobile/tablet (desktop's split hero overrides this away entirely,
      so it only ever renders below 1025px). Missed by the earlier desktop-
      only dark-blue sweep for exactly that reason; caught in this round's
      mobile/tablet audit and brought to the same steel used everywhere else
      for blocks/panels. */
-  --rs-hero-panel: #475569;
+  --rs-hero-panel: #6e5647;
 }
 
 .page-home { background: var(--rs-bg); font-family: var(--rs-font); }
@@ -1404,7 +1455,7 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
   .page-home .hero-trust-band .l { display: none; }
   .page-home .hero-trust-band .vs { display: block; }
 }
-/* Divider removed entirely per request — was steel (#475569, previously
+/* Divider removed entirely per request — was steel (#6e5647, previously
    fixed from the old ink navy), now none. The gap below (mobile: bumped
    to 36px; tablet: unchanged 32px) is the only separation between stats
    now that there's no rule line to lean on. */
@@ -1764,7 +1815,7 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 .page-home #services .card .placeholder,
 .page-home #services .card .badge { display: none; }
 /* Card background: was mobile-only (reusing the desktop Services nav
-   dropdown's own hover token, var(--hero2-panel-grey) / #e8eef2 — see
+   dropdown's own hover token, var(--hero2-panel-grey) / #f1e3cc — see
    .home-header-dropdown a:hover, ~line 500), now applies at every
    breakpoint so tablet/desktop's plain 3-column grid matches mobile's
    carousel cards. Unscoped here (no media query) instead of duplicating
@@ -1922,7 +1973,7 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     height: 4px;
     margin-top: 24px;
     border-radius: 999px;
-    background: #e5e7eb;
+    background: #eadcc4;
     overflow: hidden;
   }
   .page-home #services .carousel-progress-fill {
@@ -2077,23 +2128,23 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
   }
 }
 
-/* ---- Old dark-blue cleanup (#0f3238 / #1b4750) --------------------------
+/* ---- Old dark-blue cleanup (#3a241a / #4e3325) --------------------------
    Audit (Playwright, rendered homepage) found the old navy/teal "ink"
    family still painting three homepage backgrounds and one text colour,
    all still wired to the pre-steel tokens:
-     #0f3238 (var(--ink), via --rs-block / --rs-dark) — background on
+     #3a241a (var(--ink), via --rs-block / --rs-dark) — background on
        .rs-block--overhang ("A local decorator..."), .rs-block--dark (the
        lower CTA band), and .site-footer.
-     #1b4750 (var(--ink-700)) — text colour on .pillar .num (the 01/02/03
+     #4e3325 (var(--ink-700)) — text colour on .pillar .num (the 01/02/03
        process-step numbers in "How It Works").
    --rs-block/--rs-dark are shared tokens also read elsewhere, and .pillar
    is shared markup used by 4 other templates, so these are overridden
    directly here (not by changing the tokens) — .page-home scoping keeps
    every other page's .pillar untouched. Originally desktop-only; now
    applies at every breakpoint so mobile/tablet match (this round's brief). */
-.page-home .rs-block--overhang { background: #475569; }
-.page-home .rs-block--dark { background: #475569; }
-.page-home .pillar .num { color: #475569; }
+.page-home .rs-block--overhang { background: #6e5647; }
+.page-home .rs-block--dark { background: #6e5647; }
+.page-home .pillar .num { color: #6e5647; }
 
 /* ---- Full-bleed hero (branch: claude/hero-fullbleed-desktop, desktop
    only, 1025px+). Replaces the old vertically-centered/padding-driven
@@ -2263,11 +2314,11 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     z-index: 1;
     background: linear-gradient(
       to right,
-      rgba(17, 24, 39, 0.74) 0%,
-      rgba(17, 24, 39, 0.66) 35%,
-      rgba(17, 24, 39, 0.55) 58%,
-      rgba(17, 24, 39, 0.22) 72%,
-      rgba(17, 24, 39, 0) 85%
+      rgba(58, 36, 26, 0.74) 0%,
+      rgba(58, 36, 26, 0.66) 35%,
+      rgba(58, 36, 26, 0.55) 58%,
+      rgba(58, 36, 26, 0.22) 72%,
+      rgba(58, 36, 26, 0) 85%
     );
   }
   /* Text moves onto the scrim: light on dark, replacing the near-black-
@@ -2687,11 +2738,11 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     z-index: 1;
     background: linear-gradient(
       to bottom,
-      rgba(17, 24, 39, 0.78) 0%,
-      rgba(17, 24, 39, 0.68) 30%,
-      rgba(17, 24, 39, 0.5) 48%,
-      rgba(17, 24, 39, 0.2) 65%,
-      rgba(17, 24, 39, 0) 80%
+      rgba(58, 36, 26, 0.78) 0%,
+      rgba(58, 36, 26, 0.68) 30%,
+      rgba(58, 36, 26, 0.5) 48%,
+      rgba(58, 36, 26, 0.2) 65%,
+      rgba(58, 36, 26, 0) 80%
     );
   }
   .page-home .hero-stack--split .hero-kicker { color: #ffffff; }
@@ -3003,23 +3054,23 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
   .page-home .hero-stack--split .hero-stack-media::after {
     background: linear-gradient(
       to bottom,
-      rgba(17, 24, 39, 0.72) 0%,
-      rgba(17, 24, 39, 0.68) 9%,
-      rgba(17, 24, 39, 0.64) 18%,
-      rgba(17, 24, 39, 0.62) 31%,
-      rgba(17, 24, 39, 0.62) 48%,
-      rgba(17, 24, 39, 0.6) 60%,
-      rgba(17, 24, 39, 0.35) 75%,
-      rgba(17, 24, 39, 0.12) 90%,
-      rgba(17, 24, 39, 0) 100%
+      rgba(58, 36, 26, 0.72) 0%,
+      rgba(58, 36, 26, 0.68) 9%,
+      rgba(58, 36, 26, 0.64) 18%,
+      rgba(58, 36, 26, 0.62) 31%,
+      rgba(58, 36, 26, 0.62) 48%,
+      rgba(58, 36, 26, 0.6) 60%,
+      rgba(58, 36, 26, 0.35) 75%,
+      rgba(58, 36, 26, 0.12) 90%,
+      rgba(58, 36, 26, 0) 100%
     );
   }
 }
 
 /* Footer background + logo match — now applies at every breakpoint (was
-   desktop-only; this round brings mobile/tablet's old #0f3238 background
+   desktop-only; this round brings mobile/tablet's old #3a241a background
    and Nunito Sans wordmark in line with desktop).
-   Background: old #0f3238 -> steel #475569. That's a lighter colour, so
+   Background: old #3a241a -> steel #6e5647. That's a lighter colour, so
    the existing low-opacity cream text (tuned for contrast against the
    much darker navy) dropped below WCAG AA on several elements — links
    4.25:1, the masthead tagline 3.91:1, the copyright line ~3.3:1, all
@@ -3027,11 +3078,11 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
    luminance formula, not eyeballed). Bumped those three to white at 85%+
    opacity, which clears AA with real margin (6.0:1+).
    The h4 column headings and the wordmark's accent span both used the old
-   flagged peach (#f3caa4) — not a contrast failure on its own (4.98:1 on
+   flagged peach (#e9b978) — not a contrast failure on its own (4.98:1 on
    the new steel, still passes AA) but explicitly one of the old-palette
    colours this round's audit calls out, so both move to white too. */
 .page-home ~ .site-footer {
-  background: #475569;
+  background: #6e5647;
   color: rgba(255, 255, 255, 0.85);
 }
 .page-home ~ .site-footer .footer-masthead p { color: rgba(255, 255, 255, 0.85); }
@@ -3050,7 +3101,7 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
    is read here as the typographic treatment (font, weight, roof mark, word
    grouping), not literal identical RGB values that would go invisible
    against a different background colour. */
-/* Base "Algarve" text was still inheriting --cream (#f7f1e4, the old warm
+/* Base "Algarve" text was still inheriting --cream (#faf1e2, the old warm
    palette's light-on-dark tone) from .footer-masthead .wordmark — a leftover
    from before the footer moved to the steel background, missed by the
    earlier accent-only fix below. White here matches the accent span. */
@@ -3411,7 +3462,7 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     height: 4px;
     margin-top: 24px;
     border-radius: 999px;
-    background: #e5e7eb;
+    background: #eadcc4;
     overflow: hidden;
   }
   .page-lagos-rs #services .carousel-progress-fill {
@@ -3509,11 +3560,11 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     z-index: 1;
     background: linear-gradient(
       to right,
-      rgba(17, 24, 39, 0.74) 0%,
-      rgba(17, 24, 39, 0.66) 35%,
-      rgba(17, 24, 39, 0.55) 58%,
-      rgba(17, 24, 39, 0.22) 72%,
-      rgba(17, 24, 39, 0) 85%
+      rgba(58, 36, 26, 0.74) 0%,
+      rgba(58, 36, 26, 0.66) 35%,
+      rgba(58, 36, 26, 0.55) 58%,
+      rgba(58, 36, 26, 0.22) 72%,
+      rgba(58, 36, 26, 0) 85%
     );
   }
   .page-lagos-rs .hero-stack--split .hero-kicker { color: #ffffff; }
@@ -3634,11 +3685,11 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     z-index: 1;
     background: linear-gradient(
       to bottom,
-      rgba(17, 24, 39, 0.78) 0%,
-      rgba(17, 24, 39, 0.68) 30%,
-      rgba(17, 24, 39, 0.5) 48%,
-      rgba(17, 24, 39, 0.2) 65%,
-      rgba(17, 24, 39, 0) 80%
+      rgba(58, 36, 26, 0.78) 0%,
+      rgba(58, 36, 26, 0.68) 30%,
+      rgba(58, 36, 26, 0.5) 48%,
+      rgba(58, 36, 26, 0.2) 65%,
+      rgba(58, 36, 26, 0) 80%
     );
   }
   .page-lagos-rs .hero-stack--split .hero-kicker { color: #ffffff; }
@@ -3805,7 +3856,7 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 .page-lagos-rs ~ .site-footer {
   --ui: var(--font-nunito-sans);
   --body: var(--font-nunito-sans);
-  background: #475569;
+  background: #6e5647;
   color: rgba(255, 255, 255, 0.85);
 }
 .page-lagos-rs ~ .site-footer .footer-masthead p { color: rgba(255, 255, 255, 0.85); }
@@ -3874,4 +3925,177 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     width: 34px;
     height: 34px;
   }
+}
+
+/* =========================================================================
+   PAINT-CRAFT RESTYLE
+   =========================================================================
+   Visual language pass moving the site off the inherited navy/crimson
+   "security" template and onto a warm, tactile, paint-craft identity.
+
+   Palette, type tokens and every colour value are already swapped at the
+   :root level at the top of this file — this block carries only what the
+   token swap cannot express: which face each role uses, the painted marks,
+   and the restyled trust band.
+
+   It sits last on purpose. Large parts of this stylesheet are inherited
+   from the sister site and carry !important at high specificity (see the
+   note on the mis-nested hero blocks above), so a restyle layer that must
+   win reliably belongs at the end rather than scattered through 4000 lines
+   of component rules.
+   ------------------------------------------------------------------------ */
+
+/* ---- Type roles ---------------------------------------------------------
+   Rounded display face carries every headline, the wordmark, buttons and
+   labels; the humanist sans carries running text; the brush script is
+   reserved for two things only — the wordmark's "Painter" and the hero
+   tagline — so it reads as a signature rather than decoration. */
+.page-home h1, .page-home h2, .page-home h3, .page-home h4,
+.page-lagos-rs h1, .page-lagos-rs h2, .page-lagos-rs h3, .page-lagos-rs h4,
+.page-home .hero-kicker, .page-lagos-rs .hero-kicker,
+.page-home .eyebrow, .page-lagos-rs .eyebrow,
+.wordmark, .btn, .card-link, .footer-col h4, .toc-label,
+.hero-trust-inline .v, .hero-trust-band .v, .hero-trust-band .vs {
+  font-family: var(--display);
+}
+.page-home h1, .page-home h2, .page-home h3,
+.page-lagos-rs h1, .page-lagos-rs h2, .page-lagos-rs h3,
+.page-home .hero-kicker, .page-lagos-rs .hero-kicker { font-weight: 600; letter-spacing: -0.005em; }
+.btn { font-weight: 600; letter-spacing: 0.005em; }
+
+/* Brush-script tagline. Caveat runs small for its point size, so it is set
+   noticeably larger than the sans it replaces and given tighter leading. */
+.page-home .hero-headline, .page-lagos-rs .hero-headline {
+  font-family: var(--script);
+  font-weight: 700;
+  font-size: 1.9em;
+  line-height: 1.12;
+  letter-spacing: 0.005em;
+}
+
+/* ---- Wordmark: hand-painted ---------------------------------------------
+   "Algarve" in the rounded display face, "Painter" in the brush script with
+   a tapered brushstroke swiped underneath it (the SVG is in layout.js's
+   wordmarkHtml). The stroke is out of flow, so it never affects the
+   header's height or the drawer's layout. */
+.wordmark { align-items: baseline; }
+.wordmark span.accent { font-family: var(--script); font-weight: 700; font-size: 1.34em; line-height: 0.9; }
+.wordmark .wordmark-h-wrap { position: relative; display: inline-block; line-height: 1; }
+.wordmark .wordmark-brush {
+  position: absolute;
+  left: -4%;
+  top: 100%;
+  width: 112%;
+  height: 0.28em;
+  margin-top: -0.09em;
+  overflow: visible;
+  pointer-events: none;
+}
+.site-header .wordmark span.accent,
+.footer-masthead .wordmark span.accent,
+.site-header--home .wordmark span.accent { color: var(--terracotta); }
+.site-header .wordmark .wordmark-brush path { fill: var(--cream); }
+.site-header--home .wordmark .wordmark-brush path,
+.nav-panel .wordmark .wordmark-brush path { fill: var(--terracotta); }
+.footer-masthead .wordmark .wordmark-brush path { fill: var(--ochre); }
+
+/* ---- Painted section marks ----------------------------------------------
+   A real brushstroke swiped under every section heading, replacing the
+   inherited rule/underline conventions. Uses the generated swatch asset so
+   the mark carries genuine bristle and impasto texture rather than being a
+   drawn shape. */
+.page-home .section-head h2,
+.page-lagos-rs .section-head h2 { position: relative; padding-bottom: 26px; }
+.page-home .section-head h2::after,
+.page-lagos-rs .section-head h2::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 2px;
+  width: 132px;
+  height: 20px;
+  background: url("/assets/images/swatch-clay.png") center / 100% 100% no-repeat;
+  opacity: 0.92;
+}
+/* Left-aligned heading contexts keep the mark under the text's own edge. */
+.page-home .two-col-text .section-head h2::after,
+.page-lagos-rs .two-col-text .section-head h2::after,
+.page-home .narrow > h2::after,
+.page-lagos-rs .narrow > h2::after { left: 0; transform: none; }
+
+/* Alternating hues so consecutive sections do not repeat the same swatch. */
+.page-home section:nth-of-type(3n+2) .section-head h2::after,
+.page-lagos-rs section:nth-of-type(3n+2) .section-head h2::after {
+  background-image: url("/assets/images/swatch-ochre.png");
+}
+.page-home section:nth-of-type(3n) .section-head h2::after,
+.page-lagos-rs section:nth-of-type(3n) .section-head h2::after {
+  background-image: url("/assets/images/swatch-blush.png");
+}
+
+/* Dark CTA bands carry the full three-hue swatch as a watermark. */
+.cta-band, .rs-block--dark { position: relative; overflow: hidden; }
+.cta-band::after, .rs-block--dark::after {
+  content: "";
+  position: absolute;
+  right: -6%;
+  bottom: -14%;
+  width: 62%;
+  height: 62%;
+  background: url("/assets/images/swatch-divider.png") right bottom / contain no-repeat;
+  opacity: 0.20;
+  pointer-events: none;
+}
+.cta-band > *, .rs-block--dark > * { position: relative; z-index: 1; }
+
+/* ---- Trust band ---------------------------------------------------------
+   Same three-icon layout and the same measured sizes; restyled onto the
+   warm palette with a soft painted-panel ground so it reads as part of the
+   identity rather than as a badge strip borrowed from a security site. */
+.page-home .hero-stack--split .hero-trust-inline,
+.page-lagos-rs .hero-stack--split .hero-trust-inline {
+  border-top-color: rgba(251, 244, 232, 0.34);
+}
+.page-home .hero-stack--split .hero-trust-inline .stat,
+.page-lagos-rs .hero-stack--split .hero-trust-inline .stat {
+  border-right-color: rgba(251, 244, 232, 0.28);
+}
+.page-home .hero-stack--split .hero-trust-inline .stat svg,
+.page-lagos-rs .hero-stack--split .hero-trust-inline .stat svg { stroke: var(--cream); }
+.page-home .hero-stack--split .hero-trust-inline .v,
+.page-home .hero-stack--split .hero-trust-inline .l,
+.page-lagos-rs .hero-stack--split .hero-trust-inline .v,
+.page-lagos-rs .hero-stack--split .hero-trust-inline .l { color: var(--cream); }
+
+/* Icon dots on light grounds pick up the ochre rather than the old teal. */
+.icon-dot { background: var(--ochre-tint); color: var(--ink); }
+
+/* ---- Buttons ------------------------------------------------------------
+   Pill geometry is unchanged (--rs-radius-btn stays 999px); only the fill
+   moves from alarm-red to terracotta, with ochre on press. Uses the deeper
+   --terracotta-btn so the cream label clears AA — see the token comment. */
+.btn, .card-link,
+.page-home #services .card-link,
+.page-lagos-rs #services .card-link,
+.page-home .hero-stack-text .btn, .page-lagos-rs .hero-stack-text .btn,
+.page-home .cta-band .btn, .page-lagos-rs .cta-band .btn { background: var(--terracotta-btn); }
+.btn:hover, .card:hover .card-link { background: var(--terracotta-dark); }
+.btn:active { background: var(--ochre-deep); }
+.btn-outline { border-color: var(--terracotta-btn); color: var(--terracotta-dark); background: transparent; }
+.btn-outline:hover { background: var(--terracotta-btn); color: var(--cream); }
+
+/* ---- Cards and surfaces -------------------------------------------------
+   Warm borders instead of cool grey, and a paint-chip corner on service
+   cards so the grid reads as a set of swatches. */
+.page-home .card, .page-lagos-rs .card { border-color: var(--stone); }
+.page-home #services .card .card-icon-block,
+.page-lagos-rs #services .card .card-icon-block { background: var(--terracotta); }
+.page-home #services .card:nth-child(3n+2) .card-icon-block,
+.page-lagos-rs #services .card:nth-child(3n+2) .card-icon-block { background: var(--ochre-deep); }
+.page-home #services .card:nth-child(3n) .card-icon-block,
+.page-lagos-rs #services .card:nth-child(3n) .card-icon-block { background: var(--ink-700); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }

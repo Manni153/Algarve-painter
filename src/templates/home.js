@@ -66,7 +66,7 @@ function renderHome() {
   };
 
   const hero = heroIntro({
-    alt: 'Freshly repainted terracotta villa facade with grey shutters under an Algarve sky',
+    alt: 'Thick brushstrokes of terracotta, ochre and dusty pink paint swatched across a dark canvas',
     h1Text: 'Painting & Decorating in the Algarve',
     // "Decorating" never splits across lines (nbsp, all breakpoints); the
     // <br> is desktop-only (see .hero-kicker-break in main.css) so it
@@ -86,10 +86,10 @@ function renderHome() {
     // heroIntro in layout.js for the single 1025px <picture> breakpoint
     // that splits them.
     image: {
-      mobileWebp: '/assets/images/hero-painting-mobile.webp',
-      mobileJpg: '/assets/images/hero-painting-mobile.jpg',
-      desktopWebp: '/assets/images/hero-painting-desktop.webp',
-      desktopJpg: '/assets/images/hero-painting-desktop.jpg',
+      mobileWebp: '/assets/images/hero-paint-mobile.webp',
+      mobileJpg: '/assets/images/hero-paint-mobile.jpg',
+      desktopWebp: '/assets/images/hero-paint-desktop.webp',
+      desktopJpg: '/assets/images/hero-paint-desktop.jpg',
       objectPosition: '55% 50%',
     },
     twoColDesktop: true,

@@ -61,17 +61,25 @@ The `/public` folder is a complete static site — point any static host at it:
 
 `src/_redirects` enforces the site-wide trailing-slash convention on Netlify (matching the canonical tags and `sitemap.xml`). On other hosts, apply the equivalent rule in that platform's own redirect configuration.
 
+## Design language
+
+**v4 "paint-craft"** — warm, tactile and pigment-led, replacing the navy/crimson palette inherited from the sister site. Structure, layout, grid, components, breakpoints and the measured hero budgets are unchanged; this is a visual restyle, not a rebuild.
+
+- **Palette** — terracotta `#c25a38` (the accent; `#b85132` wherever it sits behind text, so button labels clear WCAG AA), ochre `#d9a02b`, dusty pink `#d9a08c`, deep brown `#3a241a` for text and dark surfaces, cream `#fbf4e8` as the ground. Set as token *values* at the top of `src/assets/css/main.css`; the token *names* are unchanged so the component CSS between them keeps resolving.
+- **Type** — Fredoka (rounded display) for headlines, wordmark, buttons and labels; Nunito Sans for running text; Caveat (brush script) reserved for the wordmark's "Painter" and the hero tagline, so it reads as a signature rather than decoration. All three are self-hosted variable fonts in `src/assets/fonts` — no Google Fonts request, no third-party dependency.
+- **Wordmark** — "Algarve" in the display face, "Painter" in the script with a tapered brushstroke swiped underneath (the SVG lives in `wordmarkHtml` in `layout.js`).
+- **Everything the token swap can't express** lives in one clearly-marked `PAINT-CRAFT RESTYLE` block at the very end of `main.css` — type roles, the painted section marks, the wordmark, the trust band and the button fills. It sits last because much of the inherited stylesheet carries `!important` at high specificity.
+
 ## Photography
 
-There is **no painting-specific photography yet**. What ships is generic Algarve property imagery, and every image slot is wired through a small map so real photos can be dropped in without touching any template logic:
+There is **no photography of real work yet**. The hero and the section marks are generated impasto brushwork rather than stock imagery, which is deliberate — it signals painting immediately and stays exactly on palette. Everything is wired through a small map so real photos can be dropped in without touching template logic:
 
-- **Hero (all 33 pages)** — one shared villa-facade pair, `hero-painting-{desktop,mobile}.{jpg,webp}`. Per-page overrides live in `SERVICE_HERO_PHOTO` (`src/templates/service.js`) and `TOWN_HERO_PHOTO` (`src/templates/town.js`).
+- **Hero (all 33 pages)** — `hero-paint-{desktop,mobile}.{jpg,webp}`: thick terracotta, ochre and dusty-pink strokes swiped across a dark canvas, composed so the strokes clear the text column at every breakpoint. Per-page overrides live in `SERVICE_HERO_PHOTO` (`src/templates/service.js`) and `TOWN_HERO_PHOTO` (`src/templates/town.js`).
+- **Painted marks** — `swatch-clay.png`, `swatch-ochre.png`, `swatch-blush.png` under every section heading (alternating by section), and `swatch-divider.png` as a watermark on the dark CTA bands.
 - **Town "Local to <town>" photo** — genuinely different per town: 22 `<slug>-villa-terrace.{jpg,webp}` images, mapped in `TOWN_DESCRIPTION_PHOTO`.
-- **Service in-page photos** — two slots per page ("What's Included", "Why It Matters"), mapped in `SERVICE_DESCRIPTION_PHOTO`, currently drawing on the same town imagery.
+- **Service in-page photos** — two slots per page, mapped in `SERVICE_DESCRIPTION_PHOTO`, currently drawing on the same town imagery.
 
-Every service is listed in `SERVICE_MINIMAL_IMAGES_SLUGS`, which drops the media column from the "Real-World Scenarios" and "In Detail" sections rather than filling them with placeholder boxes. Remove a slug from that set once real photos exist for it and those media columns come back.
-
-The build currently renders **zero** visible `[Placeholder: …]` boxes — every slot that renders has a real image behind it.
+The generator for all of the above is not in the repo — the assets are committed as finished files. Every service is listed in `SERVICE_MINIMAL_IMAGES_SLUGS`, which drops the media column from the "Real-World Scenarios" and "In Detail" sections rather than filling them with placeholder boxes. The build renders **zero** visible `[Placeholder: …]` boxes.
 
 ## Content notes
 

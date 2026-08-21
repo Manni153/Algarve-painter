@@ -26,11 +26,11 @@ const SERVICE_MINIMAL_IMAGES_SLUGS = new Set(['exterior-house-painting', 'interi
 // than dedicated per-service shots. When real per-service photography is
 // supplied, replace the entry for that slug here — nothing else changes.
 const SHARED_HERO = {
-  mobileWebp: '/assets/images/hero-painting-mobile.webp',
-  mobileJpg: '/assets/images/hero-painting-mobile.jpg',
-  desktopWebp: '/assets/images/hero-painting-desktop.webp',
-  desktopJpg: '/assets/images/hero-painting-desktop.jpg',
-  alt: 'Freshly repainted villa facade with grey shutters under an Algarve sky',
+  mobileWebp: '/assets/images/hero-paint-mobile.webp',
+  mobileJpg: '/assets/images/hero-paint-mobile.jpg',
+  desktopWebp: '/assets/images/hero-paint-desktop.webp',
+  desktopJpg: '/assets/images/hero-paint-desktop.jpg',
+  alt: 'Thick brushstrokes of terracotta, ochre and dusty pink paint swatched across a dark canvas',
 };
 const SERVICE_HERO_PHOTO = {
   'exterior-house-painting': SHARED_HERO,
