@@ -19,11 +19,19 @@ rather than beside it, so the argument there is weaker — but mirroring it
 too keeps the artwork facing the same way at every width, so resizing past
 1025px does not flip the strokes end for end.
 
-The portrait source needs no recomposition: it is already 0.797:1, the exact
-frame the mobile hero renders into, so it is resized rather than cropped or
-laid onto a made-up ground. (The previous mobile art was the 16:9 photograph
-pasted low on a matching canvas colour, which was only ever a way of not
-losing three of the five strokes to a crop.)
+The portrait source needs no recomposition — it is shot in the orientation
+the mobile hero renders into, so it is resized rather than cropped to shape
+or laid onto a made-up ground. (The previous mobile art was the 16:9
+photograph pasted low on a matching canvas colour, which was only ever a way
+of not losing three of the five strokes to a crop.)
+
+Its dead bottom margin is trimmed, though. Below 1025px the hero frame is
+always narrower than the artwork, so `object-fit: cover` fits the image by
+HEIGHT and crops width — which means every row of the file renders, and the
+photograph's bottom 210px of bare canvas showed as an empty band under the
+strokes at the foot of the hero. Trimming to the last row that carries paint
+puts the burgundy on the frame's bottom edge. Nothing is discarded: the cut
+is at the paint boundary, not into it.
 """
 from PIL import Image, ImageOps, ImageFilter
 
@@ -75,10 +83,18 @@ def main():
     # compared side by side at 1:1 against q82, no difference is visible —
     # while the flat pigment fields that would show banding are exactly where
     # the encoder spends least. Desktop is untouched at q82.
+    # PAINT_BOTTOM is the last row of the portrait source carrying pigment,
+    # measured off the file rather than eyeballed. Everything below it is
+    # bare canvas, and below 1025px every row renders (see the module
+    # docstring), so it would show as an empty band under the strokes.
+    # Trimming it takes the source from 0.797:1 to 0.888:1; the srcset width
+    # descriptors are unchanged, so image selection is unaffected.
+    PAINT_BOTTOM = 1838
     m = ImageOps.mirror(Image.open(SRC_MOBILE).convert('RGB'))
-    save(fit(m,  850, 1067), IMG + 'hero-paint-mobile@sm', q=76)
-    save(fit(m, 1250, 1569), IMG + 'hero-paint-mobile',    q=76)
-    save(fit(m, 1632, 2048), IMG + 'hero-paint-mobile@2x', q=76, sharpen=True)
+    m = m.crop((0, 0, m.width, PAINT_BOTTOM))
+    save(fit(m,  850,  957), IMG + 'hero-paint-mobile@sm', q=76)
+    save(fit(m, 1250, 1408), IMG + 'hero-paint-mobile',    q=76)
+    save(fit(m, 1632, 1838), IMG + 'hero-paint-mobile@2x', q=76, sharpen=True)
 
     print('hero built: desktop from %s, mobile/tablet from %s (both mirrored)'
           % (SRC_DESKTOP, SRC_MOBILE))

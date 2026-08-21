@@ -2714,22 +2714,10 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     object-fit: cover;
     border-radius: 0;
   }
-  /* This is now a dedicated portrait (1632x2048) image composed for this
-     aspect ratio, not a crop of the desktop photo — see home.js's image
-     config and the single 1025px <picture> breakpoint in layout.js's
-     heroIntro(). Because the image itself is already taller than any
-     tested container (390x680 through 820x1180 all have a wider aspect
-     ratio than the source's own 0.797), object-fit: cover here only ever
-     crops width, never height — the full vertical extent always renders,
-     so only object-position-x matters.
-     55% sits just right of centre: it keeps the front door and the pair
-     of shuttered openings — the part of the facade that actually reads as
-     "freshly painted" — in frame across the tested widths, while trimming
-     the olive-tree foliage that fills the left edge of the source. The
-     sister site used 90% here to hold a piece of hardware near the right
-     edge in frame; that asset detail is gone from this crop, so the value
-     is retuned to the facade instead of inherited unchanged. */
-    object-position: 55% 50%;
+  /* An object-position for this breakpoint used to sit here, as a bare
+     declaration after the rule above had already closed — dead, and it took
+     the rest of this media query out to top level with it. The live rule is
+     at the end of the file; see HERO CROP BELOW 1025PX. */
   }
   /* Scrim: top-to-bottom (not desktop's left-right) — darkest behind the
      header/text block at the top, easing out by roughly the point the
@@ -3662,12 +3650,10 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     object-fit: cover;
     border-radius: 0;
   }
-  /* Same dedicated portrait (1455x1826) mobile/tablet asset as the
-     homepage's own hero, with the same facade composition — reusing the
-     homepage's own tuned 55% 50% crop keeps the door and shuttered
-     openings fully in frame across the tested widths. */
+  /* Same portrait photograph as the homepage's own hero, so it takes the
+     same crop — see HERO CROP BELOW 1025PX at the end of the file. */
   .page-lagos-rs .hero-stack--split .hero-stack-media picture img {
-    object-position: 55% 50%;
+    object-position: 85% 50%;
   }
   /* Rollout towns without their own photography yet (see
      hasPilotPhotography in town.js) render the standard placeholder box
@@ -4333,5 +4319,34 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     width: 30px;
     height: 30px;
     margin-bottom: 6px;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   HERO CROP BELOW 1025PX
+   -------------------------------------------------------------------------
+   Below 1025px the hero is the portrait photograph, and the frame is always
+   narrower than the artwork — so `object-fit: cover` crops width and never
+   height. Every row of the file renders, which is why its dead bottom margin
+   is trimmed at source in tools/paint/hero_from_photo.py rather than being
+   hidden here, and why only object-position-x does anything.
+
+   85% pushes the window most of the way toward the loaded end of the strokes.
+   The strokes run at a slight diagonal and their dry-brush tails rise to the
+   left, so a centred window leaves a pale wedge of bare canvas in the bottom
+   corner where the burgundy has already lifted off. At 85% the burgundy fills
+   the foot of the frame and the rounded loaded ends of the plum and burgundy
+   come into view, while the dry fade still sits under the headline. Contrast
+   is unaffected — the stats measure 4.89:1 here against 4.96:1 centred.
+
+   This lives at the end of the file rather than in the max-width: 1024px
+   block that looks like its home, because the declaration there was orphaned
+   after a closed rule and never applied. Desktop is untouched: its own crop
+   is set inside the min-width: 1025px blocks and is not matched here.
+   ------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .page-home .hero-stack--split .hero-stack-media picture img,
+  .page-lagos-rs .hero-stack--split .hero-stack-media picture img {
+    object-position: 85% 50%;
   }
 }
