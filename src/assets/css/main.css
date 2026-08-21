@@ -54,13 +54,7 @@
                                        the veil over it and the stats band behind the
                                        trust row both derive from this one triplet so
                                        they can never drift apart */
-  --terracotta: #c25a38;      /* the accent — painted marks, swatches, section marks */
-  --crimson: #dc143c;         /* the CTA fill and the wordmark's "Painter", brought back
-                                 from the first build of this site. Cream label on top
-                                 measures 4.56:1, so it clears AA for the button without
-                                 needing the deepened step the terracotta did. */
-  --crimson-dark: #b31032;    /* hover */
-  --crimson-deep: #96092a;    /* press */
+  --terracotta: #c25a38;      /* the accent — painted marks, swatches, script wordmark */
   --terracotta-btn: #b85132;  /* the same hue, one step deeper: used wherever the accent
                                  sits behind text. #c25a38 with the cream label on top
                                  measures 4.29:1, just under AA for a 16px bold button;
@@ -92,7 +86,7 @@
   /* Exact client-specified palette for this hero pass — kept as its own
      token set (not merged into --rs-* or --header-home-*) since these are
      literal signed-off hex values, not derived design-system colours. */
-  --hero2-crimson: var(--crimson);  /* crimson again — the CTA channel inherited from the sister site */
+  --hero2-crimson: #b85132;  /* NOT crimson any more: the AA-safe terracotta used behind button labels */
   --hero2-steel: #6e5647;    /* NOT steel: warm mid-brown */
   --hero2-steel-tint: rgba(110, 86, 71, 0.13); /* image panel bg */
   --hero2-near-black: #3a241a;
@@ -1132,7 +1126,7 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
   --rs-ink: #3a241a;
   --rs-muted: #6e5647;
   --rs-dark: var(--ink);          /* reuses the existing header charcoal/navy */
-  --rs-accent: var(--crimson); /* buttons only — see the --crimson token */
+  --rs-accent: var(--terracotta-btn); /* buttons only — the AA-safe step of the accent */
 
   --rs-font: var(--body);
 
@@ -4007,10 +4001,10 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 }
 .site-header .wordmark span.accent,
 .footer-masthead .wordmark span.accent,
-.site-header--home .wordmark span.accent { color: var(--crimson); }
+.site-header--home .wordmark span.accent { color: var(--terracotta); }
 .site-header .wordmark .wordmark-brush path { fill: var(--cream); }
 .site-header--home .wordmark .wordmark-brush path,
-.nav-panel .wordmark .wordmark-brush path { fill: var(--crimson); }
+.nav-panel .wordmark .wordmark-brush path { fill: var(--terracotta); }
 .footer-masthead .wordmark .wordmark-brush path { fill: var(--ochre); }
 
 /* ---- Painted section marks ----------------------------------------------
@@ -4086,20 +4080,18 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 .icon-dot { background: var(--ochre-tint); color: var(--ink); }
 
 /* ---- Buttons ------------------------------------------------------------
-   Pill geometry is unchanged (--rs-radius-btn stays 999px); the fill is
-   crimson, the colour the first build of this site used for exactly this.
-   Hover and press are steps of the same hue rather than the terracotta and
-   ochre they were: a warm-orange press under a crimson pill reads as a
-   different button, not a pressed one. */
+   Pill geometry is unchanged (--rs-radius-btn stays 999px); only the fill
+   moves from alarm-red to terracotta, with ochre on press. Uses the deeper
+   --terracotta-btn so the cream label clears AA — see the token comment. */
 .btn, .card-link,
 .page-home #services .card-link,
 .page-lagos-rs #services .card-link,
 .page-home .hero-stack-text .btn, .page-lagos-rs .hero-stack-text .btn,
-.page-home .cta-band .btn, .page-lagos-rs .cta-band .btn { background: var(--crimson); }
-.btn:hover, .card:hover .card-link { background: var(--crimson-dark); }
-.btn:active { background: var(--crimson-deep); }
-.btn-outline { border-color: var(--crimson); color: var(--crimson-dark); background: transparent; }
-.btn-outline:hover { background: var(--crimson); color: var(--cream); }
+.page-home .cta-band .btn, .page-lagos-rs .cta-band .btn { background: var(--terracotta-btn); }
+.btn:hover, .card:hover .card-link { background: var(--terracotta-dark); }
+.btn:active { background: var(--ochre-deep); }
+.btn-outline { border-color: var(--terracotta-btn); color: var(--terracotta-dark); background: transparent; }
+.btn-outline:hover { background: var(--terracotta-btn); color: var(--cream); }
 
 /* ---- Cards and surfaces -------------------------------------------------
    Warm borders instead of cool grey, and a paint-chip corner on service
@@ -4261,8 +4253,8 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 .site-header--home-transparent .header-phone,
 .site-header--home-transparent .home-header-nav-link,
 .site-header--home-transparent .home-header-nav-trigger { color: var(--ink); }
-.site-header--home-transparent .wordmark span.accent { color: var(--crimson); }
-.site-header--home-transparent .wordmark .wordmark-brush path { fill: var(--crimson); }
+.site-header--home-transparent .wordmark span.accent { color: var(--terracotta); }
+.site-header--home-transparent .wordmark .wordmark-brush path { fill: var(--terracotta); }
 .site-header--home-transparent .hamburger span { background: var(--ink); }
 
 /* Tablet only (768-1024px): the stats row lands squarely on the strokes at
