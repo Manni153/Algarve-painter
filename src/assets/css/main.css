@@ -3827,3 +3827,51 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
   height: 0.45em;
   overflow: visible;
 }
+
+/* -------------------------------------------------------------------------
+   Desktop hero stats — larger text and icons (1025px+ only)
+   -------------------------------------------------------------------------
+   Requested size bump for the hero trust stats on desktop only; mobile and
+   tablet keep the sizes set further up untouched.
+
+   This block sits at the very end of the file deliberately. The
+   .page-home / .page-lagos-rs .hero-stack--split .hero-trust-inline
+   "compact 3-up row" rules further up (the ones setting 14px text and
+   22px icons) are indented and commented as though they were inside a
+   max-width media query, but they actually sit at TOP LEVEL — the
+   enclosing @media (max-width: 1024px) closes before them. Inherited that
+   way from the sister site's stylesheet. Because they carry !important at
+   the same specificity as the 1025px+ rules earlier in the file, they win
+   on source order at every width, which is why those earlier desktop
+   values never took effect.
+
+   Re-nesting those blocks would fix the root cause but would also pull the
+   hero scrim gradient, kicker colour and headline colour into the
+   max-width query alongside them, changing desktop appearance well beyond
+   the stats. So this override is scoped to the desktop breakpoint and
+   placed last, winning on source order without altering any other
+   breakpoint or any other property.
+
+   Only .v is rendered in the desktop stats markup (see heroIntro in
+   layout.js); .l is included so the fallback markup variant scales too.
+
+   25px/34px is the ceiling, set by the narrowest desktop width (1025px) on
+   the service and town pages: their stats row is a single nowrap line of
+   three labels inside a 780px column, and 26px pushes it 4px past the
+   edge. The homepage has slack for more, but one shared value keeps the
+   three page types consistent. Measured at 1025/1280/1440/1920 on all
+   three templates. */
+@media (min-width: 1025px) {
+  .page-home .hero-stack--split .hero-trust-inline .v,
+  .page-home .hero-stack--split .hero-trust-inline .l,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .v,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .l {
+    font-size: 25px !important;
+    line-height: 1.25;
+  }
+  .page-home .hero-stack--split .hero-trust-inline .stat svg,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .stat svg {
+    width: 34px;
+    height: 34px;
+  }
+}
