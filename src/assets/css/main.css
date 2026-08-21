@@ -2293,7 +2293,7 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
      cropping is minimal either way and centred keeps the whole facade —
      door, shutters and roofline — comfortably in frame. */
   .page-home .hero-stack--split .hero-stack-media picture img {
-    object-position: 50% 50%;
+    object-position: 55% 50%;
   }
   /* Scrim, this round's fix #2. First attempt (0.58 -> 0.34 -> 0 @
      0/30/68%) was measured via real WCAG contrast sampling (see
@@ -3542,7 +3542,7 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
      the mobile/tablet portrait repositioned, so it wants a plain centered
      position rather than the mobile crop's tuned offset. */
   .page-lagos-rs .hero-stack--split .hero-stack-media picture img {
-    object-position: 50% 50%;
+    object-position: 55% 50%;
   }
   /* Rollout towns without their own photography yet (see
      hasPilotPhotography in town.js) render the standard placeholder box
@@ -4162,17 +4162,47 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 }
 @media (max-width: 1024px) {
   /* Mobile and tablet stack text above the strokes, so the veil runs
-     top-to-bottom there instead of left-to-right. */
+     top-to-bottom there instead of left-to-right.
+
+     The hold at 0.78 through 52% is what the phone stats row now stands on.
+     It used to sit on a painted band; with the band gone the row lands
+     directly on the strokes, at roughly 41-54% of the frame, right where
+     the old ramp was already down to 0.55 — the labels measured 3.97:1 at
+     360px. Holding the veil a little longer and clearing it slightly later
+     puts them at 7.58:1 and costs only the top of the ochre stroke; the
+     four below it are untouched. */
   .page-home .hero-stack--split .hero-stack-media::before,
   .page-lagos-rs .hero-stack--split .hero-stack-media::before,
   .page-home .hero-stack--split .hero-stack-media::after,
   .page-lagos-rs .hero-stack--split .hero-stack-media::after {
     background: linear-gradient(to bottom,
       rgba(var(--hero-canvas-rgb), 0.95) 0%,
-      rgba(var(--hero-canvas-rgb), 0.90) 32%,
-      rgba(var(--hero-canvas-rgb), 0.55) 48%,
-      rgba(var(--hero-canvas-rgb), 0.10) 62%,
-      rgba(var(--hero-canvas-rgb), 0) 72%) !important;
+      rgba(var(--hero-canvas-rgb), 0.92) 40%,
+      rgba(var(--hero-canvas-rgb), 0.78) 52%,
+      rgba(var(--hero-canvas-rgb), 0.10) 64%,
+      rgba(var(--hero-canvas-rgb), 0) 74%) !important;
+  }
+}
+
+/* Below 360px the percentages above stop tracking the row. The hero's
+   height follows the viewport, the row's offset does not, and at 320px the
+   labels wrap to two lines: the row runs 54-68% of a 320x700 frame where it
+   runs 41-51% of a 390x844 one, so a veil that covers it there has already
+   cleared here and the labels fall to 1.00:1. Only at this width is the
+   trade worth it — px stops hold the veil where the row actually is (8.54:1
+   measured at 320x568 and 320x700) at the cost of washing out most of the
+   strokes, which on a 320px screen are a thin sliver anyway. */
+@media (max-width: 359px) {
+  .page-home .hero-stack--split .hero-stack-media::before,
+  .page-lagos-rs .hero-stack--split .hero-stack-media::before,
+  .page-home .hero-stack--split .hero-stack-media::after,
+  .page-lagos-rs .hero-stack--split .hero-stack-media::after {
+    background: linear-gradient(to bottom,
+      rgba(var(--hero-canvas-rgb), 0.95) 0px,
+      rgba(var(--hero-canvas-rgb), 0.92) 340px,
+      rgba(var(--hero-canvas-rgb), 0.80) 500px,
+      rgba(var(--hero-canvas-rgb), 0.10) 590px,
+      rgba(var(--hero-canvas-rgb), 0) 680px) !important;
   }
 }
 
@@ -4219,42 +4249,82 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 }
 
 /* -------------------------------------------------------------------------
-   Hero stats band
+   Hero stats without a band
    -------------------------------------------------------------------------
-   The trust row sits on a paint stroke, not a card. It needs its own solid
-   ground — relying on the veil meant the row's legibility depended on where
-   it happened to fall relative to the strokes, which varied by width and
-   would shift again on any composition change — but a rounded rectangle
-   with a shadow reads as UI dropped on top of the artwork. So the ground is
-   a stroke like every other one in the hero: same rounded ends, same matte
-   texture, laid down solid and in a warm tan from the same palette.
+   The painted band behind the trust row is gone, so the row has to sit
+   legibly on the photograph itself. It cannot do that in its old shape: the
+   three labels on one line need about 631px of glyphs at 25px, while the
+   hero photograph's light field runs out roughly 460px across (measured
+   behind the row at 1025/1440/1920, contrast for the dark labels holds
+   6-8:1 for the first half of the row and then falls off a cliff to 1.1-1.6
+   over the plum and burgundy). Left as it was, the row measured 1.32:1.
 
-   The asset is generated at two aspect ratios (see tools/paint/generate.py)
-   because the row is roughly 8:1 on desktop and 3:1 on mobile; stretching
-   one stroke across that range smears its texture visibly. Sized with
-   100% 100% so the stroke spans exactly the row and nothing else —
-   .hero-trust-inline is as wide as the hero text column, so the strokes
-   either side of it are untouched.
+   Neither reframing, a wider veil, nor a soft wash fixes that. Shifting
+   object-position moves the crop by only a few percent, because a 16:9
+   source in a 1.6 box is barely cropped horizontally — swept 0-55%, the row
+   never rose above 1.31:1. Pushing the veil's stops out to 930px, past the
+   780px text column itself, and flattening its angle from 100deg to 90deg
+   so the bottom of the hero gets as much light as the top, still only
+   reached 2.11:1: at 0.82 alpha the veil does not cover burgundy, and the
+   alpha it would take to cover it washes the photograph out entirely. A
+   feathered wash behind the row does raise it, but a pale shape spanning
+   the row is the thing that was asked to go, whether or not it has edges.
 
-   The dividing rules are dropped with the card: hairlines between the three
-   stats are the other thing that read as interface rather than paint.
+   What works is making the row narrow enough to stay on the light field: it
+   adopts the stacked value-over-label format the mobile hero already uses,
+   which needs roughly 470px instead of 631px for the same three stats at
+   the same value size. No surface behind it, the paint runs unbroken, and
+   the labels measure 4.97:1 (values) and 5.60:1 (labels) at their worst,
+   which is 1025px — clear of AA for normal text, not just large.
+
+   Tablet (768-1024px) is deliberately left alone. There the row is
+   bottom-anchored over the strokes at every width, so none of this helps:
+   stripping its translucent panel drops the labels to 1.01:1, and moving
+   the row up into the veiled zone only reaches 1.15:1. It keeps the panel
+   it already had.
    ------------------------------------------------------------------------- */
-.page-home .hero-stack--split .hero-trust-inline,
-.page-lagos-rs .hero-stack--split .hero-trust-inline {
-  background: url("/assets/images/stats-swatch-wide.png") center / 100% 100% no-repeat;
-  border-top: none;
-  border-radius: 0;
-  box-shadow: none;
-  padding: 18px 30px 20px;
-}
-.page-home .hero-stack--split .hero-trust-inline .stat,
-.page-lagos-rs .hero-stack--split .hero-trust-inline .stat {
-  border-right: none;
-}
-@media (max-width: 1024px) {
+@media (min-width: 1025px) {
   .page-home .hero-stack--split .hero-trust-inline,
   .page-lagos-rs .hero-stack--split .hero-trust-inline {
-    background-image: url("/assets/images/stats-swatch-tall.png");
-    padding: 18px 18px 20px;
+    max-width: 486px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    align-items: start;
+    padding: 0;
+    background: none;
+    border-top: 1px solid rgba(58, 36, 26, 0.16);
+    padding-top: 18px;
+  }
+  .page-home .hero-stack--split .hero-trust-inline .stat,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .stat {
+    border-right: none;
+    padding-right: 0;
+    text-align: center;
+    min-width: 0;
+  }
+  /* Swap to the stacked format: the single combined line is what does not
+     fit, not the type size. The value keeps its size; the label sits under
+     it, which is what buys back the ~165px. */
+  .page-home .hero-stack--split .hero-trust-inline .v-desktop,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .v-desktop { display: none; }
+  .page-home .hero-stack--split .hero-trust-inline .v-mobile,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .v-mobile { display: block; }
+  .page-home .hero-stack--split .hero-trust-inline .v-mobile-value,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .v-mobile-value {
+    font-size: 25px !important;
+    line-height: 1.2;
+  }
+  .page-home .hero-stack--split .hero-trust-inline .v-mobile-label,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .v-mobile-label {
+    font-size: 15px !important;
+    line-height: 1.25;
+    font-weight: 600;
+  }
+  .page-home .hero-stack--split .hero-trust-inline .stat svg,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline .stat svg {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 6px;
   }
 }

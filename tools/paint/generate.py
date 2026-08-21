@@ -103,32 +103,6 @@ def main(name='reference'):
     div.save(IMG + 'swatch-divider.png')
     print('swatches')
 
-    # Stats swatch: the band the hero trust row sits on. It is a paint stroke
-    # like everything else in the hero — same rounded ends, same matte
-    # texture — just laid down solid, so the icons and labels on top of it
-    # stay legible whatever is painted behind. Two aspect ratios rather than
-    # one stretched asset: the row is roughly 8:1 on desktop and 3:1 on
-    # mobile, and stretching a single stroke across that range visibly
-    # smears its texture.
-    # A pale tint of the hero photograph's own rose, rather than a neutral.
-    # Near-white read as a glowing bar rather than paint — it disappeared
-    # into the canvas on the left and glowed over the strokes on the right.
-    # A tint that is clearly a colour from the set reads as a light swipe of
-    # paint laid over the others, while still giving the dark labels on top
-    # of it around 9:1.
-    # Note this is the base pigment, not the rendered result: the shading
-    # terms lighten a stroke by up to ~13%, so a pale base clips toward white
-    # in the bright passes. Set deeper than the tone the band should read as.
-    TAN = (212, 186, 176)
-    # Sized close to what it actually renders at, not far above it. The row
-    # is ~780x92 CSS on desktop = 1560x184 device pixels at DPR 2, so 2400px
-    # covers DPR 3 while only downscaling ~1.5x. Generating it much larger
-    # (3200px) shrank the brush grain by 4x on the way down and the band
-    # came out looking like a smooth pill rather than paint.
-    stroke(2400, 290, TAN, seed=901, arc=0.015, load=1.0, solid=True).save(IMG + 'stats-swatch-wide.png')
-    stroke(1250, 430, TAN, seed=907, arc=0.02, load=1.0, solid=True).save(IMG + 'stats-swatch-tall.png')
-    print('stats swatch')
-
     # Favicon: two loaded swipes on cream.
     S = 1024
     fav = canvas(S, S, CANVAS, seed=5, tooth=0.08).convert('RGBA')
