@@ -24,7 +24,7 @@ def _smooth1d(v, sigma):
     k = np.exp(-0.5 * (np.arange(-r, r + 1) / sigma) ** 2); k /= k.sum()
     return np.convolve(np.pad(v, r, mode='edge'), k, mode='same')[r:r + n]
 
-def stroke(w, h, colour, seed=0, arc=0.10, load=0.85, thickness=0.74):
+def stroke(w, h, colour, seed=0, arc=0.10, load=0.85, thickness=0.74, solid=False):
     rng = np.random.RandomState(seed)
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
     t = np.linspace(0, 1, w).astype(np.float32)
@@ -33,13 +33,18 @@ def stroke(w, h, colour, seed=0, arc=0.10, load=0.85, thickness=0.74):
     centre += _smooth1d((rng.rand(w) - 0.5) * h * 0.10, w * 0.06)
 
     # rounded where the brush is set down, tapering slightly toward the tail
-    prof = np.sqrt(np.clip(t / 0.045, 0, 1)) * (1 - 0.28 * np.clip((t - 0.55) / 0.45, 0, 1) ** 1.6)
+    prof = np.sqrt(np.clip(t / (0.020 if solid else 0.045), 0, 1))
+    if not solid:
+        prof = prof * (1 - 0.28 * np.clip((t - 0.55) / 0.45, 0, 1) ** 1.6)
+    else:
+        prof = prof * np.sqrt(np.clip((1 - t) / 0.020, 0, 1))   # rounded at both ends
     half = (h * thickness * 0.5) * prof
-    half *= 0.86 + 0.28 * _smooth1d(rng.rand(w), w * 0.05)
+    half *= (0.97 + 0.05 * _smooth1d(rng.rand(w), w * 0.05)) if solid else (0.86 + 0.28 * _smooth1d(rng.rand(w), w * 0.05))
     # high-frequency raggedness on the outer envelope — paint edges are
     # irregular at every scale, and a slowly-varying envelope reads as tape
-    ragged_t = 1 + 0.13 * _smooth1d(rng.rand(w) - 0.5, max(1.5, w * 0.004)) * 2.4
-    ragged_b = 1 + 0.13 * _smooth1d(rng.rand(w) - 0.5, max(1.5, w * 0.004)) * 2.4
+    ragged_amp = 0.04 if solid else 0.13
+    ragged_t = 1 + ragged_amp * _smooth1d(rng.rand(w) - 0.5, max(1.5, w * 0.004)) * 2.4
+    ragged_b = 1 + ragged_amp * _smooth1d(rng.rand(w) - 0.5, max(1.5, w * 0.004)) * 2.4
 
     # ---- bristle lanes ----------------------------------------------------
     lanes = max(18, int(h / 5))
@@ -54,7 +59,7 @@ def stroke(w, h, colour, seed=0, arc=0.10, load=0.85, thickness=0.74):
         band_h = np.maximum(half * (1.35 / lanes) * 2.6, 0.9)
         d = np.abs(yy - band_c[None, :]) / band_h[None, :]
         lane = np.clip(1.25 - d, 0, 1)
-        alive = np.clip(1 - (t[None, :] - lane_dry[i] * load) / 0.30, 0, 1)
+        alive = np.ones((1, w), np.float32) if solid else np.clip(1 - (t[None, :] - lane_dry[i] * load) / 0.30, 0, 1)
         alive = np.clip(alive + (lane_load[i] - 0.5) * 0.8, 0, 1)
         a = np.maximum(a, lane * alive * (0.55 + 0.65 * lane_load[i]))
     up = np.maximum(half * ragged_t, 1e-3)[None, :]
@@ -73,31 +78,40 @@ def stroke(w, h, colour, seed=0, arc=0.10, load=0.85, thickness=0.74):
     # rather than an airbrush cloud. This happens before shading so the body
     # and the edge are lit as one mass.
     a = np.asarray(Image.fromarray((a * 255).astype(np.uint8))
-                   .filter(ImageFilter.GaussianBlur(max(1.4, h * 0.032))), np.float32) / 255.0
+                   .filter(ImageFilter.GaussianBlur(max(1.4, h * (0.018 if solid else 0.032)))), np.float32) / 255.0
     a = np.clip((a - 0.11) / 0.72, 0, 1)
 
     # Broad, low-frequency density variation — where the swatch was pressed
     # thin and where the pigment pooled.
     press = _noise(max(5, w // 34), max(4, h // 7), 3, 3, rng)
     press = np.asarray(Image.fromarray((press * 255).astype(np.uint8)).resize((w, h), Image.BICUBIC), np.float32) / 255.0
-    a = np.clip(a * (0.72 + 0.46 * press), 0, 1)
-
-    # Canvas tooth showing through where the pigment was pressed thin — the
-    # difference between worked paint and an airbrushed gradient.
+    # Opacity modulation is kept deliberately shallow. Thinning the alpha
+    # over a light canvas is what drains a pigment: the cream reads through
+    # and the stroke goes pastel. The worked, pressed character comes from
+    # varying the COLOUR through the body instead (below), which keeps the
+    # stroke opaque and therefore rich while still looking hand-laid.
     tooth_n = _noise(w, h, 4, 14, rng)
-    a = np.clip(a * (0.86 + 0.20 * tooth_n), 0, 1)
+    if solid:
+        a = np.clip(a * (0.97 + 0.03 * press) * (0.98 + 0.02 * tooth_n) * 1.25, 0, 1)
+    else:
+        a = np.clip(a * (0.90 + 0.13 * press) * (0.94 + 0.08 * tooth_n) * 1.12, 0, 1)
 
     # ---- body shading -----------------------------------------------------
     # Matte, not glossy: the pigment is knocked back toward a warm grey and
     # lit only by broad, soft variation. No specular rim — a bright edge
     # highlight is what made the earlier strokes read as motion graphics.
     base = np.array(colour, np.float32)
+    # A trace of warm grey only — enough to take the plastic edge off a
+    # saturated pigment, far short of desaturating it. The previous pass
+    # mixed in 12% and that, compounded with thinned alpha, is what turned
+    # the set pastel.
     grey = float(base @ np.array([0.299, 0.587, 0.114], np.float32))
-    base = base * (1 - 0.12) + np.array([grey * 1.03, grey * 0.98, grey * 0.91], np.float32) * 0.12
+    base = base * 0.97 + np.array([grey * 1.03, grey * 0.98, grey * 0.91], np.float32) * 0.03
 
     tone = _noise(w, h, 5, 5, rng)
-    body = base[None, None, :] * (0.90 + 0.17 * tone[..., None])
-    body *= (0.94 + 0.13 * press[..., None])
+    amp = 0.09 if solid else 0.26
+    body = base[None, None, :] * ((1.0 - amp * 0.5) + amp * tone[..., None])
+    body *= (1.0 - (0.09 if not solid else 0.03)) + (0.18 if not solid else 0.06) * press[..., None]
 
     # Striations survive, but blurred and shallow — worked into the paint
     # rather than dragged across the top of it.
@@ -105,20 +119,20 @@ def stroke(w, h, colour, seed=0, arc=0.10, load=0.85, thickness=0.74):
     drag = np.asarray(Image.fromarray((drag * 255).astype(np.uint8))
                       .resize((w, h), Image.BILINEAR)
                       .filter(ImageFilter.GaussianBlur(max(1.0, h * 0.010))), np.float32) / 255.0
-    body *= (0.95 + 0.11 * drag[..., None])
+    body *= (0.95 + 0.11 * drag[..., None]) if not solid else (0.98 + 0.04 * drag[..., None])
 
     lanes_light = np.zeros((h, w), np.float32)
     for i in range(lanes):
         band_c = centre + (lane_y[i] + lane_off[i]) * half
         lanes_light += np.exp(-((yy - band_c[None, :]) ** 2) / (2 * (max(h * 0.018, 1)) ** 2)) * (lane_load[i] - 0.5)
-    body *= (1 + np.clip(lanes_light, -1, 1)[..., None] * 0.09)
+    body *= (1 + np.clip(lanes_light, -1, 1)[..., None] * (0.04 if solid else 0.12))
 
     # A single soft cross-stroke gradient stands in for form. Deliberately
     # much weaker than the old edge-gradient lighting, and with no positive
     # highlight term at all.
     blur = np.asarray(Image.fromarray((a * 255).astype(np.uint8))
                       .filter(ImageFilter.GaussianBlur(max(2.5, h * 0.06))), np.float32) / 255.0
-    body *= (0.93 + 0.09 * blur[..., None])
+    body *= (0.95 + 0.07 * blur[..., None])
 
     # Soften the pigment itself, so colour bleeds slightly across the body
     # the way worked paint does.

@@ -4154,12 +4154,10 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
      the text wherever it actually is. */
   --hero-veil-left: max(24px, calc(50% - 590px));
   background: linear-gradient(100deg,
-    rgba(var(--hero-canvas-rgb), 0.94) 0px,
-    rgba(var(--hero-canvas-rgb), 0.90) calc(var(--hero-veil-left) + 520px),
-    rgba(var(--hero-canvas-rgb), 0.70) calc(var(--hero-veil-left) + 700px),
-    rgba(var(--hero-canvas-rgb), 0.26) calc(var(--hero-veil-left) + 820px),
-    rgba(var(--hero-canvas-rgb), 0.04) calc(var(--hero-veil-left) + 920px),
-    rgba(var(--hero-canvas-rgb), 0) calc(var(--hero-veil-left) + 1000px)) !important;
+    rgba(var(--hero-canvas-rgb), 0.85) 0px,
+    rgba(var(--hero-canvas-rgb), 0.62) calc(var(--hero-veil-left) + 470px),
+    rgba(var(--hero-canvas-rgb), 0.14) calc(var(--hero-veil-left) + 610px),
+    rgba(var(--hero-canvas-rgb), 0) calc(var(--hero-veil-left) + 720px)) !important;
 }
 @media (max-width: 1024px) {
   /* Mobile and tablet stack text above the strokes, so the veil runs
@@ -4222,30 +4220,40 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 /* -------------------------------------------------------------------------
    Hero stats band
    -------------------------------------------------------------------------
-   The trust row gets its own solid cream band rather than relying on the
-   veil. The veil is a gradient, so how much cover the row got depended on
-   where it happened to sit relative to the strokes — fine at one width,
-   marginal at another, and it would change again on any future palette or
-   composition edit. A flat band makes the row's legibility independent of
-   what is painted behind it.
+   The trust row sits on a paint stroke, not a card. It needs its own solid
+   ground — relying on the veil meant the row's legibility depended on where
+   it happened to fall relative to the strokes, which varied by width and
+   would shift again on any composition change — but a rounded rectangle
+   with a shadow reads as UI dropped on top of the artwork. So the ground is
+   a stroke like every other one in the hero: same rounded ends, same matte
+   texture, laid down solid and in a warm tan from the same palette.
 
-   The band spans the row and nothing else: .hero-trust-inline is exactly as
-   wide as the hero text column, so no full-bleed treatment is involved and
-   the strokes either side of the row are untouched. Colour comes from the
-   same --hero-canvas-rgb triplet as the canvas and the veil.
+   The asset is generated at two aspect ratios (see tools/paint/generate.py)
+   because the row is roughly 8:1 on desktop and 3:1 on mobile; stretching
+   one stroke across that range smears its texture visibly. Sized with
+   100% 100% so the stroke spans exactly the row and nothing else —
+   .hero-trust-inline is as wide as the hero text column, so the strokes
+   either side of it are untouched.
+
+   The dividing rules are dropped with the card: hairlines between the three
+   stats are the other thing that read as interface rather than paint.
    ------------------------------------------------------------------------- */
 .page-home .hero-stack--split .hero-trust-inline,
 .page-lagos-rs .hero-stack--split .hero-trust-inline {
-  background: rgb(var(--hero-canvas-rgb));
-  border-radius: 14px;
-  border-top-color: rgba(58, 36, 26, 0.14);
-  padding: 14px 20px 15px;
-  box-shadow: 0 1px 0 rgba(58, 36, 26, 0.05);
+  background: url("/assets/images/stats-swatch-wide.png") center / 100% 100% no-repeat;
+  border-top: none;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 18px 30px 20px;
+}
+.page-home .hero-stack--split .hero-trust-inline .stat,
+.page-lagos-rs .hero-stack--split .hero-trust-inline .stat {
+  border-right: none;
 }
 @media (max-width: 1024px) {
   .page-home .hero-stack--split .hero-trust-inline,
   .page-lagos-rs .hero-stack--split .hero-trust-inline {
-    padding: 12px 14px 13px;
-    border-radius: 12px;
+    background-image: url("/assets/images/stats-swatch-tall.png");
+    padding: 18px 18px 20px;
   }
 }

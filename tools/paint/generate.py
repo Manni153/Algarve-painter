@@ -30,11 +30,13 @@ CANVAS = (248, 243, 234)          # warm off-white; a shade lighter than the pag
 PALETTES = {
     # widest hue spread: two warms, a cool, a soft mid, and a dark anchor
     'studio':    [(233, 176, 31), (23, 166, 152), (242, 100, 60), (226, 138, 132), (34, 48, 63)],
-    # "Basic Canvas": the reference swatch set — one warm, dusty tonal family
-    # (mustard, blush pink, terracotta, cream/tan, burgundy) with nothing
-    # jumping out of it. Every value is deliberately low-chroma; the earlier
-    # bright magenta read as a separate colour rather than part of the set.
-    'reference': [(201, 163,  78), (201, 142, 142), (192, 107,  76), (223, 195, 166), (126,  68,  80)],
+    # "Basic Canvas": the reference swatch set — mustard gold, dusty rose,
+    # terracotta, warm plum, burgundy. One warm family with nothing jumping
+    # out of it, but rich pigment rather than pastel: these are deep,
+    # saturated values that read matte because of how they are SHADED (no
+    # specular rim, opaque body, colour-led texture), not because the colour
+    # itself has been drained.
+    'reference': [(210, 149,  42), (196, 112, 122), (192,  86,  47), (142,  74,  99), (126,  47,  62)],
     # maximum separation: four saturated hues plus near-black
     'pop':       [(242, 183, 5), (18, 168, 160), (214, 65, 126), (255, 107, 74), (46, 42, 40)],
 }
@@ -91,6 +93,18 @@ def main(name='reference'):
         div.alpha_composite(sw, (x, y))
     div.save(IMG + 'swatch-divider.png')
     print('swatches')
+
+    # Stats swatch: the band the hero trust row sits on. It is a paint stroke
+    # like everything else in the hero — same rounded ends, same matte
+    # texture — just laid down solid, so the icons and labels on top of it
+    # stay legible whatever is painted behind. Two aspect ratios rather than
+    # one stretched asset: the row is roughly 8:1 on desktop and 3:1 on
+    # mobile, and stretching a single stroke across that range visibly
+    # smears its texture.
+    TAN = (226, 201, 170)
+    stroke(1600, 200, TAN, seed=901, arc=0.015, load=1.0, solid=True).save(IMG + 'stats-swatch-wide.png')
+    stroke(900, 300, TAN, seed=907, arc=0.02, load=1.0, solid=True).save(IMG + 'stats-swatch-tall.png')
+    print('stats swatch')
 
     # Favicon: two loaded swipes on cream.
     S = 1024
