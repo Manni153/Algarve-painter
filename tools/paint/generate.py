@@ -20,7 +20,7 @@ run reproduces exactly what is committed.
 """
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from brush import stroke, canvas
+from brush import stroke, canvas, dither
 from PIL import Image
 
 CANVAS = (248, 243, 234)          # warm off-white; a shade lighter than the page ground
@@ -66,18 +66,40 @@ def compose(colours, geo, w, h, ground=CANVAS, tooth=0.10):
         bg.alpha_composite(sw, (int(w * fx), int(h * fy)))
     return bg.convert('RGB')
 
-def save(im, path, q=86):
-    im.save(path + '.jpg', quality=q, optimize=True, progressive=True)
-    im.save(path + '.webp', quality=82, method=6)
+def save(im, path, q=92):
+    """Encode with dither, at a quality that suits smooth pigment fields.
+
+    The strokes are large, near-flat tonal areas, which is exactly what 8-bit
+    quantisation turns into visible banding — and the previous q82 webp put a
+    1900x1069 hero into 24KB, far too little for this kind of content. The
+    dither costs a few KB and removes the banding; 4:4:4 chroma keeps the
+    stroke edges from smearing."""
+    im = dither(im, amount=1.6, seed=abs(hash(path)) % 10000)
+    im.save(path + '.jpg', quality=q, optimize=True, progressive=True, subsampling=0)
+    im.save(path + '.webp', quality=q, method=6)
 
 def main(name='reference'):
     if name not in PALETTES:
         sys.exit('unknown palette %r; choose from %s' % (name, ', '.join(PALETTES)))
     cols = PALETTES[name]
 
-    save(compose(cols, GEO_DESKTOP, 1900, 1069), IMG + 'hero-paint-desktop')
-    save(compose(cols, GEO_MOBILE, 1455, 1826), IMG + 'hero-paint-mobile')
-    print('heroes (%s)' % name)
+    # 1x and 2x of each hero. Almost every phone and most laptops render at
+    # DPR 2 or 3, and the 1x asset was being stretched 2.0x at 1920@2x and
+    # 2.7x at 2560@2x — that upscale, plus the banding above, is what made
+    # the strokes look pixelated. The 2x files are only fetched by devices
+    # that can actually use them (see the srcset in layout.js's heroIntro).
+    # Two sizes of each hero, selected by width descriptor rather than DPR
+    # (see HERO_WIDTHS in layout.js). The large desktop file covers 1920 at
+    # DPR 2; the large portrait file is 1.5x rather than 2x because the
+    # portrait art only ever serves viewports up to 1024px, so 2182px covers
+    # a 1024 tablet at DPR 2 — a true 2x there would be ~450KB of hero for
+    # no visible gain.
+    for w, h, geo, stem in ((1900, 1069, GEO_DESKTOP, 'hero-paint-desktop'),
+                            (3800, 2138, GEO_DESKTOP, 'hero-paint-desktop@2x'),
+                            (1455, 1826, GEO_MOBILE,  'hero-paint-mobile'),
+                            (2182, 2739, GEO_MOBILE,  'hero-paint-mobile@2x')):
+        save(compose(cols, geo, w, h), IMG + stem)
+    print('heroes (%s), two sizes each' % name)
 
     # Section marks: the swatch swiped under each heading, alternating by
     # section. Drawn from the same palette so page and hero stay in family.
@@ -102,8 +124,13 @@ def main(name='reference'):
     # mobile, and stretching a single stroke across that range visibly
     # smears its texture.
     TAN = (226, 201, 170)
-    stroke(1600, 200, TAN, seed=901, arc=0.015, load=1.0, solid=True).save(IMG + 'stats-swatch-wide.png')
-    stroke(900, 300, TAN, seed=907, arc=0.02, load=1.0, solid=True).save(IMG + 'stats-swatch-tall.png')
+    # Sized close to what it actually renders at, not far above it. The row
+    # is ~780x92 CSS on desktop = 1560x184 device pixels at DPR 2, so 2400px
+    # covers DPR 3 while only downscaling ~1.5x. Generating it much larger
+    # (3200px) shrank the brush grain by 4x on the way down and the band
+    # came out looking like a smooth pill rather than paint.
+    stroke(2400, 290, TAN, seed=901, arc=0.015, load=1.0, solid=True).save(IMG + 'stats-swatch-wide.png')
+    stroke(1250, 430, TAN, seed=907, arc=0.02, load=1.0, solid=True).save(IMG + 'stats-swatch-tall.png')
     print('stats swatch')
 
     # Favicon: two loaded swipes on cream.

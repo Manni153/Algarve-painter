@@ -39,10 +39,10 @@ def stroke(w, h, colour, seed=0, arc=0.10, load=0.85, thickness=0.74, solid=Fals
     else:
         prof = prof * np.sqrt(np.clip((1 - t) / 0.020, 0, 1))   # rounded at both ends
     half = (h * thickness * 0.5) * prof
-    half *= (0.97 + 0.05 * _smooth1d(rng.rand(w), w * 0.05)) if solid else (0.86 + 0.28 * _smooth1d(rng.rand(w), w * 0.05))
+    half *= (0.90 + 0.15 * _smooth1d(rng.rand(w), w * 0.05)) if solid else (0.86 + 0.28 * _smooth1d(rng.rand(w), w * 0.05))
     # high-frequency raggedness on the outer envelope — paint edges are
     # irregular at every scale, and a slowly-varying envelope reads as tape
-    ragged_amp = 0.04 if solid else 0.13
+    ragged_amp = 0.13   # solid keeps the same ragged edge as any other stroke; it is opaque, not clean
     ragged_t = 1 + ragged_amp * _smooth1d(rng.rand(w) - 0.5, max(1.5, w * 0.004)) * 2.4
     ragged_b = 1 + ragged_amp * _smooth1d(rng.rand(w) - 0.5, max(1.5, w * 0.004)) * 2.4
 
@@ -78,7 +78,7 @@ def stroke(w, h, colour, seed=0, arc=0.10, load=0.85, thickness=0.74, solid=Fals
     # rather than an airbrush cloud. This happens before shading so the body
     # and the edge are lit as one mass.
     a = np.asarray(Image.fromarray((a * 255).astype(np.uint8))
-                   .filter(ImageFilter.GaussianBlur(max(1.4, h * (0.018 if solid else 0.032)))), np.float32) / 255.0
+                   .filter(ImageFilter.GaussianBlur(max(1.4, h * 0.032))), np.float32) / 255.0
     a = np.clip((a - 0.11) / 0.72, 0, 1)
 
     # Broad, low-frequency density variation — where the swatch was pressed
@@ -92,7 +92,7 @@ def stroke(w, h, colour, seed=0, arc=0.10, load=0.85, thickness=0.74, solid=Fals
     # stroke opaque and therefore rich while still looking hand-laid.
     tooth_n = _noise(w, h, 4, 14, rng)
     if solid:
-        a = np.clip(a * (0.97 + 0.03 * press) * (0.98 + 0.02 * tooth_n) * 1.25, 0, 1)
+        a = np.clip(a * (0.90 + 0.13 * press) * (0.93 + 0.09 * tooth_n) * 1.40, 0, 1)
     else:
         a = np.clip(a * (0.90 + 0.13 * press) * (0.94 + 0.08 * tooth_n) * 1.12, 0, 1)
 
@@ -109,9 +109,9 @@ def stroke(w, h, colour, seed=0, arc=0.10, load=0.85, thickness=0.74, solid=Fals
     base = base * 0.97 + np.array([grey * 1.03, grey * 0.98, grey * 0.91], np.float32) * 0.03
 
     tone = _noise(w, h, 5, 5, rng)
-    amp = 0.09 if solid else 0.26
+    amp = 0.26
     body = base[None, None, :] * ((1.0 - amp * 0.5) + amp * tone[..., None])
-    body *= (1.0 - (0.09 if not solid else 0.03)) + (0.18 if not solid else 0.06) * press[..., None]
+    body *= 0.91 + 0.18 * press[..., None]
 
     # Striations survive, but blurred and shallow — worked into the paint
     # rather than dragged across the top of it.
@@ -119,13 +119,13 @@ def stroke(w, h, colour, seed=0, arc=0.10, load=0.85, thickness=0.74, solid=Fals
     drag = np.asarray(Image.fromarray((drag * 255).astype(np.uint8))
                       .resize((w, h), Image.BILINEAR)
                       .filter(ImageFilter.GaussianBlur(max(1.0, h * 0.010))), np.float32) / 255.0
-    body *= (0.95 + 0.11 * drag[..., None]) if not solid else (0.98 + 0.04 * drag[..., None])
+    body *= (0.95 + 0.11 * drag[..., None])
 
     lanes_light = np.zeros((h, w), np.float32)
     for i in range(lanes):
         band_c = centre + (lane_y[i] + lane_off[i]) * half
         lanes_light += np.exp(-((yy - band_c[None, :]) ** 2) / (2 * (max(h * 0.018, 1)) ** 2)) * (lane_load[i] - 0.5)
-    body *= (1 + np.clip(lanes_light, -1, 1)[..., None] * (0.04 if solid else 0.12))
+    body *= (1 + np.clip(lanes_light, -1, 1)[..., None] * 0.12)
 
     # A single soft cross-stroke gradient stands in for form. Deliberately
     # much weaker than the old edge-gradient lighting, and with no positive
@@ -150,3 +150,15 @@ def canvas(w, h, colour, seed=0, tooth=0.12):
     weave = (np.sin(g[1] * 1.9) * np.sin(g[0] * 1.9)).astype(np.float32)
     field *= (1 + weave[..., None] * 0.013)
     return Image.fromarray(np.clip(field, 0, 255).astype(np.uint8))
+
+
+def dither(im, amount=1.6, seed=0):
+    """Fine per-pixel noise applied before encoding.
+
+    The strokes are large, smooth tonal fields, which is exactly what 8-bit
+    quantisation turns into visible banding. A sub-perceptual amount of noise
+    breaks the banding up and costs a few KB."""
+    rng = np.random.RandomState(seed)
+    a = np.asarray(im.convert('RGB'), np.float32)
+    a += (rng.rand(*a.shape).astype(np.float32) - 0.5) * 2.0 * amount
+    return Image.fromarray(np.clip(a, 0, 255).astype(np.uint8))
