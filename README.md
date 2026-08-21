@@ -65,7 +65,8 @@ The `/public` folder is a complete static site — point any static host at it:
 
 **v4 "paint-craft"** — warm, tactile and pigment-led, replacing the navy/crimson palette inherited from the sister site. Structure, layout, grid, components, breakpoints and the measured hero budgets are unchanged; this is a visual restyle, not a rebuild.
 
-- **Palette** — terracotta `#c25a38` (the accent; `#b85132` wherever it sits behind text, so button labels clear WCAG AA), ochre `#d9a02b`, dusty pink `#d9a08c`, deep brown `#3a241a` for text and dark surfaces, cream `#fbf4e8` as the ground. Set as token *values* at the top of `src/assets/css/main.css`; the token *names* are unchanged so the component CSS between them keeps resolving.
+- **Page palette** — terracotta `#c25a38` (the accent; `#b85132` wherever it sits behind text, so button labels clear WCAG AA), ochre `#d9a02b`, dusty pink `#d9a08c`, deep brown `#3a241a` for text and dark surfaces, cream `#fbf4e8` as the ground.
+- **Hero palette** — deliberately wider than the page palette, on a warm off-white canvas `#f8f3ea`: mustard `#e9b01f`, turquoise `#17a698`, coral `#f2643c`, dusty pink `#e28a84`, deep navy `#22303f`. Two alternates (`reference`, `pop`) ship in the generator; switching is one command and colour-only. Set as token *values* at the top of `src/assets/css/main.css`; the token *names* are unchanged so the component CSS between them keeps resolving.
 - **Type** — Fredoka (rounded display) for headlines, wordmark, buttons and labels; Nunito Sans for running text; Caveat (brush script) reserved for the wordmark's "Painter" and the hero tagline, so it reads as a signature rather than decoration. All three are self-hosted variable fonts in `src/assets/fonts` — no Google Fonts request, no third-party dependency.
 - **Wordmark** — "Algarve" in the display face, "Painter" in the script with a tapered brushstroke swiped underneath (the SVG lives in `wordmarkHtml` in `layout.js`).
 - **Everything the token swap can't express** lives in one clearly-marked `PAINT-CRAFT RESTYLE` block at the very end of `main.css` — type roles, the painted section marks, the wordmark, the trust band and the button fills. It sits last because much of the inherited stylesheet carries `!important` at high specificity.
@@ -74,12 +75,19 @@ The `/public` folder is a complete static site — point any static host at it:
 
 There is **no photography of real work yet**. The hero and the section marks are generated impasto brushwork rather than stock imagery, which is deliberate — it signals painting immediately and stays exactly on palette. Everything is wired through a small map so real photos can be dropped in without touching template logic:
 
-- **Hero (all 33 pages)** — `hero-paint-{desktop,mobile}.{jpg,webp}`: thick terracotta, ochre and dusty-pink strokes swiped across a dark canvas, composed so the strokes clear the text column at every breakpoint. Per-page overrides live in `SERVICE_HERO_PHOTO` (`src/templates/service.js`) and `TOWN_HERO_PHOTO` (`src/templates/town.js`).
+- **Hero (all 33 pages)** — `hero-paint-{desktop,mobile}.{jpg,webp}`: five thick strokes swiped across a warm off-white canvas, composed so they clear the text column at every breakpoint. Hero text is dark ink on light, with a light veil over the text field (left-to-right on desktop, top-to-bottom below 1025px) — see the `LIGHT HERO` block at the end of `main.css`. Per-page overrides live in `SERVICE_HERO_PHOTO` (`src/templates/service.js`) and `TOWN_HERO_PHOTO` (`src/templates/town.js`).
 - **Painted marks** — `swatch-clay.png`, `swatch-ochre.png`, `swatch-blush.png` under every section heading (alternating by section), and `swatch-divider.png` as a watermark on the dark CTA bands.
 - **Town "Local to <town>" photo** — genuinely different per town: 22 `<slug>-villa-terrace.{jpg,webp}` images, mapped in `TOWN_DESCRIPTION_PHOTO`.
 - **Service in-page photos** — two slots per page, mapped in `SERVICE_DESCRIPTION_PHOTO`, currently drawing on the same town imagery.
 
-The generator for all of the above is not in the repo — the assets are committed as finished files. Every service is listed in `SERVICE_MINIMAL_IMAGES_SLUGS`, which drops the media column from the "Real-World Scenarios" and "In Detail" sections rather than filling them with placeholder boxes. The build renders **zero** visible `[Placeholder: …]` boxes.
+**The generator is in the repo**, at `tools/paint/`:
+
+```
+python3 tools/paint/generate.py            # studio (default)
+python3 tools/paint/generate.py reference  # or: pop
+```
+
+`brush.py` is the stroke engine — each stroke is built from individual bristle lanes, each with its own paint load and drop-out point, which is what produces the dry-brush skips, splayed tails and irregular edges. `generate.py` holds the palettes and the fixed stroke geometry, so a palette swap changes colour only. It needs Pillow and NumPy; neither is a runtime dependency of the site. Nothing is downloaded — every pixel is procedural, so the generated assets carry no third-party licence. Every service is listed in `SERVICE_MINIMAL_IMAGES_SLUGS`, which drops the media column from the "Real-World Scenarios" and "In Detail" sections rather than filling them with placeholder boxes. The build renders **zero** visible `[Placeholder: …]` boxes.
 
 ## Content notes
 

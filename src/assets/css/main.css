@@ -4099,3 +4099,109 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
+
+/* =========================================================================
+   LIGHT HERO
+   =========================================================================
+   The hero canvas moves from a dark umber ground to a warm off-white, so
+   the brushstrokes sit on light rather than being muted by a dark backdrop.
+
+   That inverts everything in the hero that was authored for light-on-dark:
+   the headline, tagline, subtext, breadcrumb, trust band and the
+   transparent header state all flip to the deep-brown ink, and the dark
+   scrim gradient over the image becomes a soft light veil whose only job
+   is to keep the text column calm where a stroke passes near it.
+
+   Scoped to .hero-stack--split (the full-bleed split hero used on all 33
+   pages) and placed last so it wins over the inherited light-on-dark rules
+   without editing them in place — several sit in the mis-nested blocks
+   noted earlier in this file and are awkward to modify safely.
+   ------------------------------------------------------------------------ */
+.page-home .hero-stack--split .hero-kicker,
+.page-lagos-rs .hero-stack--split .hero-kicker { color: var(--ink); text-shadow: none; }
+.page-home .hero-stack--split .hero-headline,
+.page-lagos-rs .hero-stack--split .hero-headline { color: #7d3018; text-shadow: none; }
+.page-home .hero-stack--split .hero-subtext,
+.page-lagos-rs .hero-stack--split .hero-subtext,
+.page-home .hero-stack--split .hero-subline,
+.page-lagos-rs .hero-stack--split .hero-subline { color: var(--teal-muted); text-shadow: none; }
+.page-home .hero-stack--split .hero-cta-note,
+.page-lagos-rs .hero-stack--split .hero-cta-note { color: var(--teal-muted); text-shadow: none; }
+.page-home .hero-stack--split .breadcrumb,
+.page-lagos-rs .hero-stack--split .breadcrumb,
+.page-home .hero-stack--split .breadcrumb a,
+.page-lagos-rs .hero-stack--split .breadcrumb a { color: var(--teal-muted); text-shadow: none; }
+.page-home .hero-stack--split .breadcrumb a:hover,
+.page-lagos-rs .hero-stack--split .breadcrumb a:hover { color: var(--ink); }
+
+/* Scrim: a light veil, strongest behind the text column and clearing to
+   nothing across the image, rather than the old top-down dark gradient. */
+.page-home .hero-stack--split .hero-stack-media::before,
+.page-lagos-rs .hero-stack--split .hero-stack-media::before,
+.page-home .hero-stack--split .hero-stack-media::after,
+.page-lagos-rs .hero-stack--split .hero-stack-media::after {
+  background: linear-gradient(100deg,
+    rgba(248, 243, 234, 0.97) 0%,
+    rgba(248, 243, 234, 0.95) 34%,
+    rgba(248, 243, 234, 0.78) 47%,
+    rgba(248, 243, 234, 0.30) 59%,
+    rgba(248, 243, 234, 0.05) 70%,
+    rgba(248, 243, 234, 0) 80%) !important;
+}
+@media (max-width: 1024px) {
+  /* Mobile and tablet stack text above the strokes, so the veil runs
+     top-to-bottom there instead of left-to-right. */
+  .page-home .hero-stack--split .hero-stack-media::before,
+  .page-lagos-rs .hero-stack--split .hero-stack-media::before,
+  .page-home .hero-stack--split .hero-stack-media::after,
+  .page-lagos-rs .hero-stack--split .hero-stack-media::after {
+    background: linear-gradient(to bottom,
+      rgba(248, 243, 234, 0.95) 0%,
+      rgba(248, 243, 234, 0.90) 32%,
+      rgba(248, 243, 234, 0.55) 48%,
+      rgba(248, 243, 234, 0.10) 62%,
+      rgba(248, 243, 234, 0) 72%) !important;
+  }
+}
+
+/* Trust band: same layout and sizes, ink on light. */
+.page-home .hero-stack--split .hero-trust-inline,
+.page-lagos-rs .hero-stack--split .hero-trust-inline { border-top-color: rgba(58, 36, 26, 0.18); }
+.page-home .hero-stack--split .hero-trust-inline .stat,
+.page-lagos-rs .hero-stack--split .hero-trust-inline .stat { border-right-color: rgba(58, 36, 26, 0.15); }
+.page-home .hero-stack--split .hero-trust-inline .v,
+.page-home .hero-stack--split .hero-trust-inline .l,
+.page-lagos-rs .hero-stack--split .hero-trust-inline .v,
+.page-lagos-rs .hero-stack--split .hero-trust-inline .l { color: var(--ink); text-shadow: none; }
+.page-home .hero-stack--split .hero-trust-inline .v-mobile-value,
+.page-home .hero-stack--split .hero-trust-inline .v-mobile-label,
+.page-lagos-rs .hero-stack--split .hero-trust-inline .v-mobile-value,
+.page-lagos-rs .hero-stack--split .hero-trust-inline .v-mobile-label { text-shadow: none; }
+.page-home .hero-stack--split .hero-trust-inline .stat svg,
+.page-lagos-rs .hero-stack--split .hero-trust-inline .stat svg { stroke: var(--ink); filter: none; }
+
+/* Header sitting over the light hero. */
+.site-header--home-transparent .wordmark,
+.site-header--home-transparent .header-phone,
+.site-header--home-transparent .home-header-nav-link,
+.site-header--home-transparent .home-header-nav-trigger { color: var(--ink); }
+.site-header--home-transparent .wordmark span.accent { color: var(--terracotta); }
+.site-header--home-transparent .wordmark .wordmark-brush path { fill: var(--terracotta); }
+.site-header--home-transparent .hamburger span { background: var(--ink); }
+
+/* Tablet only (768-1024px): the stats row lands squarely on the strokes at
+   this width — the deep anchor stroke measured 1.21:1 behind the labels —
+   and the top-down veil has already cleared by the time it gets there.
+   Rather than push the veil further down (which would wash the strokes out
+   at the one width where they are most visible), the band gets its own
+   translucent cream panel. Desktop and mobile are untouched: their labels
+   already clear the large-text floor at 4.2:1 and 6.5:1. */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .page-home .hero-stack--split .hero-trust-inline,
+  .page-lagos-rs .hero-stack--split .hero-trust-inline {
+    background: rgba(248, 243, 234, 0.9);
+    border-radius: 16px;
+    padding: 14px 12px 12px;
+    border-top-color: rgba(58, 36, 26, 0.12);
+  }
+}
