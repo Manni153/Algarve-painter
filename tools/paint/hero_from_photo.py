@@ -40,7 +40,7 @@ is at the paint boundary, not into it.
 """
 from PIL import Image, ImageOps, ImageFilter
 
-SRC_DESKTOP = 'paint-desktop.png'
+SRC_DESKTOP = 'villa freshly painted.png'
 SRC_MOBILE = 'paint-mobile.png'
 IMG = 'src/assets/images/'
 

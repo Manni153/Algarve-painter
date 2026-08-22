@@ -4383,3 +4383,46 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
     object-position: 85% 50%;
   }
 }
+
+/* -------------------------------------------------------------------------
+   HEADER SCRIM OVER THE HERO PHOTOGRAPH (desktop only)
+   -------------------------------------------------------------------------
+   The homepage header is transparent while the hero is in view, and its
+   text is dark ink because the hero is light. That holds as long as the top
+   of the photograph is light where the header text sits. The villa
+   photograph puts olive foliage and a roofline across the top right, which
+   is exactly where the nav and the phone link are: measured glyph-accurately
+   they ran at 1.00:1 (phone) and 1.31-2.31:1 (nav) from 1025px to 2560px —
+   "Contact" and the whole number disappeared into the leaves.
+
+   No crop fixes it. Above 1025px the frame is wider than the 16:9 source, so
+   there is no horizontal slack to shift, and the vertical crop that exists
+   at 1920px+ only trades the phone for the nav.
+
+   So the header gets its own scrim: the same canvas colour the hero veil
+   uses, strongest at the very top and gone by 160px, which is below the
+   header. It reads as haze over the top of the photograph rather than as a
+   bar, because it has no bottom edge. At 0.80/0.56 the phone measures
+   5.56-6.17:1 and the nav 7.06-8.07:1 — clear of AA — while the photograph
+   keeps its foliage.
+
+   Desktop only. Mobile and tablet do not need it: their hero is the paint
+   photograph, whose top is bare canvas, and the same elements already
+   measure 8.6-12.2:1 there. Scoping it here keeps them untouched.
+   ------------------------------------------------------------------------- */
+@media (min-width: 1025px) {
+  .site-header--home.site-header--home-transparent::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 160px;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to bottom,
+      rgba(var(--hero-canvas-rgb), 0.80) 0%,
+      rgba(var(--hero-canvas-rgb), 0.56) 60%,
+      rgba(var(--hero-canvas-rgb), 0) 100%);
+  }
+}
