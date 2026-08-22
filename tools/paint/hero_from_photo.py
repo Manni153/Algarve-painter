@@ -7,17 +7,22 @@ owns the hero assets and generate.py no longer touches them.
 There are two sources, one per orientation, because one photograph cannot
 serve both frames well:
 
-  paint example.png   2048x1152 (16:9)    -> desktop, 1025px and up
+  paint-desktop.png   2048x1152 (16:9)    -> desktop, 1025px and up
   paint-mobile.png    1632x2048 (0.797:1) -> mobile and tablet, up to 1024px
 
-Both are mirrored. The paint mass sits on the LEFT of each photograph and
-dry-brushes out to bare canvas on the right. Desktop puts its headline,
-tagline and CTA on the left, so unmirrored every word would sit on thick
-opaque pigment; mirrored, the faded dry end falls under the text and the
-loaded ends occupy the right half. Mobile stacks its text above the image
-rather than beside it, so the argument there is weaker — but mirroring it
-too keeps the artwork facing the same way at every width, so resizing past
-1025px does not flip the strokes end for end.
+Only the portrait one is mirrored, and they differ because the photographs
+do. Desktop puts its headline, tagline and CTA on the left, so what it needs
+is empty ground on the left and the loaded ends on the right. The landscape
+photograph is already composed that way — a third of clear plaster, then the
+five strokes running out to the right with the brush still in frame — so it
+is used as shot. The portrait photograph is the other way round, paint mass
+left and dry-brush right, so it is mirrored; that also keeps the artwork
+facing the same way at every width, so resizing past 1025px does not flip
+the strokes end for end.
+
+(The landscape source this replaced ran the other way and was mirrored for
+exactly the same reason. Mirroring is a property of each photograph, not a
+house rule.)
 
 The portrait source needs no recomposition — it is shot in the orientation
 the mobile hero renders into, so it is resized rather than cropped to shape
@@ -35,7 +40,7 @@ is at the paint boundary, not into it.
 """
 from PIL import Image, ImageOps, ImageFilter
 
-SRC_DESKTOP = 'paint example.png'
+SRC_DESKTOP = 'paint-desktop.png'
 SRC_MOBILE = 'paint-mobile.png'
 IMG = 'src/assets/images/'
 
@@ -65,7 +70,10 @@ def main():
     # sit just above the commonest device needs so those devices take the
     # lighter file: 1500px covers a 1440 desktop at DPR 1, and 1250px covers
     # a 390 phone at DPR 3 (1170px).
-    d = ImageOps.mirror(Image.open(SRC_DESKTOP).convert('RGB'))
+    # Not mirrored — see the module docstring. The frame is 16:9 and so are
+    # both desktop candidates, so fit() is a plain resize here: nothing is
+    # cropped and the brush stays in shot.
+    d = Image.open(SRC_DESKTOP).convert('RGB')
     save(fit(d, 1500, 844),  IMG + 'hero-paint-desktop')
     save(fit(d, 2048, 1152), IMG + 'hero-paint-desktop@2x', sharpen=True)
 
@@ -96,7 +104,7 @@ def main():
     save(fit(m, 1250, 1408), IMG + 'hero-paint-mobile',    q=76)
     save(fit(m, 1632, 1838), IMG + 'hero-paint-mobile@2x', q=76, sharpen=True)
 
-    print('hero built: desktop from %s, mobile/tablet from %s (both mirrored)'
+    print('hero built: desktop from %s (as shot), mobile/tablet from %s (mirrored)'
           % (SRC_DESKTOP, SRC_MOBILE))
 
 if __name__ == '__main__':
