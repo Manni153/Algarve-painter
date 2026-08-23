@@ -88,7 +88,7 @@ The homepage carries two working tools rather than a brochure's worth of copy. T
 
 Everything is generated, so none of it carries a third-party licence:
 
-- `tools/brand/mascot.py` — the painter in the header, built from a few large shapes with a heavy ink keyline so he survives 32px.
+- `tools/brand/mascot.py` — the painter in the header: terracotta cap, moustache, and a loaded brush held up beside his head with a drip coming off it, built from a few large shapes with a heavy ink keyline so the head-plus-diagonal-brush silhouette still names itself at 32px. `tools/brand/favicon.js` rasterises the same mark into `favicon.ico`, `favicon-32x32.png`, `apple-touch-icon.png` and `icon-512.png`, so the header, the browser tab and the home-screen icon are one mark; `generate.py` no longer writes icons.
 - `tools/brand/scene.py` — the hero, an Algarve hillside village at golden hour: chaminés algarvias, painted plinths and window surrounds, açoteia roof terraces, sea stacks off the point, bougainvillea and agave. Two cuts from one description.
 - `tools/brand/villa.py` — the visualiser villa, with a painter up a ladder rolling the wall you are recolouring.
 - `tools/brand/icons.py` — one drawn icon per service, replacing seven line glyphs that were all the same house outline with a different squiggle inside.

@@ -3,139 +3,160 @@
 
     python3 tools/brand/mascot.py
 
-Writes src/assets/brand/mascot.svg (and -flat.svg, the badge-less head for
-places that supply their own surround). Every path is generated here, so the
-mark carries no third-party licence.
+Writes src/assets/brand/mascot.svg (badged, for the header and favicon) and
+mascot-flat.svg (the figure alone, for places that supply their own
+surround). Every path is generated here, so the mark carries no third-party
+licence.
 
-Constraints the drawing is built around:
+What the drawing is built around:
 
-  * It has to survive 32px. Everything is built from a small number of large
-    shapes with a heavy ink keyline; detail that disappears at favicon size
-    is detail that only makes the 200px version noisier.
-  * It has to read as a working painter, not a generic face. The cap, the
-    brush behind the ear and the paint fleck on the shoulder do that work —
-    take them away and it is any tradesman.
-  * It uses the page palette untouched, so the mark and the site cannot drift
-    apart.
+  * It has to survive 32px. The whole mark is a small number of large shapes
+    under a heavy ink keyline. Detail that disappears at favicon size only
+    makes the 200px version noisier, so there is none.
+
+  * The brush has to read as a brush. In the first version it was tucked
+    behind the ear, where it was small, half-hidden by the cap and — at any
+    size below about 80px — indistinguishable from a flag. It is now held up
+    in front of the shoulder at the scale of the head itself, angled across
+    the badge, with a banded ferrule, tapered bristles carrying a load of
+    terracotta and a drip coming off them. Head plus diagonal brush is a
+    silhouette you can still name at 32px.
+
+  * It has to look drawn rather than assembled. Flat art gets its quality
+    from a light direction that is applied consistently, so one side of the
+    face, the cap and the brush handle all carry the same shadow tone, and
+    the eyes carry the same highlight.
 """
-INK      = '#3a241a'
-SKIN     = '#e0a87e'
-SKIN_DK  = '#c78a5f'
-TERRA    = '#c25a38'
-TERRA_DK = '#9e4128'
-OCHRE    = '#d9a02b'
-CREAM    = '#fbf4e8'
-WHITE    = '#fffdf7'
-BLUSH    = '#d9a08c'
+INK       = '#3a241a'
+INK_LINE  = '#33200f'
+SKIN      = '#e5ac81'
+SKIN_SH   = '#c98d63'      # shadow side, one consistent light direction
+SKIN_HI   = '#f0c19c'
+TERRA     = '#c25a38'
+TERRA_SH  = '#9e4128'
+TERRA_HI  = '#d7734f'
+OCHRE     = '#d9a02b'
+OCHRE_SH  = '#b27f16'
+CREAM     = '#fbf4e8'
+WHITE     = '#fffdf7'
+WOOD      = '#b8813f'
+WOOD_SH   = '#93611f'
+STEEL     = '#c9ccd1'
+STEEL_SH  = '#9aa1a9'
 
-S = 240          # viewBox
+S = 240
 CX = S / 2
-K = 7.0          # keyline weight
+K = 7.6            # keyline weight
 
 
-def head(cx, cy, sc=1.0, keyline=True):
-    """Head, cap, brush and collar, drawn around (cx, cy) at scale `sc`.
+def figure(cx, cy, sc=1.0):
+    """Head, cap, moustache and the raised brush, around (cx, cy).
 
-    Everything is sized off a 240-unit head so the whole mark scales as one
-    piece. The cap peak projects to the viewer's left rather than running
-    across the full width — the first cut drew it as a bar and it read as a
-    military cap, not a painter's."""
+    Draw order is the whole trick: shoulders, then head, then the brush LAST
+    and to the RIGHT of the face. The first attempt drew the brush first and
+    it disappeared behind the head; flat art has no depth cues except order,
+    so anything meant to be in front has to be painted last."""
     def p(x, y):
         return cx + x * sc, cy + y * sc
-    ky = (' stroke="%s" stroke-width="%.1f" stroke-linejoin="round" stroke-linecap="round"'
-          % (INK, K * sc)) if keyline else ''
+    ky = ' stroke="%s" stroke-width="%.1f" stroke-linejoin="round" stroke-linecap="round"' % (INK_LINE, K * sc)
     g = []
 
-    # collar / shoulders
+    # ---- shoulders -------------------------------------------------------
     g.append('<path d="M %.1f %.1f q %.1f %.1f %.1f %.1f l %.1f 0 q %.1f %.1f %.1f %.1f Z" fill="%s"%s/>'
-             % (*p(-80, 100), 8 * sc, -38 * sc, 80 * sc, -44 * sc, 74 * sc,
-                8 * sc, 6 * sc, 80 * sc, 44 * sc, OCHRE, ky))
-    g.append('<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s" '
-             'transform="rotate(-18 %.1f %.1f)"/>' % (*p(-48, 76), 10 * sc, 6.5 * sc, TERRA, *p(-48, 76)))
-    g.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>' % (*p(-32, 88), 5 * sc, TERRA))
+             % (*p(-86, 106), 8 * sc, -40 * sc, 86 * sc, -46 * sc, 80 * sc,
+                8 * sc, 6 * sc, 86 * sc, 46 * sc, OCHRE, ky))
+    g.append('<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s" transform="rotate(-18 %.1f %.1f)"/>'
+             % (*p(-54, 82), 10 * sc, 6 * sc, TERRA, *p(-54, 82)))
+    g.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>' % (*p(-36, 94), 5 * sc, TERRA))
 
-    # brush behind the ear, angled so the bristles clear the cap. Drawn first
-    # so the head overlaps its handle.
-    bx, by = p(58, -26)
-    g.append('<g transform="rotate(38 %.1f %.1f)">' % (bx, by))
+    # ---- neck, ears, face ------------------------------------------------
     g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="%.1f" fill="%s"%s/>'
-             % (*p(48, -18), 23 * sc, 74 * sc, 8 * sc, OCHRE, ky))          # handle
-    g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"%s/>'
-             % (*p(44, -48), 31 * sc, 18 * sc, CREAM, ky))                   # ferrule
-    g.append('<path d="M %.1f %.1f l %.1f 0 l %.1f %.1f l %.1f 0 Z" fill="%s"%s/>'
-             % (*p(44, -48), 31 * sc, 5 * sc, -34 * sc, -41 * sc, TERRA, ky))  # bristles
-    g.append('</g>')
-
-    # neck
-    g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="%.1f" fill="%s"%s/>'
-             % (*p(-20, 30), 40 * sc, 36 * sc, 11 * sc, SKIN_DK, ky))
-
-    # ears
+             % (*p(-21, 28), 42 * sc, 40 * sc, 12 * sc, SKIN_SH, ky))
     for sx in (-1, 1):
         g.append('<ellipse cx="%.1f" cy="%.1f" rx="%.1f" ry="%.1f" fill="%s"%s/>'
-                 % (*p(sx * 60, 4), 12 * sc, 16 * sc, SKIN, ky))
-
-    # face: a soft square so it reads as a jaw rather than an egg
+                 % (*p(sx * 61, 2), 12 * sc, 16 * sc, SKIN, ky))
     g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="%.1f" fill="%s"%s/>'
-             % (*p(-58, -54), 116 * sc, 98 * sc, 34 * sc, SKIN, ky))
+             % (*p(-59, -56), 118 * sc, 100 * sc, 35 * sc, SKIN, ky))
 
-    # cap: dome, then a peak that projects left and down over the brow
+    # ---- cap: crown, peak, band, button ----------------------------------
     g.append('<path d="M %.1f %.1f a %.1f %.1f 0 0 1 %.1f 0 Z" fill="%s"%s/>'
-             % (*p(-61, -48), 61 * sc, 56 * sc, 122 * sc, TERRA, ky))
+             % (*p(-62, -52), 62 * sc, 58 * sc, 124 * sc, TERRA, ky))
     g.append('<path d="M %.1f %.1f q %.1f %.1f %.1f %.1f q %.1f %.1f %.1f %.1f Z" fill="%s"%s/>'
-             % (*p(28, -46), -60 * sc, 6 * sc, -104 * sc, -2 * sc,
-                14 * sc, -20 * sc, 104 * sc, -4 * sc, TERRA_DK, ky))
-    g.append('<path d="M %.1f %.1f l %.1f 0 l 0 %.1f l %.1f 0 Z" fill="%s"/>'
-             % (*p(-58, -62), 116 * sc, 14 * sc, -116 * sc, OCHRE))
+             % (*p(30, -50), -62 * sc, 7 * sc, -108 * sc, -3 * sc,
+                15 * sc, -21 * sc, 108 * sc, -4 * sc, TERRA_SH, ky))
+    g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>'
+             % (*p(-60, -68), 120 * sc, 15 * sc, OCHRE))
+    g.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"%s/>' % (*p(0, -106), 8 * sc, OCHRE, ky))
 
-    # brows: short straight strokes, angled a touch inward
+    # ---- face features ---------------------------------------------------
     for sx in (-1, 1):
         g.append('<path d="M %.1f %.1f l %.1f %.1f" fill="none" stroke="%s" '
                  'stroke-width="%.1f" stroke-linecap="round"/>'
-                 % (*p(sx * 15, -26), sx * 20 * sc, -3 * sc, INK, 6.5 * sc))
-    for sx in (-1, 1):
-        g.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>' % (*p(sx * 25, -8), 7.5 * sc, INK))
-    # nose
+                 % (*p(sx * 15, -30), sx * 21 * sc, -4 * sc, INK, 6.5 * sc))
+        g.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>' % (*p(sx * 26, -8), 8.5 * sc, INK))
+        g.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>'
+                 % (*p(sx * 26 - 3, -11), 3.2 * sc, WHITE))
     g.append('<path d="M %.1f %.1f q %.1f %.1f %.1f %.1f" fill="none" stroke="%s" '
              'stroke-width="%.1f" stroke-linecap="round"/>'
-             % (*p(-4, 4), 8 * sc, 11 * sc, 13 * sc, 1 * sc, SKIN_DK, 6.5 * sc))
-
-    # moustache: one shape, wide and flat, clear of the mouth below it. This
-    # is the silhouette that survives at favicon size, so it is drawn simply.
+             % (*p(-5, 2), 9 * sc, 12 * sc, 14 * sc, 1 * sc, SKIN_SH, 7 * sc))
     g.append('<path d="M %.1f %.1f q %.1f %.1f %.1f %.1f q %.1f %.1f %.1f %.1f '
              'q %.1f %.1f %.1f %.1f q %.1f %.1f %.1f %.1f Z" fill="%s"/>'
              % (*p(0, 18),
-                -9 * sc, -10 * sc, -31 * sc, -7 * sc,
-                -8 * sc, 2 * sc, 1 * sc, 11 * sc,
-                9 * sc, 7 * sc, 30 * sc, 3 * sc,
-                9 * sc, -5 * sc, 0 * sc, -7 * sc, INK))
+                -9 * sc, -11 * sc, -33 * sc, -7 * sc,
+                -9 * sc, 2 * sc, 2 * sc, 12 * sc,
+                10 * sc, 8 * sc, 31 * sc, 2 * sc,
+                10 * sc, -5 * sc, 0, -7 * sc, INK))
     g.append('<path d="M %.1f %.1f q %.1f %.1f %.1f %.1f" fill="none" stroke="%s" '
              'stroke-width="%.1f" stroke-linecap="round"/>'
-             % (*p(-14, 33), 14 * sc, 11 * sc, 28 * sc, 0, INK, 6 * sc))
+             % (*p(-14, 34), 14 * sc, 11 * sc, 28 * sc, 0, INK, 6 * sc))
+
+    # ---- brush, in front and to the right --------------------------------
+    # Laid out vertically then rotated as one group, which keeps the ferrule
+    # square to the handle instead of having to solve every corner by hand.
+    px, py = p(102, 22)
+    g.append('<g transform="rotate(-14 %.1f %.1f)">' % (px, py))
+    g.append('<path d="M %.1f %.1f l %.1f 0 l %.1f %.1f l %.1f 0 Z" fill="%s"%s/>'
+             % (*p(80, 30), 26 * sc, -3 * sc, 78 * sc, -20 * sc, WOOD, ky))          # handle
+    g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="%.1f" fill="%s"%s/>'
+             % (*p(76, 0), 34 * sc, 30 * sc, 5 * sc, STEEL, ky))                     # ferrule
+    g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>'
+             % (*p(76, 9), 34 * sc, 5 * sc, STEEL_SH))                               # crimp band
+    g.append('<path d="M %.1f %.1f l %.1f 0 l %.1f %.1f q %.1f %.1f %.1f 0 Z" fill="%s"%s/>'
+             % (*p(74, 2), 38 * sc, -5 * sc, -40 * sc, -14 * sc, -6 * sc, -28 * sc, TERRA, ky))  # bristles
+    for dx in (11, 20, 28):                                                          # bristle splits
+        g.append('<path d="M %.1f %.1f l %.1f %.1f" stroke="%s" stroke-width="%.1f" opacity="0.40"/>'
+                 % (*p(74 + dx, -3), -3 * sc, -27 * sc, INK_LINE, 2.4 * sc))
+    g.append('</g>')
+
+    # hand gripping the handle, drawn after so it reads as in front of it
+    g.append('<path d="M %.1f %.1f q %.1f %.1f %.1f %.1f l %.1f %.1f q %.1f %.1f %.1f %.1f Z" fill="%s"%s/>'
+             % (*p(64, 88), 10 * sc, -20 * sc, 38 * sc, -14 * sc, 9 * sc, 24 * sc,
+                -12 * sc, 14 * sc, -38 * sc, 8 * sc, SKIN, ky))
+
+    # a drip leaving the loaded bristles
+    g.append('<path d="M %.1f %.1f q %.1f %.1f %.1f %.1f q %.1f %.1f %.1f %.1f Z" fill="%s"/>'
+             % (*p(112, -52), -6 * sc, 13 * sc, 0, 20 * sc, 6 * sc, -7 * sc, 0, -20 * sc, TERRA))
+    g.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>' % (*p(112, -24), 5.6 * sc, TERRA))
     return ''.join(g)
 
 
 def badge():
     o = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" role="img" '
-         'aria-label="Algarve Painter mascot: a painter in a terracotta cap with a '
-         'brush behind his ear">' % (S, S)]
-    o.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>' % (CX, CX, 116, INK))
+         'aria-label="Algarve Painter: a painter in a terracotta cap holding a loaded paint brush">'
+         % (S, S)]
+    o.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>' % (CX, CX, 117, INK_LINE))
     o.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>' % (CX, CX, 109, TERRA))
     o.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>' % (CX, CX, 95, CREAM))
-    o.append('<clipPath id="disc"><circle cx="%.1f" cy="%.1f" r="%.1f"/></clipPath>' % (CX, CX, 95))
-    o.append('<g clip-path="url(#disc)">')
-    o.append(head(CX, CX + 12, 0.86))
-    o.append('</g>')
-    o.append('</svg>')
+    o.append('<clipPath id="mdisc"><circle cx="%.1f" cy="%.1f" r="%.1f"/></clipPath>' % (CX, CX, 95))
+    o.append('<g clip-path="url(#mdisc)">')
+    o.append(figure(CX - 16, CX + 16, 0.75))
+    o.append('</g></svg>')
     return '\n'.join(o)
 
 
 def flat():
-    o = ['<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" role="img" '
-         'aria-label="Algarve Painter mascot">' % (S, S)]
-    o.append(head(CX, CX + 4, 0.94))
-    o.append('</svg>')
-    return '\n'.join(o)
+    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %d %d" role="img" '
+            'aria-label="Algarve Painter mascot">%s</svg>' % (S, S, figure(CX - 4, CX + 6, 0.88)))
 
 
 if __name__ == '__main__':

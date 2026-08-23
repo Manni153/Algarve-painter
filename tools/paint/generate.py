@@ -103,18 +103,10 @@ def main(name='reference'):
     div.save(IMG + 'swatch-divider.png')
     print('swatches')
 
-    # Favicon: two loaded swipes on cream.
-    S = 1024
-    fav = canvas(S, S, CANVAS, seed=5, tooth=0.08).convert('RGBA')
-    for c, fy, fh, sd, dg in [(cols[1], 0.20, 0.30, 301, -6), (cols[2], 0.44, 0.38, 303, -4)]:
-        sw = stroke(int(S * 0.88), int(S * fh), c, seed=sd, arc=0.14, load=0.9)
-        fav.alpha_composite(sw.rotate(dg, resample=Image.BICUBIC, expand=True), (int(S * 0.06), int(S * fy)))
-    fav = fav.convert('RGB').resize((512, 512), Image.LANCZOS)
-    fav.save(ICO + 'icon-512.png')
-    fav.resize((180, 180), Image.LANCZOS).save(ICO + 'apple-touch-icon.png')
-    fav.resize((32, 32), Image.LANCZOS).save(ICO + 'favicon-32x32.png')
-    fav.save(ICO + 'favicon.ico', format='ICO', sizes=[(16, 16), (32, 32), (48, 48)])
-    print('favicon')
+    # The favicon is no longer generated here: the site's icon set is the
+    # mascot, rasterised by tools/brand/favicon.js, so that the header, the
+    # browser tab and the home-screen icon are the same mark. Writing the old
+    # paint-swipe icons here would overwrite it on the next routine run.
 
 if __name__ == '__main__':
     main(sys.argv[1] if len(sys.argv) > 1 else 'reference')
