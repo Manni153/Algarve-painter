@@ -256,8 +256,18 @@ function heroIntro({ alt, breadcrumb, h1Text, h1Html, headlineHtml, subtext, cta
   // deliberate solid --ink background (the same dark-section treatment
   // used elsewhere for CTA bands/footer) instead of the default
   // transparent hero that would otherwise just show blank page background.
+  // An `image.svg` hero is the illustrated Algarve scene rather than a
+  // photograph. It needs none of the responsive plumbing below — one vector
+  // file serves every width and DPR — so it takes a plain <img> and the two
+  // cuts (wide for desktop, tall for mobile and tablet) are switched by the
+  // same single 1025px breakpoint the photographs use.
   const mediaHtml = noMedia
     ? ''
+    : image && image.svgWide
+    ? `<picture>
+        <source media="(min-width: 1025px)" type="image/svg+xml" srcset="${image.svgWide}">
+        <img src="${image.svgTall}" alt="${esc(alt)}" loading="eager" fetchpriority="high">
+      </picture>`
     : image
     ? `<picture>
         <source media="(min-width: 1025px)" type="image/webp" sizes="100vw" srcset="${heroSrcset(image.desktopWebp, 'desktop')}">
@@ -339,7 +349,12 @@ function wordmarkHtml(isHome) {
   // the belly of the stroke can carry real bristle-loaded weight variation).
   // The stroke is absolutely positioned out of flow inside .wordmark-h-wrap,
   // so it never affects line height or wrapping in the header or footer.
-  return `Algarve <span class="accent"><span class="wordmark-h-wrap">Painter<svg class="wordmark-brush" viewBox="0 0 120 16" fill="none" aria-hidden="true" focusable="false" preserveAspectRatio="none"><path d="M2.5 10.2c14-3.4 30.6-5.1 49.8-5.1 19.2 0 39.3 1.9 60.3 5.7-6.6.4-13.6.6-21 .6-16.1 0-33.6-.9-52.5-2.7-13.3-1.3-25.5-1.8-36.6-1.5Z" fill="#C25A38"/></svg></span></span>`;
+  // The mascot rides in front of the wordmark: it is the mark that makes the
+  // header unmistakable, and it is the one element repeated at every size
+  // from the 32px favicon up. Inlined as an <img> rather than inline SVG so
+  // the same file serves the header, the footer and the icons without three
+  // copies of the path data in every page.
+  return `<img class="wordmark-mascot" src="/assets/brand/mascot.svg" alt="" aria-hidden="true" width="44" height="44"> Algarve <span class="accent"><span class="wordmark-h-wrap">Painter<svg class="wordmark-brush" viewBox="0 0 120 16" fill="none" aria-hidden="true" focusable="false" preserveAspectRatio="none"><path d="M2.5 10.2c14-3.4 30.6-5.1 49.8-5.1 19.2 0 39.3 1.9 60.3 5.7-6.6.4-13.6.6-21 .6-16.1 0-33.6-.9-52.5-2.7-13.3-1.3-25.5-1.8-36.6-1.5Z" fill="#C25A38"/></svg></span></span>`;
 }
 
 

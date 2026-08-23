@@ -4426,3 +4426,68 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
       rgba(var(--hero-canvas-rgb), 0) 100%);
   }
 }
+
+/* -------------------------------------------------------------------------
+   ILLUSTRATED BRAND PASS — stage 1
+   -------------------------------------------------------------------------
+   The hero is no longer a photograph but a drawn Algarve scene
+   (tools/brand/scene.py), and the header carries the painter mascot
+   (tools/brand/mascot.py). Both are generated from the page palette, so the
+   artwork and the stylesheet cannot drift apart, and neither carries a
+   third-party licence.
+
+   What changes here, and why:
+
+   * The hero veil goes. It existed to lift dark text off a photograph that
+     was busy where the text sat. The illustration is composed the other way
+     round — its left 44% is deliberately quiet sky — so a veil now only
+     greys out artwork that was drawn to be clear in the first place.
+   * The header scrim goes with it, for the same reason: the top of the
+     drawn scene is pale sky at every width.
+   * The hero art is a vector, so it needs none of the object-position
+     tuning the photographs did. It is set to cover and centred; the two
+     cuts (wide, tall) already handle the aspect range.
+   ------------------------------------------------------------------------- */
+.wordmark-mascot {
+  width: 2.6em;
+  height: 2.6em;
+  margin-right: 0.34em;
+  align-self: center;
+  flex: none;
+  display: block;
+}
+@media (max-width: 767px) { .wordmark-mascot { width: 2.3em; height: 2.3em; } }
+/* 1025-1180px is the tightest the desktop header ever gets: full nav, phone
+   and now the mascot in a 1180px container. At 2.6em the mark pushed the row
+   33px past the viewport — the first horizontal overflow this site has had.
+   It comes down here rather than the nav losing a link. */
+@media (min-width: 1025px) and (max-width: 1240px) {
+  .wordmark-mascot { width: 1.95em; height: 1.95em; margin-right: 0.22em; }
+  /* The row was already at its limit before the mascot joined it — 28px of
+     nav gap plus the full phone number exactly filled 1180px. Nine of those
+     pixels come back here rather than shrinking the mark to nothing. */
+  .home-header-nav { gap: 20px; }
+}
+
+@media (min-width: 1025px) {
+  .page-home .hero-stack--split .hero-stack-media::before,
+  .page-lagos-rs .hero-stack--split .hero-stack-media::before,
+  .page-home .hero-stack--split .hero-stack-media::after,
+  .page-lagos-rs .hero-stack--split .hero-stack-media::after {
+    background: none !important;
+  }
+}
+/* Phones keep a veil, and it stays in CSS rather than moving into the
+   artwork like the desktop haze did. The reason is the one the px stops were
+   introduced for: the hero is 100dvh, so its height follows the viewport
+   while the stats row's offset does not, and a haze baked into the SVG
+   scales with the box instead of tracking the row. On a 640-tall phone the
+   drawn haze had cleared before the row reached it and the labels fell to
+   1.25:1. The CSS veil is measured in px and does track it. */
+.site-header--home.site-header--home-transparent::before { content: none; }
+
+.page-home .hero-stack--split .hero-stack-media picture img,
+.page-lagos-rs .hero-stack--split .hero-stack-media picture img {
+  object-fit: cover;
+  object-position: 50% 50%;
+}

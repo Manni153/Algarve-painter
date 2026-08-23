@@ -26,11 +26,9 @@ const SERVICE_MINIMAL_IMAGES_SLUGS = new Set(['exterior-house-painting', 'interi
 // than dedicated per-service shots. When real per-service photography is
 // supplied, replace the entry for that slug here — nothing else changes.
 const SHARED_HERO = {
-  mobileWebp: '/assets/images/hero-paint-mobile.webp',
-  mobileJpg: '/assets/images/hero-paint-mobile.jpg',
-  desktopWebp: '/assets/images/hero-paint-desktop.webp',
-  desktopJpg: '/assets/images/hero-paint-desktop.jpg',
-  alt: 'Five thick impasto brushstrokes — ochre, dusty rose, orange, deep plum and burgundy — swept across artist\u2019s canvas',
+      svgWide: '/assets/brand/hero-scene-wide.svg',
+      svgTall: '/assets/brand/hero-scene-tall.svg',
+  alt: 'Illustration of an Algarve hillside village at golden hour: whitewashed villas with terracotta roofs climbing a headland above the sea',
 };
 const SERVICE_HERO_PHOTO = {
   'exterior-house-painting': SHARED_HERO,
@@ -239,14 +237,11 @@ function renderService(service) {
     // Full-bleed split hero (the homepage's own hero mechanism) is opted
     // into for the pilot; every other service page keeps its original
     // boxed, in-flow hero image untouched.
-    image: heroPhoto
-      ? {
-          mobileWebp: heroPhoto.mobileWebp,
-          mobileJpg: heroPhoto.mobileJpg,
-          desktopWebp: heroPhoto.desktopWebp,
-          desktopJpg: heroPhoto.desktopJpg,
-        }
-      : undefined,
+    // Passed through whole rather than key-by-key, so an illustrated hero
+    // (svgWide/svgTall) travels as intact as a photographic one
+    // (mobileWebp/desktopJpg/...). The old explicit pick silently dropped
+    // every key it had not been told about.
+    image: heroPhoto,
     twoColDesktop: isPilot,
   });
 

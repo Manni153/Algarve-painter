@@ -86,11 +86,8 @@ function renderHome() {
     // heroIntro in layout.js for the single 1025px <picture> breakpoint
     // that splits them.
     image: {
-      mobileWebp: '/assets/images/hero-paint-mobile.webp',
-      mobileJpg: '/assets/images/hero-paint-mobile.jpg',
-      desktopWebp: '/assets/images/hero-paint-desktop.webp',
-      desktopJpg: '/assets/images/hero-paint-desktop.jpg',
-      objectPosition: '55% 50%',
+      svgWide: '/assets/brand/hero-scene-wide.svg',
+      svgTall: '/assets/brand/hero-scene-tall.svg',
     },
     twoColDesktop: true,
   });

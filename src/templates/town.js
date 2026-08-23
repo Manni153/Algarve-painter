@@ -30,34 +30,32 @@ const SERVICES_FIRST_SLUGS = new Set(['lagos', 'praia-da-luz', 'sagres', 'aljezu
 // work in a given town is available, replace that town's entry here and
 // nothing else has to change.
 const TOWN_HERO = {
-  mobileWebp: '/assets/images/hero-paint-mobile.webp',
-  mobileJpg: '/assets/images/hero-paint-mobile.jpg',
-  desktopWebp: '/assets/images/hero-paint-desktop.webp',
-  desktopJpg: '/assets/images/hero-paint-desktop.jpg',
+      svgWide: '/assets/brand/hero-scene-wide.svg',
+      svgTall: '/assets/brand/hero-scene-tall.svg',
 };
 const TOWN_HERO_PHOTO = {
-  'lagos': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Lagos, Algarve' },
-  'praia-da-luz': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Praia da Luz, Algarve' },
-  'sagres': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Sagres, Algarve' },
-  'aljezur': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Aljezur, Algarve' },
-  'alvor': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Alvor, Algarve' },
-  'portimao': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Portimão, Algarve' },
-  'ferragudo': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Ferragudo, Algarve' },
-  'lagoa': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Lagoa, Algarve' },
-  'carvoeiro': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Carvoeiro, Algarve' },
-  'silves': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Silves, Algarve' },
-  'monchique': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Monchique, Algarve' },
-  'albufeira': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Albufeira, Algarve' },
-  'vilamoura': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Vilamoura, Algarve' },
-  'quarteira': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Quarteira, Algarve' },
-  'loule': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Loulé, Algarve' },
-  'almancil': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Almancil, Algarve' },
-  'faro': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Faro, Algarve' },
-  'olhao': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Olhão, Algarve' },
-  'sao-bras-de-alportel': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — São Brás de Alportel, Algarve' },
-  'tavira': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Tavira, Algarve' },
-  'castro-marim': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Castro Marim, Algarve' },
-  'vila-real-de-santo-antonio': { ...TOWN_HERO, alt: 'Thick impasto brushstrokes in ochre, rose, orange, plum and burgundy on canvas — Vila Real de Santo António, Algarve' },
+  'lagos': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Lagos, Algarve' },
+  'praia-da-luz': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Praia da Luz, Algarve' },
+  'sagres': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Sagres, Algarve' },
+  'aljezur': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Aljezur, Algarve' },
+  'alvor': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Alvor, Algarve' },
+  'portimao': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Portimão, Algarve' },
+  'ferragudo': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Ferragudo, Algarve' },
+  'lagoa': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Lagoa, Algarve' },
+  'carvoeiro': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Carvoeiro, Algarve' },
+  'silves': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Silves, Algarve' },
+  'monchique': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Monchique, Algarve' },
+  'albufeira': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Albufeira, Algarve' },
+  'vilamoura': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Vilamoura, Algarve' },
+  'quarteira': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Quarteira, Algarve' },
+  'loule': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Loulé, Algarve' },
+  'almancil': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Almancil, Algarve' },
+  'faro': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Faro, Algarve' },
+  'olhao': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Olhão, Algarve' },
+  'sao-bras-de-alportel': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — São Brás de Alportel, Algarve' },
+  'tavira': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Tavira, Algarve' },
+  'castro-marim': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Castro Marim, Algarve' },
+  'vila-real-de-santo-antonio': { ...TOWN_HERO, alt: 'Illustration of an Algarve hillside village at golden hour, above the sea — Vila Real de Santo António, Algarve' },
 };
 
 // Per-town "Local to <town>" description photo — genuinely different per
@@ -373,14 +371,11 @@ function renderTown(town) {
     // original boxed, in-flow hero image untouched. Towns without their
     // own photography yet (see TOWN_HERO_PHOTO above) render the same
     // full-bleed shell with the standard placeholder box instead.
-    image: heroPhoto
-      ? {
-          mobileWebp: heroPhoto.mobileWebp,
-          mobileJpg: heroPhoto.mobileJpg,
-          desktopWebp: heroPhoto.desktopWebp,
-          desktopJpg: heroPhoto.desktopJpg,
-        }
-      : undefined,
+    // Passed through whole rather than key-by-key, so an illustrated hero
+    // (svgWide/svgTall) travels as intact as a photographic one
+    // (mobileWebp/desktopJpg/...). The old explicit pick silently dropped
+    // every key it had not been told about.
+    image: heroPhoto,
     twoColDesktop: isDesignSystemPilot,
   });
 
