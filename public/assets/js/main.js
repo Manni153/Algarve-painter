@@ -112,7 +112,12 @@
   // pilot of the homepage's design system (see town.js/main.css) — every
   // other page still has no element this selector can match.
   var homeHeader = document.querySelector('.site-header--home');
-  var heroStackSplit = document.querySelector('.page-home .hero-stack--split, .page-lagos-rs .hero-stack--split');
+  // .hero-atelier is the ground-up homepage hero (no .hero-stack* classes
+  // — it deliberately does not inherit the ~2000 lines of legacy
+  // .hero-stack/.hero-stack--split card/scrim machinery built for three
+  // earlier hero designs, so it is listed here explicitly rather than
+  // folded into the .hero-stack--split selector above).
+  var heroStackSplit = document.querySelector('.page-home .hero-stack--split, .page-lagos-rs .hero-stack--split, .page-home .hero-atelier');
   if (homeHeader && heroStackSplit) {
     // The v2 homepage hero carries its own WhatsApp button, so the floating
     // bubble is suppressed while that hero is on screen — four contact
@@ -120,7 +125,7 @@
     // the loudest colour on the page. It fades back in once the visitor
     // scrolls past, where it earns its keep on the long content below.
     var fab = document.querySelector('.whatsapp-float');
-    var heroHasOwnWhatsApp = !!document.querySelector('.hero-v2');
+    var heroHasOwnWhatsApp = !!document.querySelector('.hero-atelier');
     var updateHeaderTransparency = function () {
       var stillOverHero = heroStackSplit.getBoundingClientRect().bottom > 0;
       homeHeader.classList.toggle('site-header--home-transparent', stillOverHero);

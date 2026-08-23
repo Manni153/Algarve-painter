@@ -369,12 +369,23 @@ function wordmarkHtml(isHome) {
 // isHome adds a site-header--home class so the homepage's white-header
 // treatment (see main.css) can be scoped without touching the header on
 // any of the other 32 pages, which all still get the plain dark header.
-function renderHeader(isHome) {
+//
+// heroTheme is a second, independent axis: 'dark' adds
+// site-header--hero-dark, which only matters in combination with the
+// site-header--home-transparent class main.js toggles at runtime (the
+// header sits over the hero image/art while it's in view). It exists
+// because .page-home and .page-lagos-rs's hero is a light image and wants
+// ink-coloured header text, while the ground-up "Painting, Perfected."
+// hero (home.js only) is a dark ground and wants the header back to the
+// cream/white it started as. header/main are SIBLINGS in the markup below
+// (header renders first), so CSS can't reach the header from a class on
+// <main> — heroTheme has to be threaded down to renderHeader directly.
+function renderHeader(isHome, heroTheme) {
   const headerNavLinks = site.headerServiceNav
     .map((s) => `<li><a href="${s.href}">${esc(s.label)}</a></li>`)
     .join('');
   return `
-  <nav class="site-header${isHome ? ' site-header--home' : ''} bleed" aria-label="Primary">
+  <nav class="site-header${isHome ? ' site-header--home' : ''}${heroTheme === 'dark' ? ' site-header--hero-dark' : ''} bleed" aria-label="Primary">
     <div class="container">
       <a href="/" class="wordmark">${wordmarkHtml(isHome)}</a>
       <ul class="header-nav">${headerNavLinks}</ul>
@@ -537,7 +548,7 @@ function breadcrumbListSchema(steps) {
 // itself still only reflects mainClass === 'page-home' — this doesn't
 // make that page "the homepage" in any other sense (schema, mainClass,
 // path are all untouched), it only reuses the header/footer/font chrome.
-function renderPage({ path, bodyHtml, schema, mainClass, useHomeHeader, title, metaDescription }) {
+function renderPage({ path, bodyHtml, schema, mainClass, useHomeHeader, heroTheme, title, metaDescription }) {
   const isHome = mainClass === 'page-home';
   const useHeaderChrome = isHome || Boolean(useHomeHeader);
   // Trailing slash on every page, not just the homepage — matches
@@ -581,13 +592,13 @@ ${title ? `<title>${esc(title)}</title>\n` : ''}${metaDescription ? `<meta name=
 <meta property="og:image" content="${site.baseUrl}/assets/icons/icon-512.png">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="${site.baseUrl}/assets/icons/icon-512.png">
-<meta name="theme-color" content="#fbf6ec">
+<meta name="theme-color" content="${heroTheme === 'dark' ? '#1c120c' : '#fbf6ec'}">
 ${homeFontsLink}
 <link rel="stylesheet" href="/assets/css/main.css">
 ${schemaHtml}
 </head>
 <body>
-${renderHeader(useHeaderChrome)}
+${renderHeader(useHeaderChrome, heroTheme)}
 ${renderNavDrawer()}
 <main${mainClass ? ` class="${mainClass}"` : ''}>
 ${bodyHtml}

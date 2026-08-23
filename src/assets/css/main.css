@@ -73,6 +73,19 @@
 
   --cream: #faf1e2; /* text on dark (brown) backgrounds */
 
+  /* "Painting, Perfected." hero (home.js only) — a near-black, warm clay
+     ground rather than the light paper every other surface on the site
+     uses. Three stops rather than a flat colour: a raking highlight top
+     right (where the light source in hero-atelier.svg's own glow also
+     sits, so the vector art and the flat colour behind it read as one
+     continuous surface) falling to near-black at the bottom left, which
+     is deliberately the darkest point on the page — the headline sits
+     there, and dark-on-darkest is a contrast floor that can't be missed
+     the way a light hero's veil repeatedly was. */
+  --atelier-hi: #3a2416;
+  --atelier-mid: #241811;
+  --atelier-lo: #160e09;
+
   --placeholder-fill: #e8d5b8; /* flat, unobtrusive image-slot fill */
 
   /* Homepage-only white header variant (.site-header--home, desktop) —
@@ -183,6 +196,19 @@ p { margin: 0 0 1em; color: var(--teal-muted); }
    the visible viewport entirely.
    ------------------------------------------------------------------------- */
 .bleed { width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); }
+
+/* Visually-hidden but screen-reader-readable — standard clip-based hiding
+   (not display:none, which VoiceOver/NVDA also skip). Used to keep the
+   full SEO-bearing H1 text intact for crawlers/AT even where the visible
+   heading is split into short display lines (see .hero-h1 in the HERO
+   ATELIER block). */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
 
 section { padding: 56px 0; scroll-margin-top: calc(var(--header-h) + 16px); }
 @media (min-width: 900px) { section { padding: 84px 0; } }
@@ -4257,6 +4283,19 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 .site-header--home-transparent .wordmark .wordmark-brush path { fill: var(--terracotta); }
 .site-header--home-transparent .hamburger span { background: var(--ink); }
 
+/* Header sitting over the DARK "Painting, Perfected." hero
+   (renderHeader's heroTheme==='dark' branch, home.js only). Three classes
+   beats the two-class rule above regardless of source order, so this wins
+   on specificity rather than by living later in the cascade — matters
+   because .page-lagos-rs's split hero is still the light image above and
+   must keep the ink-on-light treatment untouched. */
+.site-header--hero-dark.site-header--home-transparent .wordmark,
+.site-header--hero-dark.site-header--home-transparent .header-phone,
+.site-header--hero-dark.site-header--home-transparent .home-header-nav-link,
+.site-header--hero-dark.site-header--home-transparent .home-header-nav-trigger { color: var(--cream); }
+.site-header--hero-dark.site-header--home-transparent .wordmark span.accent { color: rgba(250, 241, 226, 0.82); }
+.site-header--hero-dark.site-header--home-transparent .hamburger span { background: var(--cream); }
+
 /* Tablet only (768-1024px): the stats row lands squarely on the strokes at
    this width — the deep anchor stroke measured 1.21:1 behind the labels —
    and the top-down veil has already cleared by the time it gets there.
@@ -4751,245 +4790,371 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 .page-home #services .card-icon-block svg,
 .page-lagos-rs #services .card-icon-block svg { width: 52px; height: 52px; }
 
-/* =========================================================================
-   HERO V2 — the homepage's conversion hero
-   =========================================================================
-   Purpose-built for the homepage (heroIntro still serves the 32 service and
-   town pages). Everything here is scoped under .hero-v2; the section keeps
-   the skeleton classes so the full-bleed box, the transparent header and
-   the mobile veil are inherited, and the overrides below undo only what the
-   old text column imposed.
 
-   The layout IS the conversion argument: one dominant headline, one support
-   line, ONE primary action with the phone demoted to a text link, then
-   proof. Nothing competes with the button.
+/* =========================================================================
+   HERO ATELIER — "Painting, Perfected." — ground-up homepage redesign
+   =========================================================================
+   Replaces HERO V2 wholesale, not incrementally: a different brief (bold,
+   premium, editorial — not "friendly, illustrated") called for a different
+   visual language, not a restyle of the same structure. Nothing here
+   reuses the .hero-stack / .hero-stack--split / .hero-stack-media classes
+   heroIntro() and three earlier hero generations built up in this file —
+   deliberately. That machinery carries ~2000 lines of page/breakpoint-
+   scoped overrides (card wrappers, veils, object-position tuning) from
+   designs this one has nothing in common with, and re-auditing all of it
+   for what silently still applied was a worse bet than a clean class
+   namespace. main.js's header-transparency and WhatsApp-bubble-suppression
+   hooks were updated to target .hero-atelier directly instead.
+
+   The single biggest structural decision: the ground is dark everywhere,
+   not just under a "busy" patch of imagery. Every earlier hero on this
+   site was a light photograph or illustration with dark or light text
+   fighting for a safe patch to sit in — the veil-tuning, scrim-angle and
+   object-position sagas documented throughout this file are all instances
+   of that fight. A dark ground with cream text is a contrast floor that
+   cannot be lost track of: the guarantee holds BEFORE any art is added on
+   top, not after enough tuning.
    ========================================================================= */
-.page-home .hero-v2.hero-stack--split {
-  /* Content may outgrow a short phone screen; a hero that clips its own
-     CTA converts worse than one that scrolls. The media is inset:0 so the
-     artwork covers whatever height this resolves to. */
-  height: auto;
+.page-home .hero-atelier {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   min-height: 100svh;
   min-height: 100dvh;
   display: flex;
+  align-items: center;
+  margin-top: calc(-1 * var(--header-h));
+  padding-top: var(--header-h);
+  background: radial-gradient(120% 100% at 82% 8%, var(--atelier-hi) 0%, var(--atelier-mid) 46%, var(--atelier-lo) 100%);
+  color: var(--cream);
 }
-.page-home .hero-v2 .container {
-  display: flex;
-  width: 100%;
-}
-.page-home .hero-v2 .hero-stack-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  gap: 0;
-  width: 100%;
-  max-width: none;
-  padding: calc(var(--header-h) + 26px) 0 30px;
-  min-height: 100%;
-}
-
-.hero-v2 .sr-only {
+/* Fine plaster grain over the whole hero — a single small feTurbulence
+   data URI, alpha baked into the filter's own colour matrix rather than
+   CSS opacity, tiled at natural size. It is what stops a CSS gradient
+   reading as a flat digital wash; at this alpha (0.05) it has no
+   measurable effect on text contrast, and every contrast figure quoted
+   below was measured on screenshots that already include it. */
+.page-home .hero-atelier::after {
+  content: '';
   position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0 0 0 0);
-  white-space: nowrap; border: 0;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-.page-home .hero-v2 .hero-eyebrow {
+/* ---- The art panel -------------------------------------------------------
+   An abstract field of overlapping brushstrokes (tools/brand/atelier.py),
+   not another illustrated Algarve scene — scene.py's village still owns
+   every other hero on the site. It is placed as a right-hand panel and
+   masked to a soft fade on its own left edge, rather than full-bleed
+   behind the text: on a dark ground the text is already safe everywhere,
+   so this is a compositional choice (keep the headline's side of the
+   frame uncluttered) rather than a contrast one — the failure mode from
+   every earlier hero. */
+.page-home .hero-atelier-art {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* Anchored to the CONTAINER's own right edge, not the viewport's — see
+     .container above (max-width: 1180px, centred). A flat `right: 0; width:
+     58%` put the panel's reach in viewport units while the text column's
+     position is set by the container, which is capped and centred; past
+     ~1600px the two disagree more with every extra pixel of viewport
+     width, and at 1920 the panel's left edge (masked, but not fully
+     transparent yet at that point) had drifted under the last ~235px of
+     "Painting," — measured 2.0:1 there, real, not a screenshot artefact.
+     max(0, ...) keeps `right: 0` (this evaluates negative) below 1180px+
+     padding, where the container already fills the viewport and the old
+     behaviour was correct. min(58vw, ...) does the same job for width: the
+     vw value below that point, a flat share of the container above it, so
+     the panel does not keep growing once the container itself has stopped. */
+  right: max(0px, calc(50% - (var(--container) / 2)));
+  width: min(58vw, calc(var(--container) * 0.60));
+  z-index: 0;
+  /* The right-edge anchor above fixes where the panel's OWN box sits, but
+     the mask's zero-alpha point is relative to that box, not to the text
+     column — so anchoring the box alone wasn't the whole fix. Once the
+     container is capped (viewport past ~1220px), the panel's left edge and
+     the text's right edge both drift right at the same rate (each tied to
+     the container), leaving a fixed ~200px gap between them at every width
+     from 1220px to 2560px+ alike (measured identically at 1920 and 2560).
+     The old `58%, 100%` stops put full transparency at the box's own left
+     edge, so at that 200px mark the fade was still ~65% opaque — visible,
+     and the real cause of the 2.0:1 failure. Pulling both stops in tightens
+     the fade so alpha reaches zero within the first ~30% of the panel's
+     width (~210px), comfortably inside that 200px gap at every capped
+     width, while leaving a real fade rather than a hard edge. */
+  -webkit-mask-image: linear-gradient(to left, #000 30%, transparent 60%);
+  mask-image: linear-gradient(to left, #000 30%, transparent 60%);
+}
+.page-home .hero-atelier-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 30% 50%;
+  display: block;
+}
+.page-home .hero-atelier .container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.page-home .hero-atelier-copy {
+  max-width: 640px;
+  padding: 48px 0;
+}
+
+.page-home .hero-atelier-copy .hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   font-family: var(--display);
   font-weight: 600;
-  font-size: 0.92rem;
-  letter-spacing: 0.14em;
+  font-size: 0.86rem;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--terracotta-dark, #9e4128);
-  margin: 0 0 14px;
+  color: rgba(250, 241, 226, 0.82);
+  margin: 0 0 22px;
+}
+.page-home .hero-atelier-copy .hero-eyebrow-rule {
+  display: inline-block;
+  width: 34px;
+  height: 2px;
+  background: var(--ochre);
+  flex: none;
 }
 
-/* The headline is the largest type on the site by a clear step — nothing
-   below the fold is allowed to out-shout it. Solid ink first line, the
-   second in terracotta: two voices, one statement. */
-.page-home .hero-v2 .hero-h1 {
+/* The headline: two one-word lines, huge, tight. Each line is deliberately
+   a single short word — the "orphan line" a wrapped multi-word headline
+   produced on the previous hero (an accidental short middle line at
+   narrow widths) cannot happen here, because there is nothing left for
+   either line to reflow. */
+.page-home .hero-atelier-copy .hero-h1 {
   font-family: var(--display);
   font-weight: 700;
-  font-size: clamp(2.75rem, 7.4vw, 5.4rem);
-  line-height: 0.99;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  margin: 0 0 18px;
-  max-width: 19ch;
-  text-wrap: balance;
+  font-size: clamp(3.1rem, 8.6vw, 7.1rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: var(--cream);
+  margin: 0 0 24px;
 }
-.hero-v2 .hero-h1-line { display: block; }
-/* One step deeper than the decorative terracotta: #c25a38 measured 3.11:1
-   over the sun glow at 1280-1440 — passing, but with no margin. This is the
-   eyebrow's colour, so the hero's warm voice stays one hue. */
-.page-home .hero-v2 .hero-h1-accent { color: var(--terracotta-dark, #9e4128); }
-/* The accent line is solid at every width. It was outlined from 1280px up,
-   and the outline measured fine (4.6:1 against the real background) — but
-   two independent reviewers read a treatment that changes between widths as
-   a rendering bug, and the widest screens got the weakest version of the
-   headline. Consistency won; the outline lives on in the tool sections,
-   over flat grounds. */
+.hero-atelier-copy .hero-h1-line { display: block; }
+/* Gold, not terracotta: the accent hue is threaded once through the
+   eyebrow rule, this line and the CTA hover/focus states rather than
+   mixed with the warmer red — one accent colour reads as a considered
+   system, two competing warm accents reads as indecision. */
+.page-home .hero-atelier-copy .hero-h1-accent { color: var(--ochre); }
 
-
-.page-home .hero-v2 .hero-sub {
-  font-size: clamp(1.02rem, 1.4vw, 1.22rem);
-  line-height: 1.55;
-  color: var(--ink-700, #4e3325);
-  max-width: 52ch;
-  margin: 0 0 26px;
+.page-home .hero-atelier-copy .hero-sub {
+  font-size: clamp(1.05rem, 1.5vw, 1.24rem);
+  line-height: 1.6;
+  color: rgba(250, 241, 226, 0.82);
+  max-width: 46ch;
+  margin: 0 0 34px;
 }
 
-/* ---- CTAs ---------------------------------------------------------------
-   The primary button is deliberately outsized: this is the one element the
-   page most wants pressed, and it should be identifiable with the eyes
-   half-closed. The phone link sits beside it at text weight. */
-.hero-v2 .hero-cta-row {
+/* ---- CTA ------------------------------------------------------------- */
+.hero-atelier-copy .hero-cta-row {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 18px 26px;
+  gap: 18px 30px;
 }
-.page-home .hero-v2 .btn-hero {
+/* Cream fill on a dark ground rather than another coloured pill: the
+   brightest single object on the page is the one thing an eye scanning a
+   dark hero cannot skip past, which does the "impossible to ignore" job
+   more reliably than a louder colour would on a ground already full of
+   colour from the art panel. */
+.page-home .hero-atelier-copy .btn-hero {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  background: var(--terracotta-btn);
-  color: var(--cream);
+  gap: 14px;
+  background: var(--cream);
+  color: var(--ink);
   font-family: var(--display);
   font-weight: 700;
-  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  font-size: clamp(1.02rem, 1.3vw, 1.15rem);
   line-height: 1;
-  padding: 20px 34px;
-  border-radius: 999px;
+  padding: 21px 32px;
+  border-radius: 10px;
   text-decoration: none;
-  box-shadow: 0 12px 28px rgba(158, 65, 40, 0.34);
-  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.38);
+  transition: transform 200ms ease, box-shadow 200ms ease, background 200ms ease, color 200ms ease;
 }
-.page-home .hero-v2 .btn-hero svg { transition: transform 180ms ease; }
-.page-home .hero-v2 .btn-hero:hover {
-  background: var(--terracotta-dark, #9e4128);
+.page-home .hero-atelier-copy .btn-hero svg { transition: transform 200ms ease; flex: none; }
+.page-home .hero-atelier-copy .btn-hero:hover,
+.page-home .hero-atelier-copy .btn-hero:focus-visible {
+  background: var(--terracotta-btn);
+  color: var(--cream);
   transform: translateY(-2px);
-  box-shadow: 0 18px 36px rgba(158, 65, 40, 0.4);
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.46);
 }
-.page-home .hero-v2 .btn-hero:hover svg { transform: translateX(4px); }
-.page-home .hero-v2 .btn-hero:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
-.page-home .hero-v2 .btn-hero:active { transform: translateY(0); }
+.page-home .hero-atelier-copy .btn-hero:hover svg,
+.page-home .hero-atelier-copy .btn-hero:focus-visible svg { transform: translateX(4px); }
+.page-home .hero-atelier-copy .btn-hero:focus-visible { outline: 3px solid var(--ochre); outline-offset: 3px; }
+.page-home .hero-atelier-copy .btn-hero:active { transform: translateY(0); }
+/* A thin gilt line under the label — the button's own small "premium
+   stationery" detail, echoing the gold hairline where the hero meets the
+   credentials strip below. */
+.page-home .hero-atelier-copy .btn-hero::after {
+  content: '';
+  position: absolute;
+  left: 32px;
+  right: 32px;
+  bottom: 10px;
+  height: 2px;
+  background: var(--ochre);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 260ms ease;
+}
+.page-home .hero-atelier-copy .btn-hero:hover::after,
+.page-home .hero-atelier-copy .btn-hero:focus-visible::after { transform: scaleX(1); }
+@media (prefers-reduced-motion: reduce) {
+  .page-home .hero-atelier-copy .btn-hero,
+  .page-home .hero-atelier-copy .btn-hero svg,
+  .page-home .hero-atelier-copy .btn-hero::after { transition: none; }
+}
 
-.page-home .hero-v2 .hero-phone {
+.page-home .hero-atelier-copy .hero-phone {
   display: inline-flex;
   align-items: center;
   gap: 9px;
-  color: var(--ink);
+  color: var(--cream);
   font-size: 1rem;
   text-decoration: none;
-  border-bottom: 2px solid rgba(58, 36, 26, 0.25);
+  border-bottom: 2px solid rgba(250, 241, 226, 0.3);
   padding-bottom: 2px;
   transition: border-color 160ms ease;
 }
-.page-home .hero-v2 .hero-phone:hover { border-color: var(--terracotta); }
-.page-home .hero-v2 .hero-phone strong { font-family: var(--display); font-weight: 700; }
+.page-home .hero-atelier-copy .hero-phone:hover,
+.page-home .hero-atelier-copy .hero-phone:focus-visible { border-color: var(--ochre); }
+.page-home .hero-atelier-copy .hero-phone strong { font-family: var(--display); font-weight: 700; }
 
-.page-home .hero-v2 .hero-cta-note {
-  font-size: 0.88rem;
-  color: var(--ink-700, #4e3325);
-  margin: 12px 0 0;
-}
-
-/* ---- Trust strip --------------------------------------------------------
-   Three claims on real card surfaces at the foot of the hero. Cards rather
-   than bare text over the artwork: the surface is what makes them read as
-   credentials, and it ends the old fight between label contrast and how
-   much veil the illustration could take. */
-.hero-v2 .hero-trust {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  width: 100%;
-  margin-top: clamp(30px, 5vh, 58px);
-}
-.hero-v2 .trust-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 13px;
-  /* Near-opaque plus blur: at 0.94 the village's dark windows read through
-     the cards and sat behind the copy like stains. */
-  background: rgba(255, 253, 247, 0.97);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(58, 36, 26, 0.10);
-  border-radius: 18px;
-  padding: 16px 18px;
-  box-shadow: 0 10px 26px rgba(58, 36, 26, 0.10);
-  transition: transform 180ms ease, box-shadow 180ms ease;
-}
-.hero-v2 .trust-card:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(58, 36, 26, 0.14); }
-.hero-v2 .trust-card-icon {
-  flex: none;
-  width: 46px; height: 46px;
-  border-radius: 13px;
-  background: var(--sand);
-  display: flex; align-items: center; justify-content: center;
-}
-.hero-v2 .trust-card-icon svg { width: 30px; height: 30px; display: block; }
-.page-home .hero-v2 .trust-card-text strong {
-  display: block;
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 1.0rem;
-  color: var(--ink);
-  line-height: 1.25;
-  margin-bottom: 3px;
-}
-.page-home .hero-v2 .trust-card-text span {
-  display: block;
-  font-size: 0.86rem;
-  line-height: 1.45;
-  color: var(--teal-muted);
+.page-home .hero-atelier-copy .hero-cta-note {
+  font-size: 0.87rem;
+  color: rgba(250, 241, 226, 0.58);
+  margin: 16px 0 0;
 }
 
 /* ---- Entry motion -------------------------------------------------------
-   A short staggered rise on load — one orchestrated moment, not scattered
-   effects — and none of it for anyone who asked for reduced motion. */
+   One staggered rise, once, on load — not scattered per-element effects.
+   Off entirely under reduced-motion. */
 @media (prefers-reduced-motion: no-preference) {
-  .page-home .hero-v2 [data-rise] {
+  .page-home .hero-atelier-copy [data-rise] {
     animation: heroRise 640ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
-  .page-home .hero-v2 [data-rise]:nth-of-type(1) { animation-delay: 40ms; }
-  .page-home .hero-v2 .hero-h1[data-rise] { animation-delay: 110ms; }
-  .page-home .hero-v2 .hero-sub[data-rise] { animation-delay: 190ms; }
-  .page-home .hero-v2 .hero-cta-row[data-rise] { animation-delay: 270ms; }
-  .page-home .hero-v2 .hero-cta-note[data-rise] { animation-delay: 330ms; }
-  .page-home .hero-v2 .hero-trust[data-rise] { animation-delay: 420ms; }
+  .page-home .hero-atelier-copy .hero-eyebrow[data-rise] { animation-delay: 40ms; }
+  .page-home .hero-atelier-copy .hero-h1[data-rise] { animation-delay: 120ms; }
+  .page-home .hero-atelier-copy .hero-sub[data-rise] { animation-delay: 220ms; }
+  .page-home .hero-atelier-copy .hero-cta-row[data-rise] { animation-delay: 320ms; }
+  .page-home .hero-atelier-copy .hero-cta-note[data-rise] { animation-delay: 400ms; }
 }
 @keyframes heroRise {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ---- Breakpoints --------------------------------------------------------*/
+/* ---- Breakpoints ---------------------------------------------------------
+   Below 1025px the art panel moves to the top of the frame (behind the
+   eyebrow, above where the headline starts) rather than staying a
+   right-hand column — there is no second column at these widths, so
+   "right-hand panel" has nothing to sit beside. */
 @media (max-width: 1024px) {
-  .page-home .hero-v2 .hero-stack-text { padding-top: calc(var(--header-h) + 18px); }
-  .hero-v2 .hero-trust { grid-template-columns: 1fr; gap: 10px; }
-  .hero-v2 .trust-card { padding: 12px 15px; }
-  .hero-v2 .trust-card-icon { width: 40px; height: 40px; }
-  .hero-v2 .trust-card-icon svg { width: 26px; height: 26px; }
+  /* Vertically centred, not top-anchored: a portrait tablet (768x1024) has
+     far more height than this shorter, single-column content needs, and
+     flex-start dumped the entire difference below the CTA as dead space —
+     confirmed by screenshot, not assumed. Centring splits it evenly above
+     and below instead, which reads as a composed poster layout rather
+     than content stuck at the top of an empty page. */
+  .page-home .hero-atelier { align-items: center; }
+  .page-home .hero-atelier-copy { padding: calc(var(--header-h) + 8px) 0 40px; max-width: 100%; }
+  .page-home .hero-atelier-art {
+    inset: 0 0 auto 0;
+    width: 100%;
+    height: 46%;
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  }
+  .page-home .hero-atelier-art img { object-position: 72% 38%; }
 }
 @media (max-width: 767px) {
-  /* The full eyebrow wraps awkwardly at 390px; smaller and tighter it holds
-     one line down to 360px, and below that the wrap is at least clean. */
-  .page-home .hero-v2 .hero-eyebrow { font-size: 0.76rem; letter-spacing: 0.11em; }
-  .page-home .hero-v2 .hero-h1 { margin-bottom: 14px; }
-  .page-home .hero-v2 .btn-hero { width: 100%; justify-content: center; padding: 19px 26px; }
-  .hero-v2 .hero-cta-row { gap: 14px; }
-  .page-home .hero-v2 .hero-phone { font-size: 0.95rem; }
-  .hero-v2 .hero-trust { margin-top: 24px; }
-  .page-home .hero-v2 .trust-card-text span { font-size: 0.84rem; }
+  .page-home .hero-atelier-copy .btn-hero {
+    width: 100%;
+    justify-content: center;
+    font-size: 1rem;
+    padding: 19px 20px;
+  }
+  .hero-atelier-copy .hero-cta-row { gap: 14px; }
+  .page-home .hero-atelier-copy .hero-eyebrow { font-size: 0.74rem; letter-spacing: 0.10em; }
+  /* The rule's 34px plus its 12px gap is what pushed this onto two lines
+     at 390px (hero-v2's plain-text eyebrow didn't carry that cost) — an
+     awkward wrap since flex centring then aligns the rule against the
+     full two-line block instead of the first line. Dropped below 480px
+     rather than fought: it is a decorative flourish, not the content. */
+  .page-home .hero-atelier-copy .hero-eyebrow-rule { display: none; }
+}
+@media (max-width: 479px) {
+  .page-home .hero-atelier-copy .hero-eyebrow { font-size: 0.68rem; }
 }
 
-/* Floating WhatsApp bubble stands down while the v2 hero (which has its own
+/* =========================================================================
+   CREDENTIALS STRIP — icon-less, typographic, the hero's trust proof
+   =========================================================================
+   A slim masthead-style row on the page's own light ground, directly
+   below the dark hero, separated by a gilt hairline rather than a soft
+   fade — a hard, designed edge (like a page turn) reads more considered
+   than a gradient trying to hide the seam. Four short claims, no icons:
+   the previous hero's trust proof was three cards with drawn icons: a
+   different structure was wanted, not a recolour of the same one, and an
+   icon-less credential bar is its own established, more editorial idiom.
+   ========================================================================= */
+.page-home .credentials-strip {
+  background: var(--sand);
+  border-top: 2px solid var(--ochre);
+  padding: 26px 0;
+}
+.page-home .credentials-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
+}
+.page-home .credentials-list li {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-700, #4e3325);
+  padding: 6px 26px;
+  position: relative;
+  text-align: center;
+}
+.page-home .credentials-list li + li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 16px;
+  background: var(--stone);
+}
+@media (max-width: 640px) {
+  .page-home .credentials-list { justify-content: flex-start; }
+  .page-home .credentials-list li { padding: 6px 16px 6px 0; font-size: 0.76rem; }
+  .page-home .credentials-list li + li::before { display: none; }
+}
+
+/* Floating WhatsApp bubble stands down while the hero (which has its own
    WhatsApp button) is on screen — toggled from main.js's scroll handler. */
 .whatsapp-float {
   transition: opacity 240ms ease, transform 240ms ease;
