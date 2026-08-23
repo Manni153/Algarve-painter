@@ -34,6 +34,9 @@ WHITE      = '#fffdf7'
 # One cool note, desaturated and warm-leaning so it sits inside the warm
 # palette rather than competing with it. The Algarve without sea does not
 # read as the Algarve.
+AZULEJO    = '#5b7f9e'      # the blue of Portuguese tilework and painted trim
+BOUGAIN    = '#c2417a'      # bougainvillea
+BOUGAIN_DK = '#9c2c5e'
 SEA        = '#bacdd4'
 SEA_DEEP   = '#a3bbc4'
 
@@ -76,29 +79,118 @@ def cliff(w, h, x0, y, seed):
     return d + ' L %.1f %.1f L %.1f %.1f Z' % (w + 60, h + 60, x0, h + 60)
 
 
-def villa(x, base, w, h, roof, wall, flip=False):
-    """A whitewashed block with a pitched terracotta roof, arched door and
-    shuttered windows — the Algarve vernacular, drawn as simply as it bears."""
-    g = []
-    over = w * 0.16                              # roof overhang each side
-    peak = h * 0.42
-    g.append('<path d="M %.1f %.1f L %.1f %.1f L %.1f %.1f Z" fill="%s"/>'
-             % (x - over, base - h, x + w + over, base - h, x + w / 2, base - h - peak, roof))
-    g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>' % (x, base - h, w, h, wall))
-    cx = x + w * (0.16 if flip else 0.72)
+def chimney(x, base, w, h, colour, trim):
+    """A chaminé algarvia. These are the single most identifiable thing on an
+    Algarve roofline — tall, square, and pierced with a filigree lattice under
+    a flared cap — and leaving them off is most of why the first cut could
+    have been anywhere on the Mediterranean."""
+    g = ['<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>' % (x, base - h, w, h, colour)]
+    # pierced lattice: two rows of openings, suggested rather than drawn out
+    hx, hy = w * 0.19, h * 0.13
+    for r in range(2):
+        for c in range(3):
+            g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>'
+                     % (x + w * 0.14 + c * w * 0.27, base - h * (0.78 - r * 0.26), hx, hy, trim))
+    # flared cap and finial
+    g.append('<path d="M %.1f %.1f l %.1f 0 l %.1f %.1f l %.1f 0 Z" fill="%s"/>'
+             % (x - w * 0.20, base - h, w * 1.40, -w * 0.18, -h * 0.11, -w * 1.04, trim))
     g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>'
-             % (cx, base - h - peak * 0.86, w * 0.10, peak * 0.72, wall))
-    dw, dh = w * 0.20, h * 0.52
-    dx = x + (w * 0.66 if flip else w * 0.14)
+             % (x + w * 0.40, base - h - h * 0.19, w * 0.20, h * 0.09, trim))
+    return ''.join(g)
+
+
+def villa(x, base, w, h, roof, wall, flip=False, terrace=False, trim=AZULEJO):
+    """A white Algarve house: pantiled or flat-terraced, with a painted skirt
+    band and painted surrounds to the openings, an arched door, and a filigree
+    chimney. The paint is not decoration here — a painting company's own
+    illustration ought to show painted buildings."""
+    g = []
+    if terrace:
+        # açoteia: flat roof with a parapet, and a run of little arches
+        g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>'
+                 % (x - w * 0.05, base - h - h * 0.16, w * 1.10, h * 0.16, wall))
+        g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>'
+                 % (x - w * 0.05, base - h - h * 0.16, w * 1.10, h * 0.045, trim))
+        for i in range(3):
+            g.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>'
+                     % (x + w * (0.18 + 0.32 * i), base - h - h * 0.055, w * 0.055, trim))
+        roof_top = base - h - h * 0.16
+    else:
+        over, peak = w * 0.14, h * 0.36
+        g.append('<path d="M %.1f %.1f L %.1f %.1f L %.1f %.1f Z" fill="%s"/>'
+                 % (x - over, base - h, x + w + over, base - h, x + w / 2, base - h - peak, roof))
+        # pantile courses, just enough to read as tile rather than a flat plane
+        for i in (1, 2):
+            fy = i / 3.0
+            g.append('<path d="M %.1f %.1f L %.1f %.1f" stroke="%s" stroke-width="%.1f" opacity="0.35"/>'
+                     % (x - over + (over + w / 2) * fy, base - h - peak * fy,
+                        x + w + over - (over + w / 2) * fy, base - h - peak * fy, CREAM, h * 0.020))
+        roof_top = base - h - peak
+
+    g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>' % (x, base - h, w, h, wall))
+    # painted skirt band along the base — the vernacular ochre or blue plinth
+    g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>'
+             % (x, base - h * 0.17, w, h * 0.17, trim))
+
+    cw = w * 0.19
+    g.append(chimney(x + w * (0.10 if flip else 0.72), roof_top + h * 0.03, cw, h * 0.26, wall, trim))
+
+    # arched door with a painted surround
+    dw, dh = w * 0.21, h * 0.50
+    dx = x + (w * 0.64 if flip else w * 0.13)
+    g.append('<path d="M %.1f %.1f v %.1f a %.1f %.1f 0 0 1 %.1f 0 v %.1f Z" fill="%s"/>'
+             % (dx - w * 0.035, base, -(dh - dw / 2 + h * 0.05), dw / 2 + w * 0.035, dw / 2 + w * 0.035,
+                dw + w * 0.07, dh - dw / 2 + h * 0.05, trim))
     g.append('<path d="M %.1f %.1f v %.1f a %.1f %.1f 0 0 1 %.1f 0 v %.1f Z" fill="%s"/>'
              % (dx, base, -(dh - dw / 2), dw / 2, dw / 2, dw, dh - dw / 2, INK))
+
+    # shuttered windows, each in a painted surround
     for i in range(2):
-        ww, wh = w * 0.15, h * 0.24
-        wx = x + w * (0.16 if flip else 0.44) + i * w * 0.26
-        if wx + ww > x + w * 0.94:
+        ww, wh = w * 0.155, h * 0.23
+        wx = x + w * (0.16 if flip else 0.42) + i * w * 0.25
+        if wx + ww > x + w * 0.92:
             break
         g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>'
-                 % (wx, base - h * 0.78, ww, wh, INK))
+                 % (wx - w * 0.032, base - h * 0.74 - h * 0.03, ww + w * 0.064, wh + h * 0.06, trim))
+        g.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s"/>'
+                 % (wx, base - h * 0.74, ww, wh, INK))
+    return ''.join(g)
+
+
+def stack(x, base, w, h, colour, arch=False):
+    """A limestone sea stack, optionally pierced — the Ponta da Piedade
+    silhouette that says Algarve coast and nowhere else."""
+    g = ['<path d="M %.1f %.1f L %.1f %.1f L %.1f %.1f L %.1f %.1f L %.1f %.1f Z" fill="%s"/>'
+         % (x, base, x + w * 0.10, base - h * 0.72, x + w * 0.36, base - h,
+            x + w * 0.82, base - h * 0.66, x + w, base, colour)]
+    if arch:
+        g.append('<path d="M %.1f %.1f v %.1f a %.1f %.1f 0 0 1 %.1f 0 v %.1f Z" fill="%s"/>'
+                 % (x + w * 0.30, base, -h * 0.34, w * 0.20, h * 0.24, w * 0.40, h * 0.34, SEA_DEEP))
+    return ''.join(g)
+
+
+def agave(x, base, h, colour):
+    """Agave — the spiky rosette on every Algarve roadside and clifftop."""
+    g = []
+    for a in (-168, -142, -116, -90, -64, -38, -12):
+        r = math.radians(a)
+        ex, ey = x + math.cos(r) * h * 0.62, base + math.sin(r) * h
+        g.append('<path d="M %.1f %.1f L %.1f %.1f L %.1f %.1f Z" fill="%s"/>'
+                 % (x - h * 0.15, base, ex, ey, x + h * 0.15, base, colour))
+    return ''.join(g)
+
+
+def bougainvillea(x, base, w, h, colour, dark):
+    """A bougainvillea spilling down a wall: the one hot colour in an Algarve
+    street, and the reason a whitewashed village never reads as monotone."""
+    g = []
+    rng = random.Random(int(x) * 7 + 3)
+    for i in range(30):
+        cx = x + rng.uniform(0, w)
+        cy = base - rng.uniform(0, h)
+        r = h * rng.uniform(0.055, 0.115)
+        g.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>'
+                 % (cx, cy, r, dark if i % 3 == 0 else colour))
     return ''.join(g)
 
 
@@ -155,10 +247,10 @@ def scene(w, h, layout):
              '<stop offset="0" stop-color="#fff3dc" stop-opacity="0.62"/>'
              '<stop offset="1" stop-color="#fff3dc" stop-opacity="0"/></linearGradient>'
              '<linearGradient id="haze" x1="0" y1="0" x2="1" y2="0">'
-             '<stop offset="0" stop-color="#fdf6ec" stop-opacity="0.94"/>'
-             '<stop offset="0.30" stop-color="#fdf6ec" stop-opacity="0.86"/>'
-             '<stop offset="0.52" stop-color="#fdf6ec" stop-opacity="0.34"/>'
-             '<stop offset="0.68" stop-color="#fdf6ec" stop-opacity="0"/></linearGradient>'
+             '<stop offset="0" stop-color="#fdf6ec" stop-opacity="0.80"/>'
+             '<stop offset="0.30" stop-color="#fdf6ec" stop-opacity="0.62"/>'
+             '<stop offset="0.52" stop-color="#fdf6ec" stop-opacity="0.20"/>'
+             '<stop offset="0.66" stop-color="#fdf6ec" stop-opacity="0"/></linearGradient>'
              '<linearGradient id="hazeV" x1="0" y1="0" x2="0" y2="1">'
              '<stop offset="0" stop-color="#fdf6ec" stop-opacity="0.95"/>'
              '<stop offset="0.40" stop-color="#fdf6ec" stop-opacity="0.90"/>'
@@ -218,6 +310,17 @@ def scene(w, h, layout):
                     h * 0.0085, h * 0.0043, OCHRE_PALE if near > 0.55 else BLUSH_PALE,
                     0.25 + 0.45 * near))
 
+    # Sea stacks off the point, one of them pierced. This is the Ponta da
+    # Piedade silhouette, and it is the fastest way to say Algarve coast
+    # rather than generic Mediterranean bay.
+    st_base = SEA_END - (SEA_END - SKY_END) * 0.16
+    if wide:
+        st = [(0.360, 0.055, 0.090, True), (0.418, 0.036, 0.060, False), (0.310, 0.028, 0.045, False)]
+    else:
+        st = [(0.140, 0.070, 0.075, True), (0.245, 0.046, 0.050, False), (0.058, 0.036, 0.038, False)]
+    for fx, fw, fh, arch in st:
+        o.append(stack(w * fx, st_base, w * fw, h * fh, OCHRE_MID, arch))
+
     # golden cliff dropping into the water on the right, faceted not rounded
     cx0 = w * (quiet + 0.10)
     face = [(cx0, SEA_END)]
@@ -235,21 +338,30 @@ def scene(w, h, layout):
     o.append('<path d="%s" fill="%s"/>' % (ridge(w, h, SEA_END, h * 0.014, 3, 6, tilt=0.02), BLUSH))
     o.append('<path d="%s" fill="%s"/>' % (ridge(w, h, SLOPE, h * 0.022, 23, 6, tilt=0.10), CLAY_MID))
 
-    # the village CLIMBS the slope: each house sits a step higher to the right,
-    # which is what makes it read as a hill town rather than a terrace
+    # The village CLIMBS the slope — each house a step higher — and mixes
+    # pitched pantile roofs with flat açoteia terraces, which is what an
+    # actual Algarve hill village does. Trim alternates between the blue of
+    # the tilework and ochre, so the row reads as painted buildings rather
+    # than as one repeated block.
     if wide:
-        spots = [(0.50, 0.86, 0.00), (0.575, 1.06, 0.030), (0.655, 0.88, 0.058),
+        spots = [(0.50, 0.86, 0.000), (0.575, 1.06, 0.030), (0.655, 0.88, 0.058),
                  (0.725, 1.14, 0.086), (0.805, 0.94, 0.112), (0.880, 1.06, 0.138),
                  (0.950, 0.86, 0.162)]
     else:
-        spots = [(0.03, 0.88, 0.00), (0.135, 1.08, 0.026), (0.265, 0.90, 0.050),
+        spots = [(0.03, 0.88, 0.000), (0.135, 1.08, 0.026), (0.265, 0.90, 0.050),
                  (0.395, 1.16, 0.074), (0.535, 0.96, 0.098), (0.665, 1.08, 0.120),
                  (0.795, 0.88, 0.140), (0.900, 1.00, 0.158)]
     vh = h * (0.068 if wide else 0.062)
-    for i, (fx, s, lift) in enumerate(spots):
-        o.append(villa(w * fx, SLOPE + h * 0.075 - h * lift, vh * 1.02 * s, vh * s,
+    for i, (fx, s_, lift) in enumerate(spots):
+        vx, vy2 = w * fx, SLOPE + h * 0.075 - h * lift
+        o.append(villa(vx, vy2, vh * 1.02 * s_, vh * s_,
                        roof=TERRACOTTA if i % 2 else CLAY_DEEP,
-                       wall=WHITE if i % 2 else CREAM, flip=bool(i % 3)))
+                       wall=WHITE if i % 2 else CREAM,
+                       flip=bool(i % 3), terrace=(i % 4 == 2),
+                       trim=AZULEJO if i % 2 else OCHRE))
+        if i in (1, 4):
+            o.append(bougainvillea(vx + vh * 0.72 * s_, vy2, vh * 0.44 * s_, vh * 0.62 * s_,
+                                   BOUGAIN, BOUGAIN_DK))
 
     # near bank, darkest plane, closing the frame
     o.append('<path d="%s" fill="%s"/>' % (ridge(w, h, FG, h * 0.018, 31, 6, tilt=-0.03), CLAY_DEEP))
@@ -262,6 +374,12 @@ def scene(w, h, layout):
                  (0.700, 0.070, 'c'), (0.905, 0.100, 'p')]
     for fx, fh, kind in trees:
         o.append((cypress if kind == 'c' else pine)(w * fx, FG + h * 0.075, h * fh, BARK))
+    # agave on the near bank, and one bougainvillea to carry a hot note into
+    # the foreground so the bottom of the frame is not all earth
+    for fx, fh in ((0.215, 0.082), (0.695, 0.068), (0.455, 0.058)) if wide else ((0.31, 0.072), (0.85, 0.060)):
+        o.append(agave(w * fx, FG + h * 0.085, h * fh, BARK))
+    bx = w * (0.815 if wide else 0.60)
+    o.append(bougainvillea(bx, FG + h * 0.075, w * 0.055, h * 0.075, BOUGAIN, BOUGAIN_DK))
     # Morning haze over the quiet side. This is the job the CSS veil used to
     # do, moved into the picture: an illustrator would draw the light this
     # way round anyway, and here it can be judged against the artwork instead
