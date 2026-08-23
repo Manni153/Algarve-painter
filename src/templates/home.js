@@ -66,32 +66,74 @@ function renderHome() {
     })),
   };
 
-  const hero = heroIntro({
-    alt: 'Five thick impasto brushstrokes — ochre, dusty rose, orange, deep plum and burgundy — swept across artist\u2019s canvas',
-    h1Text: 'Painting & Decorating in the Algarve',
-    // "Decorating" never splits across lines (nbsp, all breakpoints); the
-    // <br> is desktop-only (see .hero-kicker-break in main.css) so it
-    // forces a clean two-line break there without affecting mobile's
-    // natural wrap. Wording/punctuation is byte-identical to h1Text above
-    // — no copy change, purely a line-break placement.
-    h1Html: 'Painting &amp; Decorating<br class="hero-kicker-break"> in the Algarve',
-    headlineHtml: 'Make your Algarve property look cared for again',
-    subtext: 'Exteriors, interiors, render repair and woodwork — prepared properly and explained in plain English.',
-    trustStats: site.trustStats,
-    desktopStatsText: site.heroStatsDesktop,
-    mobileStatsText: site.heroStatsShort,
-    // Full-bleed hero, two dedicated images: desktop (1025px+) gets its own
-    // wide crop of the villa facade; mobile and tablet (<=1024px, both
-    // breakpoints together) share ONE portrait image composed for that
-    // aspect ratio rather than cropped down from the desktop photo — see
-    // heroIntro in layout.js for the single 1025px <picture> breakpoint
-    // that splits them.
-    image: {
-      svgWide: '/assets/brand/hero-scene-wide.svg',
-      svgTall: '/assets/brand/hero-scene-tall.svg',
+  // ---- Hero v2 -----------------------------------------------------------
+  // The homepage hero is purpose-built here rather than through heroIntro,
+  // which still serves the 32 service/town pages unchanged. It keeps the
+  // skeleton classes (.hero-stack--split, .hero-stack-media, .container) so
+  // the full-bleed 100dvh mechanics, the transparent-header JS and the
+  // mobile veil all keep working — only the text column's contents are new.
+  //
+  // Conversion order is the layout: headline -> support line -> one primary
+  // action -> quiet phone alternative -> proof. One primary CTA, not two
+  // equals: the button goes to WhatsApp because that is how Algarve
+  // owners actually open a conversation, and the phone number is styled as
+  // the fallback it is.
+  const heroTrust = [
+    {
+      title: 'Plain English, start to finish',
+      copy: 'Quotes, scheduling and final touch-ups — all in your language.',
+      icon: `<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g stroke="#3a241a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M 10 14 H 54 V 42 H 30 L 18 52 V 42 H 10 Z" fill="#fffdf7"/><path d="M 18 24 H 46 M 18 32 H 38" fill="none"/></g></svg>`,
     },
-    twoColDesktop: true,
-  });
+    {
+      title: 'Algarve-based, all year round',
+      copy: 'Lagos to Tavira, winter included — never a crew from out of town.',
+      icon: `<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g stroke="#3a241a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M 32 8 C 21 8 14 16 14 26 C 14 38 32 56 32 56 C 32 56 50 38 50 26 C 50 16 43 8 32 8 Z" fill="#c25a38"/><circle cx="32" cy="26" r="8" fill="#fbf4e8"/></g></svg>`,
+    },
+    {
+      title: 'Spotless when we leave',
+      copy: 'Sheeted, masked and swept at the end of every day — not just the final one.',
+      icon: `<svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><g stroke="#3a241a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><rect x="12" y="12" width="26" height="14" rx="4" fill="#c25a38"/><path d="M 38 19 h 8 v 10 h -12" fill="none"/><path d="M 34 29 v 12" fill="none"/><path d="M 50 12 l 2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 Z" fill="#d9a02b"/></g></svg>`,
+    },
+  ];
+
+  const hero = `
+  <section class="hero-stack hero-stack--split hero-v2 bleed">
+    <div class="container">
+      <div class="hero-stack-text">
+        <p class="hero-eyebrow" data-rise>Painting &amp; Decorating &middot; Lagos to Tavira</p>
+        <h1 class="hero-h1" data-rise>
+          <span class="sr-only">Painting and decorating in the Algarve — </span>
+          <span class="hero-h1-line">A finish worthy</span>
+          <span class="hero-h1-line hero-h1-accent">of the Algarve sun</span>
+        </h1>
+        <p class="hero-sub" data-rise>Same&#8209;day replies. Crews that turn up. Paintwork that stands up to salt air and UV &mdash; from English&#8209;speaking painters who live here year&#8209;round.</p>
+        <div class="hero-cta-row" data-rise>
+          <a class="btn-hero" href="${site.whatsappHref}" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><path d="M12.01 2C6.48 2 2 6.48 2 12.01c0 1.98.55 3.83 1.5 5.42L2 22l4.7-1.47a9.96 9.96 0 0 0 5.3 1.52h.01c5.53 0 10.01-4.48 10.01-10.02C22 6.48 17.53 2 12.01 2zm5.86 14.3c-.25.7-1.44 1.34-1.98 1.4-.5.06-1.02.28-3.42-.72-2.88-1.2-4.73-4.1-4.87-4.3-.14-.2-1.16-1.55-1.16-2.95 0-1.4.73-2.09 1-2.37.26-.28.57-.35.76-.35.19 0 .38 0 .55.01.18.01.42-.07.65.5.25.6.85 2.08.92 2.23.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.36 1.46.3.15.48.13.65-.08.18-.2.75-.87.95-1.17.2-.3.4-.25.66-.15.27.1 1.72.81 2.02.96.3.15.5.22.57.35.08.13.08.75-.17 1.45z"/></svg>
+            WhatsApp Us &mdash; Free Quote
+          </a>
+          <a class="hero-phone" href="${site.telHref}">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
+            Prefer to call? <strong>${esc(site.phoneDisplay)}</strong>
+          </a>
+        </div>
+        <p class="hero-cta-note" data-rise>Free, no&#8209;obligation quotes &mdash; priced from the surfaces, not a guess</p>
+        <div class="hero-trust" data-rise role="list">
+          ${heroTrust.map((c) => `
+          <div class="trust-card" role="listitem">
+            <span class="trust-card-icon">${c.icon}</span>
+            <div class="trust-card-text"><strong>${c.title}</strong><span>${c.copy}</span></div>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div class="hero-stack-media">
+        <picture>
+          <source media="(min-width: 1025px)" type="image/svg+xml" srcset="/assets/brand/hero-scene-wide.svg">
+          <img src="/assets/brand/hero-scene-tall.svg" alt="Illustration of an Algarve hillside village at golden hour: whitewashed villas with terracotta roofs climbing a headland above the sea" loading="eager" fetchpriority="high">
+        </picture>
+      </div>
+    </div>
+  </section>`;
 
   const reassurance = reassuranceBand({
     heading: 'No pressure, no hard sell — just a straight answer.',

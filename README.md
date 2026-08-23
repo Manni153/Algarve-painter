@@ -77,6 +77,12 @@ The `/public` folder is a complete static site — point any static host at it:
 - **Wordmark** — "Algarve" in the display face, "Painter" in the script with a tapered brushstroke swiped underneath (the SVG lives in `wordmarkHtml` in `layout.js`).
 - **Everything the token swap can't express** lives in one clearly-marked `PAINT-CRAFT RESTYLE` block at the very end of `main.css` — type roles, the painted section marks, the wordmark, the trust band and the button fills. It sits last because much of the inherited stylesheet carries `!important` at high specificity.
 
+## Hero v2
+
+The homepage hero is purpose-built in `home.js` (heroIntro still serves the 32 service and town pages). One dominant two-tone headline, one support line, ONE primary action — the WhatsApp button says which channel it opens, with the phone demoted to a text fallback — then three trust cards on real surfaces at the foot of the hero. The floating WhatsApp bubble is suppressed while this hero is on screen, because the hero carries its own WhatsApp button and four contact affordances in one viewport split attention.
+
+Copy promises were audited for keepability: "Quotes in 24 hours" was cut (a clock a small firm will miss on villa-scale jobs), replaced by "Same-day replies" and "priced from the surfaces, not a guess". **The strongest thing the owner can add here is real proof — a Google review count and one before/after photo. The illustration carries the brand; only third-party proof carries the track record.**
+
 ## The two tools
 
 The homepage carries two working tools rather than a brochure's worth of copy. They are the reason to build this site rather than buy a template, and both are ordinary progressive enhancement: with JavaScript off the visualiser still renders a painted villa in its default scheme and the estimator still renders as a list of options and a phone number. Neither is on the critical path — call and WhatsApp work regardless.

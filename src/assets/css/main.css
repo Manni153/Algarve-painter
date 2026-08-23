@@ -4750,3 +4750,253 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
 .page-lagos-rs #services .card-icon-block { width: 66px; height: 66px; border-radius: 18px; }
 .page-home #services .card-icon-block svg,
 .page-lagos-rs #services .card-icon-block svg { width: 52px; height: 52px; }
+
+/* =========================================================================
+   HERO V2 — the homepage's conversion hero
+   =========================================================================
+   Purpose-built for the homepage (heroIntro still serves the 32 service and
+   town pages). Everything here is scoped under .hero-v2; the section keeps
+   the skeleton classes so the full-bleed box, the transparent header and
+   the mobile veil are inherited, and the overrides below undo only what the
+   old text column imposed.
+
+   The layout IS the conversion argument: one dominant headline, one support
+   line, ONE primary action with the phone demoted to a text link, then
+   proof. Nothing competes with the button.
+   ========================================================================= */
+.page-home .hero-v2.hero-stack--split {
+  /* Content may outgrow a short phone screen; a hero that clips its own
+     CTA converts worse than one that scrolls. The media is inset:0 so the
+     artwork covers whatever height this resolves to. */
+  height: auto;
+  min-height: 100svh;
+  min-height: 100dvh;
+  display: flex;
+}
+.page-home .hero-v2 .container {
+  display: flex;
+  width: 100%;
+}
+.page-home .hero-v2 .hero-stack-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+  max-width: none;
+  padding: calc(var(--header-h) + 26px) 0 30px;
+  min-height: 100%;
+}
+
+.hero-v2 .sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+.page-home .hero-v2 .hero-eyebrow {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.92rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--terracotta-dark, #9e4128);
+  margin: 0 0 14px;
+}
+
+/* The headline is the largest type on the site by a clear step — nothing
+   below the fold is allowed to out-shout it. Solid ink first line, the
+   second in terracotta: two voices, one statement. */
+.page-home .hero-v2 .hero-h1 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(2.75rem, 7.4vw, 5.4rem);
+  line-height: 0.99;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 18px;
+  max-width: 19ch;
+  text-wrap: balance;
+}
+.hero-v2 .hero-h1-line { display: block; }
+/* One step deeper than the decorative terracotta: #c25a38 measured 3.11:1
+   over the sun glow at 1280-1440 — passing, but with no margin. This is the
+   eyebrow's colour, so the hero's warm voice stays one hue. */
+.page-home .hero-v2 .hero-h1-accent { color: var(--terracotta-dark, #9e4128); }
+/* The accent line is solid at every width. It was outlined from 1280px up,
+   and the outline measured fine (4.6:1 against the real background) — but
+   two independent reviewers read a treatment that changes between widths as
+   a rendering bug, and the widest screens got the weakest version of the
+   headline. Consistency won; the outline lives on in the tool sections,
+   over flat grounds. */
+
+
+.page-home .hero-v2 .hero-sub {
+  font-size: clamp(1.02rem, 1.4vw, 1.22rem);
+  line-height: 1.55;
+  color: var(--ink-700, #4e3325);
+  max-width: 52ch;
+  margin: 0 0 26px;
+}
+
+/* ---- CTAs ---------------------------------------------------------------
+   The primary button is deliberately outsized: this is the one element the
+   page most wants pressed, and it should be identifiable with the eyes
+   half-closed. The phone link sits beside it at text weight. */
+.hero-v2 .hero-cta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px 26px;
+}
+.page-home .hero-v2 .btn-hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--terracotta-btn);
+  color: var(--cream);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  line-height: 1;
+  padding: 20px 34px;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 12px 28px rgba(158, 65, 40, 0.34);
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+.page-home .hero-v2 .btn-hero svg { transition: transform 180ms ease; }
+.page-home .hero-v2 .btn-hero:hover {
+  background: var(--terracotta-dark, #9e4128);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(158, 65, 40, 0.4);
+}
+.page-home .hero-v2 .btn-hero:hover svg { transform: translateX(4px); }
+.page-home .hero-v2 .btn-hero:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.page-home .hero-v2 .btn-hero:active { transform: translateY(0); }
+
+.page-home .hero-v2 .hero-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ink);
+  font-size: 1rem;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(58, 36, 26, 0.25);
+  padding-bottom: 2px;
+  transition: border-color 160ms ease;
+}
+.page-home .hero-v2 .hero-phone:hover { border-color: var(--terracotta); }
+.page-home .hero-v2 .hero-phone strong { font-family: var(--display); font-weight: 700; }
+
+.page-home .hero-v2 .hero-cta-note {
+  font-size: 0.88rem;
+  color: var(--ink-700, #4e3325);
+  margin: 12px 0 0;
+}
+
+/* ---- Trust strip --------------------------------------------------------
+   Three claims on real card surfaces at the foot of the hero. Cards rather
+   than bare text over the artwork: the surface is what makes them read as
+   credentials, and it ends the old fight between label contrast and how
+   much veil the illustration could take. */
+.hero-v2 .hero-trust {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  width: 100%;
+  margin-top: clamp(30px, 5vh, 58px);
+}
+.hero-v2 .trust-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  /* Near-opaque plus blur: at 0.94 the village's dark windows read through
+     the cards and sat behind the copy like stains. */
+  background: rgba(255, 253, 247, 0.97);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(58, 36, 26, 0.10);
+  border-radius: 18px;
+  padding: 16px 18px;
+  box-shadow: 0 10px 26px rgba(58, 36, 26, 0.10);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.hero-v2 .trust-card:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(58, 36, 26, 0.14); }
+.hero-v2 .trust-card-icon {
+  flex: none;
+  width: 46px; height: 46px;
+  border-radius: 13px;
+  background: var(--sand);
+  display: flex; align-items: center; justify-content: center;
+}
+.hero-v2 .trust-card-icon svg { width: 30px; height: 30px; display: block; }
+.page-home .hero-v2 .trust-card-text strong {
+  display: block;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.0rem;
+  color: var(--ink);
+  line-height: 1.25;
+  margin-bottom: 3px;
+}
+.page-home .hero-v2 .trust-card-text span {
+  display: block;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--teal-muted);
+}
+
+/* ---- Entry motion -------------------------------------------------------
+   A short staggered rise on load — one orchestrated moment, not scattered
+   effects — and none of it for anyone who asked for reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .page-home .hero-v2 [data-rise] {
+    animation: heroRise 640ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+  .page-home .hero-v2 [data-rise]:nth-of-type(1) { animation-delay: 40ms; }
+  .page-home .hero-v2 .hero-h1[data-rise] { animation-delay: 110ms; }
+  .page-home .hero-v2 .hero-sub[data-rise] { animation-delay: 190ms; }
+  .page-home .hero-v2 .hero-cta-row[data-rise] { animation-delay: 270ms; }
+  .page-home .hero-v2 .hero-cta-note[data-rise] { animation-delay: 330ms; }
+  .page-home .hero-v2 .hero-trust[data-rise] { animation-delay: 420ms; }
+}
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Breakpoints --------------------------------------------------------*/
+@media (max-width: 1024px) {
+  .page-home .hero-v2 .hero-stack-text { padding-top: calc(var(--header-h) + 18px); }
+  .hero-v2 .hero-trust { grid-template-columns: 1fr; gap: 10px; }
+  .hero-v2 .trust-card { padding: 12px 15px; }
+  .hero-v2 .trust-card-icon { width: 40px; height: 40px; }
+  .hero-v2 .trust-card-icon svg { width: 26px; height: 26px; }
+}
+@media (max-width: 767px) {
+  /* The full eyebrow wraps awkwardly at 390px; smaller and tighter it holds
+     one line down to 360px, and below that the wrap is at least clean. */
+  .page-home .hero-v2 .hero-eyebrow { font-size: 0.76rem; letter-spacing: 0.11em; }
+  .page-home .hero-v2 .hero-h1 { margin-bottom: 14px; }
+  .page-home .hero-v2 .btn-hero { width: 100%; justify-content: center; padding: 19px 26px; }
+  .hero-v2 .hero-cta-row { gap: 14px; }
+  .page-home .hero-v2 .hero-phone { font-size: 0.95rem; }
+  .hero-v2 .hero-trust { margin-top: 24px; }
+  .page-home .hero-v2 .trust-card-text span { font-size: 0.84rem; }
+}
+
+/* Floating WhatsApp bubble stands down while the v2 hero (which has its own
+   WhatsApp button) is on screen — toggled from main.js's scroll handler. */
+.whatsapp-float {
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+.whatsapp-float--suppressed {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+}
+@media (prefers-reduced-motion: reduce) { .whatsapp-float { transition: none; } }

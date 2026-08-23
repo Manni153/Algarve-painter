@@ -239,7 +239,8 @@ def scene(w, h, layout):
          'with umbrella pines and cypresses in the foreground">' % (w, h)]
     o.append('<defs>'
              '<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">'
-             '<stop offset="0" stop-color="%s"/><stop offset="0.55" stop-color="#fae7d3"/>'
+             '<stop offset="0" stop-color="%s"/><stop offset="0.44" stop-color="#fae7d3"/>'
+             '<stop offset="0.78" stop-color="#f8d9b4"/>'
              '<stop offset="1" stop-color="%s"/></linearGradient>'
              '<linearGradient id="water" x1="0" y1="0" x2="0" y2="1">'
              '<stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>'
@@ -278,6 +279,20 @@ def scene(w, h, layout):
     sun_y = SKY_END - h * 0.15
     o.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="url(#glow)"/>' % (sun_x, sun_y, h * 0.30))
     o.append('<circle cx="%.1f" cy="%.1f" r="%.1f" fill="%s"/>' % (sun_x, sun_y, h * 0.058, OCHRE_PALE))
+
+    # Gulls over the water: three two-stroke arcs, sized down with distance.
+    # Life and scale for almost no ink, kept right of the text zone.
+    # Placement is a text-safety constraint, not taste: at 0.60 the flock sat
+    # exactly behind the headline's second line and its ink strokes took the
+    # outline type down to 1.0:1. 0.78 keeps them over the cliff at every
+    # tested width up to 2560, clear of the widest text run.
+    gx = 0.78 if wide else 0.72
+    for dx, dy, gs in ((0.0, 0.0, 1.0), (0.06, -0.05, 0.72), (-0.05, -0.085, 0.55)):
+        cxg, cyg, r = w * (gx + dx), SKY_END - h * (0.30 + dy), h * 0.016 * gs
+        o.append('<path d="M %.1f %.1f q %.1f %.1f %.1f 0 M %.1f %.1f q %.1f %.1f %.1f 0" '
+                 'stroke="%s" stroke-width="%.1f" fill="none" stroke-linecap="round" opacity="0.75"/>'
+                 % (cxg - 2 * r, cyg, r, -r * 1.15, 2 * r, cxg, cyg, r, -r * 1.15, 2 * r,
+                    INK, h * 0.0042 * gs))
 
     # far headland: sits ON the horizon and spans only part of the width, so
     # open water is still visible beside it rather than behind it
@@ -335,7 +350,7 @@ def scene(w, h, layout):
                 w + 60, h + 60, cx0, h + 60, OCHRE_MID))
 
     # near shore and the village hillside
-    o.append('<path d="%s" fill="%s"/>' % (ridge(w, h, SEA_END, h * 0.014, 3, 6, tilt=0.02), BLUSH))
+    o.append('<path d="%s" fill="%s"/>' % (ridge(w, h, SEA_END, h * 0.026, 3, 7, tilt=0.02), BLUSH))
     o.append('<path d="%s" fill="%s"/>' % (ridge(w, h, SLOPE, h * 0.022, 23, 6, tilt=0.10), CLAY_MID))
 
     # The village CLIMBS the slope — each house a step higher — and mixes
@@ -364,7 +379,7 @@ def scene(w, h, layout):
                                    BOUGAIN, BOUGAIN_DK))
 
     # near bank, darkest plane, closing the frame
-    o.append('<path d="%s" fill="%s"/>' % (ridge(w, h, FG, h * 0.018, 31, 6, tilt=-0.03), CLAY_DEEP))
+    o.append('<path d="%s" fill="%s"/>' % (ridge(w, h, FG, h * 0.018, 31, 6, tilt=-0.03), '#7d3f21'))
 
     if wide:
         trees = [(0.055, 0.130, 'p'), (0.150, 0.086, 'c'), (0.192, 0.068, 'c'),
@@ -385,6 +400,17 @@ def scene(w, h, layout):
     # way round anyway, and here it can be judged against the artwork instead
     # of greying it out from above.
     o.append('<rect width="%d" height="%d" fill="url(#%s)"/>' % (w, h, 'haze' if wide else 'hazeV'))
+    # A few swells re-drawn OVER the haze on the quiet side. The haze erased
+    # the water's texture there, and a pale flat rectangle with a straight
+    # horizon above and a straight shore below stopped reading as sea at all
+    # — a design review called it "a scrim band with hard seams".
+    if wide:
+        rh = random.Random(41)
+        for i in range(6):
+            yy = SKY_END + (SEA_END - SKY_END) * (0.22 + 0.12 * i)
+            o.append('<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="%.1f" fill="%s" opacity="%.2f"/>'
+                     % (w * rh.uniform(0.02, 0.38), yy, w * rh.uniform(0.05, 0.14),
+                        h * 0.006, h * 0.003, SEA_DEEP, rh.uniform(0.18, 0.30)))
     o.append('</svg>')
     return '\n'.join(o)
 

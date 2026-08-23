@@ -114,9 +114,17 @@
   var homeHeader = document.querySelector('.site-header--home');
   var heroStackSplit = document.querySelector('.page-home .hero-stack--split, .page-lagos-rs .hero-stack--split');
   if (homeHeader && heroStackSplit) {
+    // The v2 homepage hero carries its own WhatsApp button, so the floating
+    // bubble is suppressed while that hero is on screen — four contact
+    // affordances in one viewport split attention, and the bubble's green is
+    // the loudest colour on the page. It fades back in once the visitor
+    // scrolls past, where it earns its keep on the long content below.
+    var fab = document.querySelector('.whatsapp-float');
+    var heroHasOwnWhatsApp = !!document.querySelector('.hero-v2');
     var updateHeaderTransparency = function () {
       var stillOverHero = heroStackSplit.getBoundingClientRect().bottom > 0;
       homeHeader.classList.toggle('site-header--home-transparent', stillOverHero);
+      if (fab && heroHasOwnWhatsApp) fab.classList.toggle('whatsapp-float--suppressed', stillOverHero);
     };
     updateHeaderTransparency();
     window.addEventListener('scroll', updateHeaderTransparency, { passive: true });
