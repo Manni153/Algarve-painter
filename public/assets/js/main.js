@@ -123,3 +123,109 @@
     window.addEventListener('resize', updateHeaderTransparency);
   }
 })();
+
+  // ---- Colour visualiser -------------------------------------------------
+  // The villa's repaintable surfaces are driven by five CSS custom properties
+  // on the wrapper, not by touching the SVG's own fills. That means a scheme
+  // change is one style write instead of a walk over several hundred nodes,
+  // and it keeps the artwork file free of state.
+  var viz = document.querySelector('[data-viz]');
+  if (viz) {
+    var vizCaption = viz.querySelector('[data-viz-caption]');
+    var vizCta = viz.querySelector('[data-viz-cta]');
+    var vizWa = vizCta ? vizCta.getAttribute('href').split('?')[0] : '';
+    var chosen = {};
+
+    function vizName(surface, id) {
+      var btn = viz.querySelector('.swatch[data-surface="' + surface + '"][data-colour="' + id + '"]');
+      return btn ? btn.querySelector('.swatch-name').textContent.trim() : id;
+    }
+
+    function vizSync() {
+      if (!vizCta || !vizWa) return;
+      var parts = [];
+      ['wall', 'trim', 'shutter', 'door', 'roof'].forEach(function (k) {
+        if (chosen[k]) parts.push(k.charAt(0).toUpperCase() + k.slice(1) + ': ' + chosen[k]);
+      });
+      var msg = 'Hello — I have picked colours on your website and would like a quote.\n\n' +
+                parts.join('\n') + '\n\nMy property is in: ';
+      vizCta.setAttribute('href', vizWa + '?text=' + encodeURIComponent(msg));
+    }
+
+    function vizSet(surface, id, hex) {
+      viz.style.setProperty('--v-' + surface, hex);
+      chosen[surface] = vizName(surface, id);
+      viz.querySelectorAll('.swatch[data-surface="' + surface + '"]').forEach(function (b) {
+        b.setAttribute('aria-checked', String(b.getAttribute('data-colour') === id));
+      });
+      vizSync();
+    }
+
+    viz.querySelectorAll('.swatch').forEach(function (b) {
+      b.addEventListener('click', function () {
+        vizSet(b.getAttribute('data-surface'), b.getAttribute('data-colour'), b.getAttribute('data-hex'));
+        viz.querySelectorAll('.scheme').forEach(function (s) { s.setAttribute('aria-pressed', 'false'); });
+        if (vizCaption) vizCaption.innerHTML = '<strong>Your own scheme</strong> — mixed from the Algarve palette';
+      });
+    });
+
+    viz.querySelectorAll('.scheme').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var s;
+        try { s = JSON.parse(btn.getAttribute('data-scheme')); } catch (e) { return; }
+        ['wall', 'trim', 'shutter', 'door', 'roof'].forEach(function (k) { vizSet(k, s.ids[k], s[k]); });
+        viz.querySelectorAll('.scheme').forEach(function (o) { o.setAttribute('aria-pressed', String(o === btn)); });
+        if (vizCaption) vizCaption.innerHTML = '<strong>' + s.name + '</strong> — ' + s.note;
+      });
+    });
+
+    // Seed `chosen` from whatever is checked at load, so the WhatsApp message
+    // is already correct before anyone touches a swatch.
+    viz.querySelectorAll('.scheme[aria-pressed="true"]').forEach(function (btn) {
+      try {
+        var s = JSON.parse(btn.getAttribute('data-scheme'));
+        ['wall', 'trim', 'shutter', 'door', 'roof'].forEach(function (k) { chosen[k] = vizName(k, s.ids[k]); });
+      } catch (e) {}
+    });
+    vizSync();
+  }
+
+  // ---- Instant estimate --------------------------------------------------
+  var est = document.querySelector('[data-est]');
+  if (est) {
+    var euro = function (n) {
+      return '€' + Math.round(n / 50) * 50 + '';
+    };
+    var lo = est.querySelector('[data-est-lo]');
+    var hi = est.querySelector('[data-est-hi]');
+    var working = est.querySelector('[data-est-working]');
+    var wa = est.querySelector('[data-est-wa]');
+    var waBase = wa ? wa.getAttribute('href').split('?')[0] : '';
+
+    function pick(name) {
+      return est.querySelector('input[name="' + name + '"]:checked');
+    }
+
+    function estimate() {
+      var job = pick('job'), size = pick('size'), cond = pick('cond'), prop = pick('prop');
+      if (!job || !size || !cond || !prop) return;
+      var m2 = parseFloat(size.getAttribute('data-m2'));
+      var f = parseFloat(cond.getAttribute('data-factor'));
+      var a = parseFloat(job.getAttribute('data-lo')) * m2 * f;
+      var b = parseFloat(job.getAttribute('data-hi')) * m2 * f;
+      lo.textContent = euro(a);
+      hi.textContent = euro(b);
+      var label = function (el) { return el.parentNode.querySelector('.opt-label').textContent.trim(); };
+      working.textContent = label(job) + ' on a ' + label(size).toLowerCase() + ' ' +
+        label(prop).toLowerCase() + ', around ' + m2 + ' m² of painted surface, in ' +
+        label(cond).toLowerCase() + ' condition.';
+      if (wa && waBase) {
+        wa.setAttribute('href', waBase + '?text=' + encodeURIComponent(
+          'Hello — your website estimated ' + euro(a) + '–' + euro(b) + ' for:\n\n' +
+          working.textContent + '\n\nCould we arrange a proper look? My property is in: '));
+      }
+    }
+
+    est.addEventListener('change', estimate);
+    estimate();
+  }

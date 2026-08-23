@@ -4491,3 +4491,262 @@ a.card:hover { box-shadow: 0 14px 34px rgba(15, 50, 56, 0.12); }
   object-fit: cover;
   object-position: 50% 50%;
 }
+
+/* =========================================================================
+   THE TOOLS — colour visualiser and instant estimate
+   =========================================================================
+   These two sections are the reason to build this site rather than buy a
+   template, so they get the strongest treatment on the page: full-bleed
+   bands, display type at a size nothing else uses, and one of them on a
+   dark ground so the page has somewhere to breathe between them.
+   ========================================================================= */
+.tool-band { padding: clamp(64px, 8vw, 116px) 0; background: var(--sand); }
+.tool-band--dark { background: var(--ink); color: var(--cream); }
+.tool-band--dark .lede,
+.tool-band--dark legend { color: rgba(251, 244, 232, 0.82); }
+.tool-band--dark .eyebrow { color: var(--ochre); }
+
+.section-head--wide { max-width: 780px; margin-bottom: clamp(32px, 4vw, 56px); }
+
+/* Display type: one size larger and one weight heavier than anything else,
+   with the second line knocked out as an outline. The outline is the trick
+   the reference leans on and it earns its place — it lets a two-line
+   statement carry a change of voice without a change of colour. */
+.display-xl {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 6.2vw, 4.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  margin: 0.12em 0 0.32em;
+}
+.ghost {
+  -webkit-text-stroke: 2px var(--ink);
+  color: transparent;
+  paint-order: stroke fill;
+}
+.ghost--light { -webkit-text-stroke: 2px var(--cream); }
+@supports not (-webkit-text-stroke: 1px red) {
+  /* Without text-stroke the outline would render as invisible text, so the
+     fallback is a real colour rather than nothing. */
+  .ghost { color: var(--terracotta); }
+  .ghost--light { color: var(--ochre); }
+}
+
+/* ---- Visualiser --------------------------------------------------------- */
+.viz {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.95fr);
+  gap: clamp(20px, 3vw, 44px);
+  align-items: start;
+}
+@media (max-width: 900px) { .viz { grid-template-columns: minmax(0, 1fr); } }
+
+.viz-stage {
+  background: var(--white);
+  border: 1px solid var(--sand-line, #eadcc4);
+  border-radius: 26px;
+  padding: 14px 14px 8px;
+  box-shadow: 0 20px 50px rgba(58, 36, 26, 0.10);
+  position: sticky;
+  top: calc(var(--header-h) + 16px);
+}
+@media (max-width: 900px) { .viz-stage { position: static; } }
+.viz-stage svg { width: 100%; height: auto; display: block; border-radius: 18px; }
+.viz-caption {
+  margin: 12px 4px 8px;
+  font-size: 0.95rem;
+  color: var(--teal-muted);
+}
+.viz-caption strong { color: var(--ink); }
+
+/* The five repaintable surfaces. Everything else in the drawing keeps its
+   own fill; only these follow the custom properties, which is what lets one
+   style write repaint the whole house. */
+.viz .v-wall    { fill: var(--v-wall);    transition: fill 260ms ease; }
+.viz .v-trim    { fill: var(--v-trim);    transition: fill 260ms ease; }
+.viz .v-shutter { fill: var(--v-shutter); transition: fill 260ms ease; }
+.viz .v-door    { fill: var(--v-door);    transition: fill 260ms ease; }
+.viz .v-roof    { fill: var(--v-roof);    transition: fill 260ms ease; }
+@media (prefers-reduced-motion: reduce) {
+  .viz .v-wall, .viz .v-trim, .viz .v-shutter, .viz .v-door, .viz .v-roof { transition: none; }
+}
+
+.viz-panel { display: flex; flex-direction: column; gap: 22px; }
+.viz-label {
+  display: block;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--ink);
+  margin-bottom: 9px;
+}
+.viz-label em { font-style: normal; font-weight: 500; color: var(--teal-muted); font-size: 0.86em; }
+
+.scheme-row { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.scheme {
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--sand-line, #eadcc4);
+  border-radius: 14px;
+  background: var(--white);
+  font: inherit; font-family: var(--display); font-weight: 600; font-size: 0.92rem;
+  color: var(--ink); cursor: pointer; text-align: left;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+.scheme:hover { border-color: var(--terracotta); }
+.scheme[aria-pressed="true"] {
+  border-color: var(--terracotta);
+  box-shadow: inset 0 0 0 1.5px var(--terracotta);
+}
+.scheme-chips { display: flex; flex: none; }
+.scheme-chips i {
+  width: 13px; height: 22px; display: block;
+  border: 1px solid rgba(58, 36, 26, 0.18);
+}
+.scheme-chips i:first-child { border-radius: 5px 0 0 5px; }
+.scheme-chips i:last-child { border-radius: 0 5px 5px 0; }
+
+.swatch-row { display: flex; flex-wrap: wrap; gap: 7px; }
+.swatch {
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 11px 5px 5px;
+  border: 1.5px solid var(--sand-line, #eadcc4);
+  border-radius: 999px;
+  background: var(--white);
+  font: inherit; font-size: 0.82rem; color: var(--ink);
+  cursor: pointer;
+  transition: border-color 160ms ease;
+}
+.swatch:hover { border-color: var(--terracotta); }
+.swatch[aria-checked="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.swatch-chip {
+  width: 22px; height: 22px; border-radius: 999px; flex: none;
+  background: var(--sw);
+  border: 1px solid rgba(58, 36, 26, 0.20);
+}
+.viz-actions { margin-top: 2px; }
+.viz-note { margin: 9px 2px 0; font-size: 0.84rem; color: var(--teal-muted); }
+
+/* ---- Estimator ---------------------------------------------------------- */
+.est-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 18px;
+  margin-bottom: 26px;
+}
+.est-q { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+.est-q legend {
+  font-family: var(--display); font-weight: 600; font-size: 0.95rem;
+  color: var(--cream); padding: 0; margin-bottom: 4px;
+}
+.opt { position: relative; display: block; cursor: pointer; }
+.opt input {
+  position: absolute; opacity: 0; width: 1px; height: 1px;
+}
+.opt-body {
+  display: block;
+  padding: 10px 13px;
+  border: 1.5px solid rgba(251, 244, 232, 0.22);
+  border-radius: 13px;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.opt:hover .opt-body { border-color: rgba(251, 244, 232, 0.5); }
+.opt input:checked + .opt-body {
+  border-color: var(--ochre);
+  background: rgba(217, 160, 43, 0.13);
+}
+.opt input:focus-visible + .opt-body { outline: 2px solid var(--ochre); outline-offset: 2px; }
+.opt-label { display: block; font-family: var(--display); font-weight: 600; font-size: 0.95rem; color: var(--cream); }
+.opt-note { display: block; font-size: 0.8rem; color: rgba(251, 244, 232, 0.62); margin-top: 2px; }
+
+.est-out {
+  background: rgba(251, 244, 232, 0.06);
+  border: 1.5px solid rgba(251, 244, 232, 0.18);
+  border-radius: 22px;
+  padding: clamp(22px, 3vw, 34px);
+}
+.est-out-label {
+  display: block; text-transform: uppercase; letter-spacing: 0.12em;
+  font-size: 0.72rem; font-weight: 700; color: var(--ochre);
+}
+.est-figure {
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(2.2rem, 5.4vw, 3.6rem);
+  line-height: 1.05; margin: 6px 0 10px; color: var(--cream);
+  font-variant-numeric: tabular-nums;
+}
+.est-dash { color: var(--ochre); }
+.est-working { margin: 0 0 20px; color: rgba(251, 244, 232, 0.86); max-width: 56ch; }
+.est-cta { display: flex; flex-wrap: wrap; gap: 11px; }
+.tool-band--dark .btn-outline { border-color: var(--cream); color: var(--cream); }
+.tool-band--dark .btn-outline:hover { background: var(--cream); color: var(--ink); }
+.est-smallprint {
+  margin: 18px 0 0; font-size: 0.82rem; line-height: 1.55;
+  color: rgba(251, 244, 232, 0.58); max-width: 68ch;
+}
+
+/* -------------------------------------------------------------------------
+   Tool sections: specificity, not !important
+   -------------------------------------------------------------------------
+   The inherited stylesheet carries page-scoped rules like
+   `.page-home p, .page-home li, .page-home .lede { ... }` at (0,2,1), which
+   quietly outrank a single class. The estimate figure was rendering at 19px
+   in body brown on a dark ground because of it — legible-looking in the
+   editor, invisible on the page.
+
+   These are the same declarations as above, re-stated through an ancestor so
+   they win on specificity rather than by shouting. Grouped here rather than
+   edited in place so the block above still reads as the design and this one
+   reads as what the cascade cost.
+   ------------------------------------------------------------------------- */
+.tool-band .section-head .display-xl {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(2.4rem, 6.2vw, 4.6rem);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.tool-band--dark .section-head .display-xl { color: var(--cream); }
+.tool-band .section-head .lede { font-size: 1.06rem; line-height: 1.62; color: var(--teal-muted); max-width: 62ch; }
+.tool-band--dark .section-head .lede { color: rgba(250, 241, 226, 0.80); }
+
+.tool-band .viz .viz-caption { font-size: 0.95rem; line-height: 1.5; color: var(--teal-muted); }
+.tool-band .viz .viz-note { font-size: 0.84rem; line-height: 1.5; color: var(--teal-muted); }
+.tool-band .viz .swatch .swatch-name { font-size: 0.82rem; color: var(--ink); }
+
+.tool-band--dark .est .est-out .est-figure {
+  font-size: clamp(2.2rem, 5.4vw, 3.6rem);
+  line-height: 1.05;
+  color: var(--cream);
+}
+.tool-band--dark .est .est-out .est-working { font-size: 1rem; line-height: 1.6; color: rgba(250, 241, 226, 0.86); }
+.tool-band--dark .est .est-out .est-smallprint { font-size: 0.82rem; line-height: 1.55; color: rgba(250, 241, 226, 0.68); }
+.tool-band--dark .est .est-q .opt .opt-note { font-size: 0.8rem; line-height: 1.4; color: rgba(250, 241, 226, 0.62); }
+.tool-band--dark .est .est-q .opt .opt-label { font-size: 0.95rem; color: var(--cream); }
+
+/* Left-aligned, because a 4.6rem two-line statement centred over a 780px
+   column reads as a poster and these sections are meant to read as work. */
+.tool-band .section-head--wide { text-align: left; margin-left: 0; margin-right: 0; }
+.tool-band .section-head--wide .lede { margin-left: 0; }
+
+/* Anchor targets have to clear the sticky header. */
+#colours, #estimate { scroll-margin-top: calc(var(--header-h) + 18px); }
+
+/* The painted section mark is a ::after on the h2 inside .section-head. It
+   belongs under the standard section heads, not under a 4.6rem outline
+   statement — over the dark band it read as a smudge, and under the light
+   one it collided with the outline's descenders. */
+.page-home .tool-band .section-head h2::after,
+.page-lagos-rs .tool-band .section-head h2::after { content: none; display: none; }
+
+/* The drawn service icons carry real detail — a roller, a filling knife, a
+   parasol — where the line glyphs they replaced were three strokes. At the
+   38px the glyphs were sized for, that detail turns to noise, so the tile
+   grows and the artwork with it. */
+.page-home #services .card-icon-block,
+.page-lagos-rs #services .card-icon-block { width: 66px; height: 66px; border-radius: 18px; }
+.page-home #services .card-icon-block svg,
+.page-lagos-rs #services .card-icon-block svg { width: 52px; height: 52px; }

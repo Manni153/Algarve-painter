@@ -4,6 +4,7 @@ const site = require('../data/site');
 const services = require('../data/services');
 const { regionGroups } = require('../data/towns');
 const { esc, rich, heroIntro, reassuranceBand, renderPage, cardIcon, serviceIcon } = require('./layout');
+const { visualiser, estimator } = require('./tools');
 
 function renderHome() {
   const trustCards = site.trustSection
@@ -113,6 +114,9 @@ function renderHome() {
       <div class="carousel-progress" aria-hidden="true"><div class="carousel-progress-fill"></div></div>
     </div>
   </section>
+
+  ${visualiser()}
+  ${estimator()}
 
   <section>
     <div class="container">

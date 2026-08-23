@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 'use strict';
 
 const site = require('../data/site');
@@ -76,15 +78,20 @@ const heroStatIcons = [
 // Keyed by service slug (see data/services.js) rather than by index, so the
 // mapping stays correct even if services.js is reordered.
 const houseOutline = 'M2.1 20.8V9.8L12 2.1L21.9 9.8V20.8Z';
-const serviceIcons = {
-  'exterior-house-painting': `<svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${houseOutline}"/><rect x="6.9" y="11.4" width="7" height="2.8" rx="0.8"/><path d="M13.9 12.8h2.2v3.6"/><path d="M16.1 16.4v3.4"/></svg>`,
-  'interior-painting': `<svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${houseOutline}"/><rect x="9.6" y="10.9" width="4.8" height="2.6" rx="0.7"/><path d="M10.7 13.5v2.2h2.6v-2.2"/><path d="M12 15.7v1.6"/><path d="M7.2 19.4h9.6"/></svg>`,
-  'villa-pool-area-painting': `<svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${houseOutline}"/><path d="M7 13.9c1.15-1 2.3-1 3.45 0s2.3 1 3.45 0 2.3-1 3.45 0"/><path d="M7 17.5c1.15-1 2.3-1 3.45 0s2.3 1 3.45 0 2.3-1 3.45 0"/></svg>`,
-  'render-crack-repair': `<svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${houseOutline}"/><path d="M12.6 10.5 10.4 14l2.9 1.5-2 4.3"/><path d="M6.9 19.8h10.2"/></svg>`,
-  'wood-shutter-treatment': `<svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${houseOutline}"/><rect x="7.6" y="11" width="8.8" height="8.8" rx="1.1"/><path d="M9.4 13.4h5.2M9.4 15.4h5.2M9.4 17.4h5.2"/></svg>`,
-  'metalwork-railing-painting': `<svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${houseOutline}"/><path d="M6.8 12.6h10.4M6.8 19.6h10.4"/><path d="M9.2 12.6v7M12 12.6v7M14.8 12.6v7"/></svg>`,
-  'waterproof-roof-coating': `<svg viewBox="0 0 24 24" width="38" height="38" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${houseOutline}"/><path d="M12 10.4c1.9 2.45 3.1 4.05 3.1 5.75a3.1 3.1 0 0 1-6.2 0c0-1.7 1.2-3.3 3.1-5.75Z"/></svg>`,
-};
+// One drawn icon per service, read from src/assets/brand at build time and
+// inlined. They replaced seven line glyphs that were all the same house
+// outline with a different squiggle inside — see tools/brand/icons.py. Read
+// from disk rather than pasted in here so the generator stays the source of
+// truth and a redraw is one command, not a hand-merge of seven path strings.
+const serviceIcons = (() => {
+  const dir = path.join(__dirname, '../assets/brand');
+  const out = {};
+  for (const f of fs.readdirSync(dir)) {
+    const m = f.match(/^icon-(.+)\.svg$/);
+    if (m) out[m[1]] = fs.readFileSync(path.join(dir, f), 'utf8').trim();
+  }
+  return out;
+})();
 
 function serviceIcon(slug) {
   return serviceIcons[slug] || '';

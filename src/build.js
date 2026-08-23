@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const site = require('./data/site');
+const pricing = require('./data/pricing');
 const services = require('./data/services');
 const { towns } = require('./data/towns');
 
@@ -126,6 +127,16 @@ Sitemap: ${site.baseUrl}/sitemap.xml
     console.warn('  !!  PLACEHOLDER PHONE NUMBER STILL IN PLACE  !!');
     console.warn(`      Every CTA, the WhatsApp link and the JSON-LD use ${site.phoneDisplay}.`);
     console.warn('      Set phoneDisplay / phoneTel in src/data/site.js before going live.');
+    console.warn('');
+  }
+
+  // Same treatment for the estimator's rates. A visitor reads the number it
+  // produces as a real one, so shipping placeholder rates is worse than
+  // shipping no estimator at all.
+  if (pricing.RATES_ARE_PLACEHOLDER) {
+    console.warn('  !!  PLACEHOLDER ESTIMATE RATES STILL IN PLACE  !!');
+    console.warn('      The instant estimate on the homepage is quoting made-up euro-per-m2 bands.');
+    console.warn('      Set them in src/data/pricing.js and clear RATES_ARE_PLACEHOLDER before going live.');
     console.warn('');
   }
 }

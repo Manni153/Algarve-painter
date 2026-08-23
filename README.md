@@ -77,6 +77,22 @@ The `/public` folder is a complete static site — point any static host at it:
 - **Wordmark** — "Algarve" in the display face, "Painter" in the script with a tapered brushstroke swiped underneath (the SVG lives in `wordmarkHtml` in `layout.js`).
 - **Everything the token swap can't express** lives in one clearly-marked `PAINT-CRAFT RESTYLE` block at the very end of `main.css` — type roles, the painted section marks, the wordmark, the trust band and the button fills. It sits last because much of the inherited stylesheet carries `!important` at high specificity.
 
+## The two tools
+
+The homepage carries two working tools rather than a brochure's worth of copy. They are the reason to build this site rather than buy a template, and both are ordinary progressive enhancement: with JavaScript off the visualiser still renders a painted villa in its default scheme and the estimator still renders as a list of options and a phone number. Neither is on the critical path — call and WhatsApp work regardless.
+
+- **Colour visualiser** (`#colours`) — an illustrated Algarve villa whose walls, trim, shutters, door and roof recolour as you choose them, from `tools/brand/villa.py`. The five repaintable surfaces are driven by CSS custom properties on the wrapper, so a scheme change is one style write rather than a walk over several hundred SVG nodes, and the artwork file carries no state. Colours are in `src/data/colours.js` with their Portuguese names — Branco Cal, Azul Atlântico, Amarelo Algarve — because those are the names on the tins here. The CTA writes the chosen scheme into a WhatsApp message.
+- **Instant estimate** (`#estimate`) — four questions to an indicative euro range, with the working shown and the WhatsApp message pre-filled with the spec. The page never calls it a quote. **The rates in `src/data/pricing.js` are placeholders** and the build warns about them on every run, the same way it warns about the phone number: a visitor reads that number as real, so shipping invented rates would be worse than shipping no estimator.
+
+## Brand artwork
+
+Everything is generated, so none of it carries a third-party licence:
+
+- `tools/brand/mascot.py` — the painter in the header, built from a few large shapes with a heavy ink keyline so he survives 32px.
+- `tools/brand/scene.py` — the hero, an Algarve hillside village at golden hour: chaminés algarvias, painted plinths and window surrounds, açoteia roof terraces, sea stacks off the point, bougainvillea and agave. Two cuts from one description.
+- `tools/brand/villa.py` — the visualiser villa, with a painter up a ladder rolling the wall you are recolouring.
+- `tools/brand/icons.py` — one drawn icon per service, replacing seven line glyphs that were all the same house outline with a different squiggle inside.
+
 ## Photography
 
 There is **no photography of real work yet**. The heroes are supplied photographs of impasto brushwork and the section marks are generated to match them, rather than stock imagery of houses — deliberate, since it signals painting immediately and stays exactly on palette. Everything is wired through a small map so real photos can be dropped in without touching template logic:
