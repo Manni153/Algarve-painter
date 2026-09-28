@@ -1,1 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#1c2427"/><path d="M16 50V28l16-12 16 12v22" fill="none" stroke="#f4efe6" stroke-width="3.2" stroke-linejoin="round"/><rect x="27" y="34" width="10" height="16" fill="#c9a574"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 34 34">
+  <!-- The header logo mark (site/templates/layout.js), with a heavier line
+       so it stays legible at 16px. Ink on limestone; inverted in dark mode. -->
+  <style>
+    .g { fill: #f6f2ea; stroke: #1c2427; }
+    .d { fill: #1c2427; }
+    @media (prefers-color-scheme: dark) {
+      .g { fill: #1c2427; stroke: #f6f2ea; }
+      .d { fill: #f6f2ea; }
+    }
+  </style>
+  <rect class="g" x="1.25" y="1.25" width="31.5" height="31.5" rx="2.5" stroke-width="2.5"/>
+  <path class="g" d="M8 26V14.5L17 8l9 6.5V26" fill="none" style="fill:none" stroke-width="2.5" stroke-linejoin="round"/>
+  <rect class="d" x="14" y="17" width="6" height="9"/>
+</svg>

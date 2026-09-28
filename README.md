@@ -103,6 +103,10 @@ This writes WebP at several widths, a JPEG fallback, OG crops and art-directed c
 
 The photography currently on the site is a finished Algarve villa exterior and a set of views from painted, rendered terraces. The alt text describes what each image shows, not a specific job. There are **no interior photographs yet**: the interior service page uses a terrace image until real ones exist. Per-page photos are mapped in `HERO_PHOTO` (`site/templates/service.js`) and `PHOTOS` (`site/data/locations.js`).
 
+## Favicon
+
+The favicon is the house mark from the header logo. `site/static/favicon.svg` is used by modern browsers and switches to light-on-dark in dark mode. The PNG and ICO versions (tab, Apple home-screen and 512px icons) are drawn from the same shape by `python3 tools/favicons.py`.
+
 ## Before & after gallery
 
 `site/data/projects.js` drives the gallery on the homepage, `/projects/`, and the matching service and location pages. Until real photos are added, each entry shows a drawn before/after illustration of the project type, clearly labelled as an illustration. To publish a real project, add the before and after photos (same position and framing), run the image script, fill in `before`, `after` and the alt text, and remove `illustration`. Set `showIllustrations: false` to hide the drawn entries.
