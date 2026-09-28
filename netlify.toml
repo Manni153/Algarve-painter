@@ -1,0 +1,7 @@
+# Netlify: builds the site in /site into /dist. No dependencies to install.
+[build]
+  command = "node site/build.js"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"

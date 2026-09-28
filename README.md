@@ -1,130 +1,117 @@
-# AlgarvePainter.com
+# Algarve Painter
 
-Static marketing / lead-generation site for **Algarve Painter** — painting and decorating across the Algarve, targeting English-speaking expats and property owners (UK, Ireland, Netherlands, Germany), plus commercial work.
+Lead-generation website for **Algarve Painter**, an English-speaking interior and exterior painting company for villas, houses and apartments across the Algarve.
 
-Built to the same architecture as its sister site, AlgarveSecure — same zero-dependency generator, same template structure, same design system — with the content, services, imagery and branding rewritten for painting.
+The site follows the proven expat-trades model: a clear English-speaking positioning, deep service pages, genuinely local location pages, strong internal linking and easy contact from every page. It is weighted towards larger projects: complete villas, full exteriors, complete interiors, apartments, rental refreshes and pre-sale preparation.
 
-## Stack
-
-Zero-dependency Node.js static site generator (plain JS template literals, no framework). Content and site structure live in `/src`; running the build compiles everything to plain HTML/CSS/JS in `/public`, ready to deploy to any static host.
+## Quick start
 
 ```
-src/
-  data/            site config, 7 services, 22 towns
-  templates/       page templates (layout, home, service, town, how-we-work, about, contact)
-  assets/          css + js + images + icons, copied as-is into the build
-  build.js         generates /public
-  _redirects       Netlify trailing-slash rules, copied to the site root
-public/            generated static site (build output — deploy this folder)
+npm run build     # renders /site into /dist (no dependencies to install)
+npm run serve     # preview dist/ at http://localhost:4173
 ```
 
-## Build
-
-```
-npm run build
-```
-
-Regenerates `/public`, including `sitemap.xml` and `robots.txt`, from the data and templates in `/src`. No install step required — the generator has no external dependencies.
-
-## Local preview
-
-```
-npm run serve
-```
-
-Or any static file server, e.g. `python3 -m http.server 4173 --directory public`.
-
-## Pages (33 total)
-
-- `/` — homepage
-- 7 service pages: `/exterior-house-painting` (flagship), `/interior-painting`, `/villa-pool-area-painting`, `/render-crack-repair`, `/wood-shutter-treatment`, `/metalwork-railing-painting`, `/waterproof-roof-coating`
-- 22 town pages, e.g. `/albufeira`, `/lagos`, `/tavira`, … (full list in `src/data/towns.js`)
-- `/how-we-work`, `/about`, `/contact`
-
-Each URL is served as a clean directory (`/exterior-house-painting/index.html`), which static hosts serve automatically for `/exterior-house-painting`.
+Netlify reads `netlify.toml`: build command `node site/build.js`, publish directory `dist`.
 
 ## ⚠️ Before going live
 
-**The phone number is a placeholder.** `src/data/site.js` currently carries `+351 000 000 000`, which is wired into every CTA button, the header, the sticky mobile call bar, the WhatsApp deep link, the footer and the `LocalBusiness` JSON-LD. Set `phoneDisplay` and `phoneTel` at the top of that file and everything updates together — nothing else hardcodes a number. `npm run build` prints a warning while the placeholder is still in place.
+The build prints a warning for each of these while it is still a placeholder.
 
-Also worth confirming before launch:
+1. **Phone and WhatsApp**: set `phoneDisplay`, `phoneTel` and `whatsappNumber` at the top of `site/data/site.js`. Every button, the header, the mobile call bar, the footer and the schema read from there. Set `whatsappEnabled: false` to remove WhatsApp everywhere.
+2. **Email and domain**: `email` and `baseUrl` in the same file. `baseUrl` drives canonical tags, OpenGraph, schema and `sitemap.xml`.
+3. **Opening hours**: `openingHours` in `site.js`. Keep them accurate or empty the array.
+4. **Google reviews**: set `googleReviewsUrl` once the Business Profile exists, then add genuine reviews to `site/data/reviews.js` (instructions in the file).
+5. **Project photos**: see *Before & after gallery* below.
+6. **Netlify Forms**: enable form detection in the Netlify dashboard and set the notification email. The form is named `quote`.
+7. **How the business operates**: if the site should say how the work is delivered (for example a marketing service connecting owners with a local painter), put one plain sentence in `disclosure` in `site.js`. It then shows on the About page and in the footer.
+8. **Local fact check**: the location pages name neighbourhoods and local features. Have someone local read them. Worth checking in particular: Vale d'Éguas, Ludo and Fonte Santa (Almancil), Monte Carvoeiro and Vale de Milho (Carvoeiro), Tôr and São Clemente (Loulé), Belmonte de Baixo (Olhão), Pedra Mourinha (Portimão), Encosta do Lago and Quinta Jacintina (Quinta do Lago), Santa Catarina da Fonte do Bispo (Tavira). The Lagos, Faro, Tavira and Vilamoura Old Village copy mentions possible local rules on exterior colours, phrased as "may".
 
-- **Domain.** `baseUrl` in `src/data/site.js` is `https://www.algarvepainter.com`, which drives every canonical tag and every `sitemap.xml` entry.
-- **Business model copy.** `/how-we-work` states that Algarve Painter is a marketing service connecting property owners with a **local painter**, mirroring the sister site's own disclosure. `/about` is worded to match. If that is not how the business actually operates, both need changing together — `src/templates/how-we-work.js` and `src/templates/about.js`.
-
-## Deploying
-
-The `/public` folder is a complete static site — point any static host at it:
-
-- **Netlify / Vercel / Cloudflare Pages**: set build command to `npm run build` and publish directory to `public`.
-- **Any plain static host / S3 / GitHub Pages**: upload the contents of `/public` directly.
-
-`src/_redirects` enforces the site-wide trailing-slash convention on Netlify (matching the canonical tags and `sitemap.xml`). On other hosts, apply the equivalent rule in that platform's own redirect configuration.
-
-## Design language
-
-**v4 "paint-craft"** — warm, tactile and pigment-led, replacing the navy/crimson palette inherited from the sister site. Structure, layout, grid, components, breakpoints and the measured hero budgets are unchanged; this is a visual restyle, not a rebuild.
-
-- **Page palette** — terracotta `#c25a38` (the accent; `#b85132` wherever it sits behind text, so button labels clear WCAG AA), ochre `#d9a02b`, dusty pink `#d9a08c`, deep brown `#3a241a` for text and dark surfaces, cream `#fbf4e8` as the ground.
-- **Hero** — two photographs, one for mobile and tablet and a photograph of a finished job for desktop: `villa freshly painted.png` (2048×1152) from 1025px up, `paint-mobile.png` (1632×2048) below it. `tools/paint/hero_from_photo.py` owns the resulting hero files; `generate.py` deliberately no longer writes them, or a routine run would silently overwrite the artwork. **Only the portrait one is mirrored**, and they differ because the photographs do. Desktop needs a quiet left side, where its headline, tagline and CTA sit; the villa photograph is already composed that way — open sky and distant hills on the left, the freshly painted facade filling the right — so it is used as shot and uncropped (frame and both candidates are all 16:9). The portrait paint photograph runs paint-mass-left, dry-brush-right, so it is mirrored to put the faded end under the mobile text. Mirroring is a property of each photograph, not a house rule. The portrait source needs no recomposition — it is shot in the orientation the mobile hero renders into, where the art it replaced was the landscape photo pasted low on a matching canvas ground to avoid losing three of the five strokes to a crop. Its dead bottom margin **is** trimmed, at row 1838 (the last row carrying pigment, measured off the file). Below 1025px the frame is always narrower than the artwork, so `object-fit: cover` fits by height and crops width — every row renders, and the photograph's bottom 210px of bare canvas showed as an empty band under the strokes at the foot of the hero. Trimming takes the source from 0.797:1 to 0.888:1 and puts the burgundy on the frame's bottom edge; nothing is discarded, since the cut is at the paint boundary rather than into it.
-- **Header scrim over the hero photograph (desktop only).** The homepage header is transparent while the hero is in view, and its text is dark ink because the hero is light — which holds only while the top of the photograph is light where the header text sits. The villa puts olive foliage and a roofline across the top right, exactly where the nav and phone link are: measured glyph-accurately they ran at **1.00:1** (phone) and **1.31–2.31:1** (nav) from 1025px to 2560px, so "Contact" and the whole number vanished into the leaves. No crop fixes it — above 1025px the frame is wider than the 16:9 source, so there is no horizontal slack, and the vertical crop that exists at 1920px+ only trades the phone for the nav. So the header gets its own scrim, in the `HEADER SCRIM` block at the end of `main.css`: the hero veil's own canvas colour, 0.80 at the top and gone by 160px, which is below the header. It has no bottom edge, so it reads as haze over the top of the photograph rather than as a bar. Phone now 5.56–6.17:1, nav 7.06–8.07:1. Desktop only — mobile and tablet keep the paint photograph, whose top is bare canvas, and already measure 8.6–12.2:1 there.
-- **Hero resolution ceiling** — each large candidate is its source's native width, never an upscale, but neither source is wide enough to cover every device. Phones are fine (a 430px handset at DPR 3 needs 1290px and gets 1632px). A large tablet at DPR 2 needs 2048px and gets 1632px, a 1.26× upscale; a high-DPI desktop needs 3840px at 1920 DPR 2 and gets 2048px, a 1.9× one. A light unsharp mask on the large candidates recovers some crispness — it cannot add detail that is not in the source, so higher-resolution originals are the real fix, and the desktop one is the more urgent.
-- **Generated marks** — the section swatches, CTA watermark and favicon are still generated (`tools/paint/generate.py`) in a palette chosen to sit with the photograph.
-- **Hero stats, no band** — the trust row sits directly on the photograph, with no surface behind it. It cannot do that in its old shape: three labels on one line need about 631px of glyphs at 25px, while the hero's light field runs out around 460px across — left as it was the row measured 1.32:1. Neither reframing nor a soft wash fixes it (`object-position` swept 0–55% never rose above 1.31:1, because a 16:9 source in a 1.6 box is barely cropped horizontally; and extending the veil to 930px, past the text column itself, still only reached 2.11:1). What works is making the row narrow enough to stay on the light field: above 1025px it adopts the stacked value-over-label format the mobile hero already uses, which needs ~470px for the same three stats at the same 25px value size. Measured worst case 4.97:1 on the values and 5.60:1 on the labels, both at 1025px — clear of AA for normal text, with the paint running unbroken behind them. **Tablet (768–1024px) is the exception**: there the row is bottom-anchored over the strokes at every width, so it keeps its translucent cream panel — removing it drops the labels to 1.01:1.
-- **Hero resolution** — heroes are selected by *width* descriptor with `sizes="100vw"`, not by DPR. The hero is full-bleed, so what matters is viewport width × DPR: a 390px phone at DPR 2 needs 780px and takes the 850px portrait file, the same phone at DPR 3 needs 1170px and takes the 1250px one, while a 1024px tablet at DPR 2 needs 2048px and takes the largest, 1632px. A `2x` descriptor would hand that first phone the largest file purely for its pixel density. Desktop ships two candidates (1500/2048); **portrait ships three** (850/1250/1632), because its source is photographic edge to edge where the art it replaced was half flat synthetic ground — like for like the 1250px file is roughly three times the weight, and this is the LCP image on the platform least able to afford it. Portrait encodes at q76 rather than q82 for the same reason: the dry-brush grain and canvas tooth run through the whole frame and mask webp artefacts completely (compared at 1:1 against q82, no difference is visible), and it takes ~22% off. Desktop is untouched at q82.
-- **Hero crop below 1025px** — `object-position: 85% 50%`, set in a `HERO CROP BELOW 1025PX` block at the end of `main.css`. The strokes run at a slight diagonal and their dry-brush tails rise to the left, so a centred window leaves a pale wedge of bare canvas in the bottom corner where the burgundy has already lifted off; at 85% the burgundy fills the foot of the frame and the loaded rounded ends of the plum and burgundy come into view, while the dry fade still sits under the headline. Contrast is unaffected — the stats measure 4.89:1 against 4.96:1 centred. It lives at the end of the file because the declaration in the `max-width: 1024px` block that looks like its home was **orphaned after a closed rule** and never applied — the second instance of this defect found in the inherited stylesheet, and like the first it also drops the rest of that media query to top level. Neither was re-nested: doing so would change what applies at desktop.
-- **Type** — Fredoka (rounded display) for headlines, wordmark, buttons and labels; Nunito Sans for running text; Caveat (brush script) reserved for the wordmark's "Painter" and the hero tagline, so it reads as a signature rather than decoration. All three are self-hosted variable fonts in `src/assets/fonts` — no Google Fonts request, no third-party dependency.
-- **Wordmark** — "Algarve" in the display face, "Painter" in the script with a tapered brushstroke swiped underneath (the SVG lives in `wordmarkHtml` in `layout.js`).
-- **Everything the token swap can't express** lives in one clearly-marked `PAINT-CRAFT RESTYLE` block at the very end of `main.css` — type roles, the painted section marks, the wordmark, the trust band and the button fills. It sits last because much of the inherited stylesheet carries `!important` at high specificity.
-
-## Hero v2
-
-The homepage hero is purpose-built in `home.js` (heroIntro still serves the 32 service and town pages). One dominant two-tone headline, one support line, ONE primary action — the WhatsApp button says which channel it opens, with the phone demoted to a text fallback — then three trust cards on real surfaces at the foot of the hero. The floating WhatsApp bubble is suppressed while this hero is on screen, because the hero carries its own WhatsApp button and four contact affordances in one viewport split attention.
-
-Copy promises were audited for keepability: "Quotes in 24 hours" was cut (a clock a small firm will miss on villa-scale jobs), replaced by "Same-day replies" and "priced from the surfaces, not a guess". **The strongest thing the owner can add here is real proof — a Google review count and one before/after photo. The illustration carries the brand; only third-party proof carries the track record.**
-
-## The two tools
-
-The homepage carries two working tools rather than a brochure's worth of copy. They are the reason to build this site rather than buy a template, and both are ordinary progressive enhancement: with JavaScript off the visualiser still renders a painted villa in its default scheme and the estimator still renders as a list of options and a phone number. Neither is on the critical path — call and WhatsApp work regardless.
-
-- **Colour visualiser** (`#colours`) — an illustrated Algarve villa whose walls, trim, shutters, door and roof recolour as you choose them, from `tools/brand/villa.py`. The five repaintable surfaces are driven by CSS custom properties on the wrapper, so a scheme change is one style write rather than a walk over several hundred SVG nodes, and the artwork file carries no state. Colours are in `src/data/colours.js` with their Portuguese names — Branco Cal, Azul Atlântico, Amarelo Algarve — because those are the names on the tins here. The CTA writes the chosen scheme into a WhatsApp message.
-- **Instant estimate** (`#estimate`) — four questions to an indicative euro range, with the working shown and the WhatsApp message pre-filled with the spec. The page never calls it a quote. **The rates in `src/data/pricing.js` are placeholders** and the build warns about them on every run, the same way it warns about the phone number: a visitor reads that number as real, so shipping invented rates would be worse than shipping no estimator.
-
-## Brand artwork
-
-Everything is generated, so none of it carries a third-party licence:
-
-- `tools/brand/mascot.py` — the painter in the header: terracotta cap, moustache, and a loaded brush held up beside his head with a drip coming off it, built from a few large shapes with a heavy ink keyline so the head-plus-diagonal-brush silhouette still names itself at 32px. `tools/brand/favicon.js` rasterises the same mark into `favicon.ico`, `favicon-32x32.png`, `apple-touch-icon.png` and `icon-512.png`, so the header, the browser tab and the home-screen icon are one mark; `generate.py` no longer writes icons.
-- `tools/brand/scene.py` — the hero, an Algarve hillside village at golden hour: chaminés algarvias, painted plinths and window surrounds, açoteia roof terraces, sea stacks off the point, bougainvillea and agave. Two cuts from one description.
-- `tools/brand/villa.py` — the visualiser villa, with a painter up a ladder rolling the wall you are recolouring.
-- `tools/brand/icons.py` — one drawn icon per service, replacing seven line glyphs that were all the same house outline with a different squiggle inside.
-
-## Photography
-
-There is **no photography of real work yet**. The heroes are supplied photographs of impasto brushwork and the section marks are generated to match them, rather than stock imagery of houses — deliberate, since it signals painting immediately and stays exactly on palette. Everything is wired through a small map so real photos can be dropped in without touching template logic:
-
-- **Hero (all 33 pages)** — `hero-paint-desktop{,@2x}.{jpg,webp}` and `hero-paint-mobile{@sm,,@2x}.{jpg,webp}`: five thick strokes swiped across artist's canvas, one photograph per orientation. Hero text is dark ink on light, with a light veil over the text field (left-to-right on desktop, top-to-bottom below 1025px) — see the `LIGHT HERO` block at the end of `main.css`. Per-page overrides live in `SERVICE_HERO_PHOTO` (`src/templates/service.js`) and `TOWN_HERO_PHOTO` (`src/templates/town.js`).
-- **Painted marks** — `swatch-clay.png`, `swatch-ochre.png`, `swatch-blush.png` under every section heading (alternating by section), and `swatch-divider.png` as a watermark on the dark CTA bands.
-- **Town "Local to <town>" photo** — genuinely different per town: 22 `<slug>-villa-terrace.{jpg,webp}` images, mapped in `TOWN_DESCRIPTION_PHOTO`.
-- **Service in-page photos** — two slots per page, mapped in `SERVICE_DESCRIPTION_PHOTO`, currently drawing on the same town imagery.
-
-**The generator is in the repo**, at `tools/paint/`:
+## Structure
 
 ```
-python3 tools/paint/generate.py reference  # the shipped colourway
-python3 tools/paint/generate.py studio     # or: pop
+site/
+  build.js            generator: renders pages, sitemap, robots, redirects
+  data/
+    site.js           brand, contact details, nav, feature switches
+    home.js           homepage copy + shared blocks (why us, steps, FAQs)
+    services.js       7 service pages
+    locations.js      combines locations-a.js + locations-b.js, adds photos
+    projects.js       before/after gallery entries
+    reviews.js        genuine Google reviews (empty until collected)
+    redirects.js      301s from the previous site's URLs
+    images.json       generated by tools/site-images.py
+  lib/                util (picture/srcset, escaping), icons, components,
+                      gallery illustrations
+  templates/          layout, home, service, location, hub/company pages, schema
+  assets/             css (inlined into every page at build), js, fonts, img
+  static/             copied to the site root: favicons, _headers
+  photos/             original photographs (source for assets/img)
+tools/site-images.py  responsive image pipeline (Pillow)
+docs/content-guide.md voice, compliance rules and data shapes for all copy
+dist/                 build output (git-ignored)
 ```
 
-`brush.py` is the stroke engine — each stroke is built from individual bristle lanes, each with its own paint load and drop-out point, which is what produces the dry-brush skips, splayed tails and irregular edges. `generate.py` holds the palettes and the fixed stroke geometry, so a palette swap changes colour only. It needs Pillow and NumPy; neither is a runtime dependency of the site. Nothing is downloaded — every pixel is procedural, so the generated assets carry no third-party licence. Every service is listed in `SERVICE_MINIMAL_IMAGES_SLUGS`, which drops the media column from the "Real-World Scenarios" and "In Detail" sections rather than filling them with placeholder boxes. The build renders **zero** visible `[Placeholder: …]` boxes.
+`src/`, `public/` and `tools/brand`, `tools/paint` are the **previous version** of the site, left untouched. Nothing in the new build uses them. Once the new site is live they can be deleted. `npm run build:legacy` still builds the old version.
 
-## Content notes
+## Pages (31)
 
-- Copy avoids certification and licensing claims, "free quote" language, same-day promises, pricing figures, warranty lengths, response-time commitments and product brand names — the same compliance rules as the sister site.
-- Town content is reasoned from each town's actual property stock and exposure (coastal salt, inland heat, Atlantic wind on the west coast, damp in the Monchique hills, traditional lime render in the older towns), not from claims about specific past jobs, client counts or named developments.
-- Commercial painting — apartment-block common areas, hotel and rental turnarounds, restaurants, shops and offices — is referenced across the homepage, `/about`, service `propertyTypes` and FAQs rather than being given a page of its own.
+| URL | Purpose |
+| --- | --- |
+| `/` | Homepage: hero, trust stats, reviews, services, why us, trust strip, Algarve climate content, common painting problems, before/after, how it works, service area, FAQ, quote form |
+| `/interior-painting/`, `/exterior-house-painting/`, `/villa-painting/`, `/apartment-painting/`, `/walls-ceilings/`, `/doors-shutters-woodwork/`, `/rental-property-painting/` | Service pages: hero, intro, customer problems, detail, Algarve considerations, what's included, preparation, how it works, who it's for, why us, related services, locations, FAQ, quote |
+| `/painters-albufeira/` … `/painters-vilamoura/` (14) | Location pages: local property types, conditions, relevant services, typical projects, nearby areas, FAQ, quote form with the town preselected |
+| `/painting-services/`, `/areas-we-cover/` | Hubs for internal linking |
+| `/projects/`, `/how-it-works/`, `/about/`, `/contact/`, `/privacy-policy/` | Company pages |
+| `/thank-you/`, `/404.html` | `noindex` |
 
-## Editing content
+### Adding a service or location
 
-- **Services** — `src/data/services.js`. Each entry drives one page: hero, intro, deep-dive sections, what's-included list, real-world scenarios, common problems, property types, in-detail cards and FAQs (with FAQ schema generated automatically).
-- **Towns** — `src/data/towns.js`. Each entry drives one page, and `nearby` / `region` drive the cross-linking between them.
-- **Sitewide** — `src/data/site.js`: brand, phone, nav labels, hero trust stats, the four trust cards, the process steps and the homepage FAQs.
+Add an entry to `site/data/services.js` or `site/data/locations-*.js`, following the shape in `docs/content-guide.md`. For a location, also map a photo in `site/data/locations.js`. The page, menus, footer, area grid, quote-form dropdown, sitemap and schema all update on the next build. The build fails if a `related`, `nearby` or service slug doesn't exist, and warns about long titles and duplicate titles or descriptions.
+
+Location pages must not be thin: each one needs local property types, conditions and scenarios, not just a different town name.
+
+## SEO
+
+- Unique `<title>`, meta description, canonical and OpenGraph tags on every page. The OG image is a 1200×630 crop of the villa photograph.
+- One `h1` per page with a clean heading hierarchy.
+- Schema:
+  - `HousePainter` (LocalBusiness) with `areaServed` for every location, defined once with an `@id`.
+  - `Service` on service and location pages, pointing to that business.
+  - `BreadcrumbList` on every inner page.
+  - `FAQPage` wherever FAQs are visible on the page. Google currently shows FAQ rich results only for a few authoritative sites, but the markup is valid and describes the visible content.
+  - No review or rating schema: Google ignores self-published reviews for LocalBusiness.
+- `sitemap.xml`, `robots.txt`, trailing-slash URLs, descriptive image filenames and alt text.
+- `_redirects` sends every old-site URL to its new equivalent with a 301.
+
+## Performance
+
+- No framework and no runtime dependencies. The only script is `main.js` (~2 KB): mobile menu, dropdowns, before/after sliders and the homepage header.
+- The CSS is inlined into every page, so no request blocks rendering. Fonts are self-hosted variable WOFF2, subset to Latin, and only the display face is preloaded.
+- Images are responsive WebP with `srcset`/`sizes`, explicit width and height (no layout shift) and lazy loading below the fold. The homepage hero uses a portrait crop on phones.
+- `_headers` sets long cache lifetimes for the script, fonts and images, plus basic security headers.
+- Lighthouse (mobile, simulated throttling, brotli): performance 95–99, accessibility 100, best practices 100, SEO 100.
+
+## Images
+
+Originals live in `site/photos/`. After adding or replacing one:
+
+```
+pip install pillow
+python3 tools/site-images.py
+```
+
+This writes WebP at several widths, a JPEG fallback, OG crops and art-directed crops (configured at the top of the script) into `site/assets/img/`, and updates `site/data/images.json`. Name files descriptively (`vilamoura-villa-exterior-after.jpg`), because the name becomes the public filename.
+
+The photography currently on the site is a finished Algarve villa exterior and a set of views from painted, rendered terraces. The alt text describes what each image shows, not a specific job. There are **no interior photographs yet**: the interior service page uses a terrace image until real ones exist. Per-page photos are mapped in `HERO_PHOTO` (`site/templates/service.js`) and `PHOTOS` (`site/data/locations.js`).
+
+## Before & after gallery
+
+`site/data/projects.js` drives the gallery on the homepage, `/projects/`, and the matching service and location pages. Until real photos are added, each entry shows a drawn before/after illustration of the project type, clearly labelled as an illustration. To publish a real project, add the before and after photos (same position and framing), run the image script, fill in `before`, `after` and the alt text, and remove `illustration`. Set `showIllustrations: false` to hide the drawn entries.
+
+## Contact form
+
+Fields: name, phone, email, property location, property type, interior/exterior/both, approximate areas, timeframe and message. The form also records which page it was sent from, and presets the location or service on those pages. It has a honeypot for spam. For photo uploads, set `form.photoUpload: true` in `site.js` to add an optional multi-file field (Netlify Forms accepts attachments; check your plan's limits).
+
+## Content rules
+
+See `docs/content-guide.md`. In short: British English, specific and calm. No invented reviews, statistics or project counts. No prices, warranties, certifications or paint brands. No damp-proofing or structural claims: painting refreshes surfaces, and underlying causes are flagged, not painted over.

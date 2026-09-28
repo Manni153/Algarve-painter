@@ -1,0 +1,199 @@
+{
+  "albufeira-coastal-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "algarve-villa-exterior-freshly-painted": {
+    "width": 2048,
+    "height": 1152,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600,
+      2048
+    ],
+    "fallback": 1200
+  },
+  "algarve-villa-exterior-freshly-painted-portrait": {
+    "width": 648,
+    "height": 1152,
+    "widths": [
+      480,
+      648
+    ],
+    "fallback": 648
+  },
+  "arade-river-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "barrocal-olive-hills-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "carvoeiro-cliff-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "faro-lagoon-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "lagoa-coast-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "lagos-sea-view-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "loule-countryside-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "olhao-harbour-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "red-cliffs-beach-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "ria-de-alvor-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "ria-formosa-pines-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "river-estuary-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "seafront-town-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "tavira-river-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  },
+  "vilamoura-golf-view-terrace-rendered-wall": {
+    "width": 1376,
+    "height": 2048,
+    "widths": [
+      480,
+      800,
+      1200,
+      1376
+    ],
+    "fallback": 1200
+  }
+}

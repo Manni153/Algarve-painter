@@ -2,10 +2,12 @@
   "name": "algarvepainter-site",
   "version": "1.0.0",
   "private": true,
-  "description": "Static marketing site for Algarve Painter — painting and decorating lead generation across the Algarve.",
+  "description": "Lead-generation site for Algarve Painter: English-speaking interior and exterior painters across the Algarve.",
   "scripts": {
-    "build": "node src/build.js",
-    "serve": "npx --yes serve public -l 4173"
+    "build": "node site/build.js",
+    "serve": "npx --yes serve dist -l 4173",
+    "images": "python3 tools/site-images.py",
+    "build:legacy": "node src/build.js"
   },
   "engines": {
     "node": ">=16"
