@@ -53,10 +53,9 @@ module.exports = {
   address: { locality: 'Algarve', region: 'Faro District', country: 'PT' },
   geo: { latitude: 37.1, longitude: -8.2 },
 
-  // Google Business Profile. When set, the review section links to it and
-  // the LocalBusiness schema adds it to `sameAs`.
+  // Google Business Profile URL. When set, the LocalBusiness schema lists it
+  // in `sameAs` (it is not shown on the page).
   googleReviewsUrl: '',
-  googleWriteReviewUrl: '',
 
   // Optional plain-language note on how the business operates, shown on the
   // About page and in the footer. Leave empty ('') to hide it.

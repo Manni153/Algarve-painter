@@ -95,7 +95,6 @@ ${c.areaGrid(locations)}
 
   const body = html([
     hero,
-    c.reviewsSection({ tone: 'sand' }),
     servicesSection,
     c.whyChoose(),
     c.trustStrip(),

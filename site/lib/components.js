@@ -7,10 +7,9 @@
 const site = require('../data/site');
 const home = require('../data/home');
 const servicePhotos = require('../data/service-photos');
-const reviews = require('../data/reviews');
 const projects = require('../data/projects');
 const { esc, html, map, picture, jsonLd, abs, phoneHtml, waHref } = require('./util');
-const { icon, googleG } = require('./icons');
+const { icon } = require('./icons');
 const { illustration } = require('./illustrations');
 
 // ---------------------------------------------------------------- buttons
@@ -232,47 +231,6 @@ ${sectionHead({ eyebrow, heading, id })}
   return { html: out, schema: ld };
 }
 
-// ---------------------------------------------------------------- reviews
-
-function stars(n) {
-  return `<span class="stars" role="img" aria-label="${n} out of 5 stars">${Array.from({ length: 5 }, (_, i) =>
-    icon('star', { size: 16, className: `icon star${i < n ? ' is-on' : ''}` })
-  ).join('')}</span>`;
-}
-
-function reviewsSection({ limit = 6, tone = '' } = {}) {
-  const list = reviews.slice(0, limit);
-  const profile = site.googleReviewsUrl
-    ? `<a class="btn btn--ghost" href="${esc(site.googleReviewsUrl)}" target="_blank" rel="noopener">${googleG}<span>Read our reviews on Google</span></a>`
-    : '';
-  const body = list.length
-    ? `<ul class="review-grid" role="list">${map(
-        list,
-        (r) => `<li class="review">
-<div class="review__top">${stars(r.rating)}${googleG}</div>
-<blockquote class="review__text"><p>${esc(r.text)}</p></blockquote>
-<p class="review__meta"><strong>${esc(r.author)}</strong>${r.location ? ` · ${esc(r.location)}` : ''}${r.date ? ` · <time datetime="${esc(r.date)}">${esc(formatMonth(r.date))}</time>` : ''}</p>
-</li>`
-      )}</ul>${profile ? `<div class="center-row">${profile}</div>` : ''}`
-    : `<div class="review-empty">
-<div class="review-empty__badge">${googleG}<span>Google Reviews</span></div>
-<p>We only publish genuine reviews, word for word from our Google Business Profile. Reviews from Algarve homeowners will appear here as projects are completed.</p>
-${profile}
-</div>`;
-  return `<section class="section${list.length ? '' : ' section--compact'}${tone ? ` section--${tone}` : ''}" aria-labelledby="reviews-title" id="reviews">
-<div class="container${list.length ? '' : ' reviews-pending'}">
-${sectionHead({ eyebrow: 'WHAT CLIENTS SAY', heading: 'Real Reviews From Algarve Homeowners', id: 'reviews-title' })}
-${body}
-</div>
-</section>`;
-}
-
-function formatMonth(ym) {
-  const [y, m] = String(ym).split('-');
-  const names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  return m ? `${names[Number(m) - 1]} ${y}` : y;
-}
-
 // ---------------------------------------------------------------- gallery
 
 function visibleProjects() {
@@ -353,7 +311,6 @@ module.exports = {
   steps,
   areaGrid,
   faqSection,
-  reviewsSection,
   gallery,
   visibleProjects,
   contactBlock,

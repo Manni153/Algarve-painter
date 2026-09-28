@@ -5,7 +5,6 @@
 
 const site = require('../data/site');
 const home = require('../data/home');
-const reviews = require('../data/reviews');
 const { esc, phoneHtml, map, html, picture, waHref } = require('../lib/util');
 const { icon } = require('../lib/icons');
 const c = require('../lib/components');
@@ -184,7 +183,6 @@ function about({ services, locations }) {
 ${site.disclosure ? `<h3>How we operate</h3><p>${esc(site.disclosure)}</p>` : ''}
 </div></section>`,
     c.whyChoose(),
-    reviews.length ? c.reviewsSection({ limit: 50 }) : '',
     c.contactBlock(),
   ]);
   return layout({

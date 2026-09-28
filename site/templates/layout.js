@@ -9,6 +9,15 @@ const { icon } = require('../lib/icons');
 // removes the only render-blocking request.
 const assets = { cssInline: '', js: '/assets/js/main.js' };
 
+// The number in the mobile header: the "+351" country code is hidden on the
+// narrowest phones so logo, number and menu fit on one line (the tel: link
+// always carries the full international number).
+function headerNumber() {
+  const m = site.phoneDisplay.match(/^(\+\d+)\s+(.*)$/);
+  if (!m) return phoneHtml();
+  return `<span class="header-call__cc">${esc(m[1])}&nbsp;</span>${esc(m[2]).replace(/ /g, '&nbsp;')}`;
+}
+
 function wordmark() {
   return `<a class="wordmark" href="/" aria-label="${esc(site.brand)}, home">
 <svg class="wordmark__mark" width="34" height="34" viewBox="0 0 34 34" aria-hidden="true" focusable="false"><rect x="1" y="1" width="32" height="32" rx="2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 26V14.5L17 8l9 6.5V26" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="14" y="17" width="6" height="9" fill="currentColor"/></svg>
@@ -40,6 +49,7 @@ ${menuItem('Areas', '/areas-we-cover/', 'areas')}
 <li class="nav__item nav__item--call"><a class="nav__call" href="${site.telHref}">${icon('phone', { size: 18 })}<span class="nav__call-label">Call Us</span><span class="nav__call-number">${phoneHtml()}</span></a></li>
 </ul>
 </nav>
+<a class="header-call" href="${site.telHref}" aria-label="Call ${esc(site.phoneDisplay)}">${icon('phone', { size: 16 })}<span>${headerNumber()}</span></a>
 <button class="nav-burger" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle><span class="visually-hidden">Menu</span>${icon('menu', { size: 24, className: 'icon nav-burger__open' })}${icon('close', { size: 24, className: 'icon nav-burger__close' })}</button>
 </div>
 </header>`;
