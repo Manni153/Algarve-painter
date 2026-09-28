@@ -9,14 +9,14 @@
 // prints a warning for every value that is still a placeholder.
 // ---------------------------------------------------------------------------
 
-const phoneDisplay = '+351 000 000 000';
-const phoneTel = '+351000000000';
+const phoneDisplay = '+351 923 224 340';
+const phoneTel = '+351923224340';
 
 // WhatsApp number in international format, digits only. Phone and WhatsApp
 // are the only contact routes on the site; set `whatsappEnabled` to false
 // only if WhatsApp is genuinely unavailable (every WhatsApp button then
 // disappears and phone becomes the single action).
-const whatsappNumber = '351000000000';
+const whatsappNumber = '351923224340';
 const whatsappEnabled = true;
 
 const brand = 'Algarve Painter';

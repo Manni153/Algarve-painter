@@ -844,8 +844,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* ------------------------------------------------------------------ mobile contact bar */
 
-/* Phones and tablets: Call and WhatsApp, two equal buttons, fixed to the
-   bottom above the home indicator. The body is padded by the same amount so
+/* Phones and tablets: one full-width WhatsApp button, fixed to the bottom
+   above the home indicator. The body is padded by the same amount so
    nothing can sit underneath it. */
 .mobile-bar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;

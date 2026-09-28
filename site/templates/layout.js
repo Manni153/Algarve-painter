@@ -71,14 +71,14 @@ ${site.disclosure ? `<p class="site-footer__disclosure">${esc(site.disclosure)}<
 </footer>`;
 }
 
-// Fixed bottom bar on phones: two equal actions, Call and WhatsApp.
+// Fixed bottom bar on phones: a single full-width WhatsApp button. (The
+// phone number stays in the menu, the hero and the contact section.)
 function mobileBar() {
   if (!site.whatsappEnabled) {
     return `<aside class="mobile-bar mobile-bar--single" aria-label="Quick contact"><a class="mobile-bar__btn mobile-bar__btn--primary" href="${site.telHref}">${icon('phone', { size: 20 })}<span>Call ${phoneHtml()}</span></a></aside>`;
   }
-  return `<aside class="mobile-bar" aria-label="Quick contact">
-<a class="mobile-bar__btn" href="${site.telHref}">${icon('phone', { size: 20 })}<span>Call</span></a>
-<a class="mobile-bar__btn mobile-bar__btn--primary" href="${waHref()}" target="_blank" rel="noopener">${icon('whatsapp', { size: 21 })}<span>WhatsApp</span></a>
+  return `<aside class="mobile-bar mobile-bar--single" aria-label="Quick contact">
+<a class="mobile-bar__btn mobile-bar__btn--primary" href="${waHref()}" target="_blank" rel="noopener">${icon('whatsapp', { size: 22 })}<span>WhatsApp Us</span></a>
 </aside>`;
 }
 

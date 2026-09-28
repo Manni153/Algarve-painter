@@ -17,7 +17,7 @@ Netlify reads `netlify.toml`: build command `node site/build.js`, publish direct
 
 The build prints a warning for each of these while it is still a placeholder.
 
-1. **Phone and WhatsApp**: set `phoneDisplay`, `phoneTel` and `whatsappNumber` at the top of `site/data/site.js`. These are the site's only contact routes: every button, the header, the mobile contact bar, the floating WhatsApp button, the footer and the schema read from there. `whatsappMessage` is the default prefilled WhatsApp text; service and location pages prefill their own ("…villa painting at my property…", "…my property in Vilamoura").
+1. **Phone and WhatsApp** (set to +351 923 224 340): change `phoneDisplay`, `phoneTel` and `whatsappNumber` at the top of `site/data/site.js`. These are the site's only contact routes: every button, the header, the mobile contact bar, the floating WhatsApp button, the footer and the schema read from there. `whatsappMessage` is the default prefilled WhatsApp text; service and location pages prefill their own ("…villa painting at my property…", "…my property in Vilamoura").
 2. **Email and domain**: `email` and `baseUrl` in the same file. `baseUrl` drives canonical tags, OpenGraph, schema and `sitemap.xml`.
 3. **Opening hours**: `openingHours` in `site.js`. Keep them accurate or empty the array.
 4. **Google reviews**: set `googleReviewsUrl` once the Business Profile exists, then add genuine reviews to `site/data/reviews.js` (instructions in the file).
@@ -112,7 +112,7 @@ The photography currently on the site is a finished Algarve villa exterior and a
 There are no forms anywhere on the site. Every page ends in a direct-contact block (WhatsApp first, "Prefer to speak?" then the phone number, plus opening hours), and CTAs are standardised as **WhatsApp Us** / **Get a quote on WhatsApp** (primary) and **Call Us** (secondary).
 
 - **Header:** logo; Home, Services ▾, Areas ▾ and the phone number. On phones: logo and menu button only; the menu holds Home, Services and Areas (accordions) and Call Us with the number.
-- **Phones and tablets (below 960px):** a fixed Call | WhatsApp bar at the bottom, padded for the iPhone home indicator. The body is padded by the same height so nothing is hidden behind it.
+- **Phones and tablets (below 960px):** a fixed full-width WhatsApp button at the bottom, padded for the iPhone home indicator. The body is padded by the same height so nothing is hidden behind it.
 - **Desktop:** one floating WhatsApp button, bottom right. It never appears alongside the mobile bar.
 - WhatsApp links are `wa.me` links with a short prefilled message (`waHref()` in `site/lib/util.js`). The WhatsApp glyph is in `site/lib/icons.js`.
 
