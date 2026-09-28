@@ -71,22 +71,11 @@ ${site.disclosure ? `<p class="site-footer__disclosure">${esc(site.disclosure)}<
 </footer>`;
 }
 
-// Fixed bottom bar on phones: a single full-width WhatsApp button. (The
-// phone number stays in the menu, the hero and the contact section.)
-function mobileBar() {
-  if (!site.whatsappEnabled) {
-    return `<aside class="mobile-bar mobile-bar--single" aria-label="Quick contact"><a class="mobile-bar__btn mobile-bar__btn--primary" href="${site.telHref}">${icon('phone', { size: 20 })}<span>Call ${phoneHtml()}</span></a></aside>`;
-  }
-  return `<aside class="mobile-bar mobile-bar--single" aria-label="Quick contact">
-<a class="mobile-bar__btn mobile-bar__btn--primary" href="${waHref()}" target="_blank" rel="noopener">${icon('whatsapp', { size: 22 })}<span>WhatsApp Us</span></a>
-</aside>`;
-}
-
-// Desktop only: one floating WhatsApp button, bottom right. Phones have the
-// contact bar instead, so there is never more than one floating element.
+// One floating WhatsApp button, bottom right, on every screen size: just
+// the logo in a round button, never a bar. It is the only floating element.
 function floatingWhatsApp() {
   if (!site.whatsappEnabled) return '';
-  return `<a class="wa-float" href="${waHref()}" target="_blank" rel="noopener" aria-label="WhatsApp us">${icon('whatsapp', { size: 30 })}</a>`;
+  return `<a class="wa-float" href="${waHref()}" target="_blank" rel="noopener" aria-label="WhatsApp us">${icon('whatsapp', { size: 30, className: 'icon wa-float__icon' })}</a>`;
 }
 
 function localBusinessRef() {
@@ -146,7 +135,6 @@ ${header({ locations: p.locations, transparent: p.overHero })}
 ${p.body}
 </main>
 ${footer({ locations: p.locations })}
-${mobileBar()}
 ${floatingWhatsApp()}
 <script src="${assets.js}" defer></script>
 </body>

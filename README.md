@@ -116,8 +116,7 @@ The favicon is the house mark from the header logo. `site/static/favicon.svg` is
 There are no forms anywhere on the site. Every page ends in a direct-contact block (WhatsApp first, "Prefer to speak?" then the phone number, plus opening hours), and CTAs are standardised as **WhatsApp Us** / **Get a quote on WhatsApp** (primary) and **Call Us** (secondary).
 
 - **Header:** logo; Home, Services ▾, Areas ▾ and the phone number. On phones: logo and menu button only; the menu holds Home, Services and Areas (accordions) and Call Us with the number.
-- **Phones and tablets (below 960px):** a fixed full-width WhatsApp button at the bottom, padded for the iPhone home indicator. The body is padded by the same height so nothing is hidden behind it.
-- **Desktop:** one floating WhatsApp button, bottom right. It never appears alongside the mobile bar.
+- **Floating WhatsApp button:** a round WhatsApp-logo button, bottom right, on every screen size (clear of the iPhone home indicator). The footer is padded so it never covers the last lines.
 - WhatsApp links are `wa.me` links with a short prefilled message (`waHref()` in `site/lib/util.js`). The WhatsApp glyph is in `site/lib/icons.js`.
 
 On phones, the long homepage and service-page sections (the Algarve climate notes, common problems and service detail) collapse into accordions. The content stays in the HTML, and everything is open on larger screens or without JavaScript.
