@@ -1,6 +1,6 @@
 // Algarve Painter — the only script on the site. Everything works without it;
-// this adds the mobile menu, dropdown toggles, the before/after sliders, the
-// and the homepage header behaviour.
+// this adds the mobile menu, dropdown toggles, the before/after sliders and
+// the homepage header behaviour.
 (function () {
   'use strict';
   var doc = document.documentElement;
