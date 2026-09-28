@@ -65,6 +65,20 @@
     }, { rootMargin: '-120px 0px 0px 0px' }).observe(hero);
   }
 
+  // Long sections collapse to accordions on phones (all open elsewhere, and
+  // everywhere without JavaScript). data-acc="open" stays open.
+  var phone = window.matchMedia('(max-width: 699px)');
+  var accs = document.querySelectorAll('[data-acc]');
+  function setAccs() {
+    accs.forEach(function (d) {
+      d.open = !phone.matches || d.getAttribute('data-acc') === 'open';
+    });
+  }
+  if (accs.length) {
+    setAccs();
+    if (phone.addEventListener) phone.addEventListener('change', setAccs);
+  }
+
   // Before/after comparison sliders.
   document.querySelectorAll('[data-ba]').forEach(function (el) {
     var range = el.querySelector('.ba__range');

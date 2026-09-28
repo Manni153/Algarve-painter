@@ -6,7 +6,7 @@
 const site = require('../data/site');
 const home = require('../data/home');
 const reviews = require('../data/reviews');
-const { esc, phoneHtml, map, html, picture } = require('../lib/util');
+const { esc, phoneHtml, map, html, picture, waHref } = require('../lib/util');
 const { icon } = require('../lib/icons');
 const c = require('../lib/components');
 const { layout } = require('./layout');
@@ -29,7 +29,7 @@ ${c.serviceCards(services, { feature: true })}
 </div></section>`,
     c.whyChoose(),
     c.steps(home.steps),
-    c.quoteForm({ locations, services, pagePath: path }),
+    c.contactBlock(),
   ]);
   return layout({
     path,
@@ -60,10 +60,10 @@ ${c.sectionHead({ eyebrow: 'LOCATIONS', heading: 'Choose Your Area', intro: 'Eac
         (l) => `<li><a class="loc-card" href="/painters-${l.slug}/">${picture(l.image, { alt: '', sizes: '(min-width: 1100px) 260px, (min-width: 700px) 30vw, 46vw', className: 'loc-card__img' })}<span class="loc-card__body"><span class="loc-card__kicker">Painters in</span><strong>${esc(l.name)}</strong><span class="loc-card__muni">${esc(l.municipality)} municipality</span></span></a></li>`
       )
       .join('')}</ul>
-<p class="area-note">Not listed? We cover the whole Algarve, including Praia da Luz, Alvor, Ferragudo, Silves, São Brás de Alportel and inland villages. <a href="#quote" data-quote-link>Ask about your area</a>.</p>
+<p class="area-note">Not listed? We cover the whole Algarve, including Praia da Luz, Alvor, Ferragudo, Silves, São Brás de Alportel and inland villages. <a href="${waHref("Hi, is my area of the Algarve covered? My property is in ")}" target="_blank" rel="noopener">Ask us on WhatsApp</a>.</p>
 </div></section>`,
     c.whyChoose(),
-    c.quoteForm({ locations, services, pagePath: path }),
+    c.contactBlock(),
   ]);
   return layout({
     path,
@@ -89,8 +89,7 @@ function projectsPage({ services, locations }) {
     `<section class="section section--flush-top" aria-label="Project gallery"><div class="container">
 ${gallery || '<p class="section-intro">Project photographs are being added. In the meantime, ask us and we will share examples relevant to your property.</p>'}
 </div></section>`,
-    c.ctaBand({ heading: 'Planning a Project Like These?', text: 'Send a few details and photographs of your property and we will arrange a visit and a clear written quote.' }),
-    c.quoteForm({ locations, services, pagePath: path }),
+    c.contactBlock({ heading: 'Planning a Project Like These?' }),
   ]);
   return layout({
     path,
@@ -109,7 +108,7 @@ function howItWorks({ services, locations }) {
     {
       h: 'Tell us about your property',
       p: [
-        'Send us a message, call, or use the quote form. Tell us where the property is, what type it is and roughly what needs painting. Photographs help a great deal: a wide shot of each area and close-ups of any cracks, peeling or staining.',
+        'Send us a WhatsApp message or call. Tell us where the property is, what type it is and roughly what needs painting. Photographs help a great deal: a wide shot of each area and close-ups of any cracks, peeling or staining, sent straight to our WhatsApp.',
         'If you are not in Portugal, that is normal. Many of our clients own second homes or rentals here, and the whole process can be arranged remotely.',
       ],
     },
@@ -150,7 +149,7 @@ function howItWorks({ services, locations }) {
 ${detail.map((d, i) => `<h3><span class="prose__num">0${i + 1}</span> ${esc(d.h)}</h3>${c.paras(d.p)}`).join('\n')}
 </div></section>`,
     c.whyChoose(),
-    c.quoteForm({ locations, services, pagePath: path }),
+    c.contactBlock(),
   ]);
   return layout({
     path,
@@ -186,7 +185,7 @@ ${site.disclosure ? `<h3>How we operate</h3><p>${esc(site.disclosure)}</p>` : ''
 </div></section>`,
     c.whyChoose(),
     reviews.length ? c.reviewsSection({ limit: 50 }) : '',
-    c.quoteForm({ locations, services, pagePath: path }),
+    c.contactBlock(),
   ]);
   return layout({
     path,
@@ -202,46 +201,34 @@ function contact({ services, locations }) {
   const path = '/contact/';
   const crumbs = c.breadcrumbs([{ name: 'Contact', path }]);
   const hours = site.openingHours.length
-    ? `<h3>Office hours</h3><ul class="plain-list" role="list">${site.openingHours.map((h) => `<li>${esc(h.label)}</li>`).join('')}</ul>`
+    ? `<h3>Hours</h3><ul class="plain-list" role="list">${site.openingHours.map((h) => `<li>${esc(h.label)}</li>`).join('')}</ul>`
     : '';
   const body = html([
     c.pageHero({
       crumbs: crumbs.nav,
       eyebrow: 'CONTACT',
-      h1: 'Contact Our Algarve Painters',
-      lead: 'Call, send a WhatsApp message or use the form below. Tell us about your property and we will reply in English to arrange a visit.',
+      h1: 'Talk to Our Algarve Painters',
+      lead: 'WhatsApp is the quickest way to reach us: send a few photos of what needs painting and a line about the property. Prefer to talk? Call us. Either way, everything is in English.',
+      actions: false,
     }),
     `<section class="section section--flush-top" aria-labelledby="direct-title"><div class="container">
 <h2 class="visually-hidden" id="direct-title">Contact details</h2>
 <ul class="contact-cards" role="list">
-<li><a class="contact-card" href="${site.telHref}">${icon('phone', { size: 26 })}<span class="contact-card__label">Call</span><strong>${phoneHtml()}</strong></a></li>
-${site.whatsappEnabled ? `<li><a class="contact-card" href="${site.whatsappHref}" target="_blank" rel="noopener">${icon('whatsapp', { size: 26 })}<span class="contact-card__label">WhatsApp</span><strong>Send a message</strong></a></li>` : ''}
-<li><a class="contact-card" href="mailto:${site.email}">${icon('mail', { size: 26 })}<span class="contact-card__label">Email</span><strong>${esc(site.email)}</strong></a></li>
+${site.whatsappEnabled ? `<li><a class="contact-card" href="${waHref()}" target="_blank" rel="noopener">${icon('whatsapp', { size: 28 })}<span class="contact-card__label">WhatsApp</span><strong>Send us a message</strong><span class="contact-card__note">Photos welcome</span></a></li>` : ''}
+<li><a class="contact-card" href="${site.telHref}">${icon('phone', { size: 28 })}<span class="contact-card__label">Call</span><strong>${phoneHtml()}</strong><span class="contact-card__note">Speak to us in English</span></a></li>
 </ul>
 <div class="contact-meta prose">${hours}<h3>Area covered</h3><p>The whole Algarve. See <a href="/areas-we-cover/">areas we cover</a>.</p></div>
 </div></section>`,
-    c.quoteForm({ locations, services, pagePath: path }),
+    c.steps(home.steps),
   ]);
   return layout({
     path,
-    title: `Contact | ${site.brand} | Request a Free Quote`,
-    description: 'Contact our English-speaking Algarve painters by phone, WhatsApp, email or the quote form. Tell us about your property and we will arrange a visit.',
+    title: `Contact ${site.brand} | WhatsApp or Call`,
+    description: 'Contact our English-speaking Algarve painters on WhatsApp or by phone. Send photos of what needs painting and we will arrange a visit.',
     locations,
     schema: crumbs.schema,
     body,
   });
-}
-
-function thankYou({ locations }) {
-  const body = `<section class="page-hero page-hero--simple"><div class="container container--narrow">
-<p class="eyebrow">THANK YOU</p>
-<h1 class="page-hero__title">We Have Your Details</h1>
-<p class="page-hero__lead">Thank you for getting in touch. We will reply in English to discuss your property and arrange the next step.</p>
-<p>If you have photographs of the areas that need painting, you can send them now${site.whatsappEnabled ? ' by WhatsApp or' : ' by'} email. They help us prepare for the visit.</p>
-<div class="btn-row">${site.whatsappEnabled ? c.btnWhatsApp('Send photos on WhatsApp', 'btn btn--primary') : ''}<a class="btn btn--ghost" href="mailto:${site.email}?subject=${encodeURIComponent('Photos for my painting quote')}">${icon('mail', { size: 18 })}<span>Email photos</span></a></div>
-<p><a class="text-link" href="/">Back to the homepage ${icon('arrow', { size: 16 })}</a></p>
-</div></section>`;
-  return layout({ path: '/thank-you/', title: `Thank You | ${site.brand}`, description: 'Thank you for your enquiry.', noindex: true, locations, body });
 }
 
 function privacy({ locations }) {
@@ -249,13 +236,13 @@ function privacy({ locations }) {
   const crumbs = c.breadcrumbs([{ name: 'Privacy Policy', path }]);
   const body = `<section class="page-hero page-hero--simple"><div class="container container--narrow">${crumbs.nav}<h1 class="page-hero__title">Privacy Policy</h1></div></section>
 <section class="section section--flush-top"><div class="container container--narrow prose">
-<p>This policy explains what ${esc(site.brand)} does with the personal information you give us through this website.</p>
+<p>This policy explains what ${esc(site.brand)} does with the personal information you share with us.</p>
 <h2>What we collect</h2>
-<p>When you use the quote form we receive the details you enter: your name, phone number, email address, property location and type, and the information you give about the work. If you call, message or email us, we receive the details you send.</p>
+<p>This website has no forms and does not collect personal information itself. When you call us or send us a WhatsApp message, we receive the details you choose to share: usually your name, phone number, the property location and photographs of the work.</p>
 <h2>How we use it</h2>
-<p>Only to reply to your enquiry, arrange a visit, prepare a quotation and carry out and administer any work you ask us to do. We do not sell your information or use it for unrelated marketing.</p>
+<p>Only to reply to you, arrange a visit, prepare a quotation and carry out and administer any work you ask us to do. We do not sell your information or use it for unrelated marketing.</p>
 <h2>How it is stored</h2>
-<p>Form submissions are processed by our website host, Netlify, and delivered to us by email. We keep enquiry details only for as long as needed for the purposes above and for our legal and accounting obligations.</p>
+<p>WhatsApp messages are handled by WhatsApp (Meta) under its own privacy policy. We keep your details only for as long as needed for the purposes above and for our legal and accounting obligations.</p>
 <h2>Your rights</h2>
 <p>Under the GDPR you can ask to see, correct or delete the personal information we hold about you, or object to how we use it. Contact us at <a href="mailto:${site.email}">${esc(site.email)}</a>. You also have the right to complain to the Portuguese data protection authority, the CNPD.</p>
 <h2>Cookies</h2>
@@ -264,7 +251,7 @@ function privacy({ locations }) {
   return layout({
     path,
     title: `Privacy Policy | ${site.brand}`,
-    description: `How ${site.brand} uses the personal information you send through this website, and your rights under the GDPR.`,
+    description: `How ${site.brand} uses the personal information you share by phone or WhatsApp, and your rights under the GDPR.`,
     locations,
     schema: crumbs.schema,
     body,
@@ -286,4 +273,4 @@ ${services.map((s) => `<li><a href="/${s.slug}/">${esc(s.name)}</a></li>`).join(
   return layout({ path: '/404.html', title: `Page Not Found | ${site.brand}`, description: 'Page not found.', noindex: true, locations, body });
 }
 
-module.exports = { servicesHub, areasHub, projectsPage, howItWorks, about, contact, thankYou, privacy, notFound };
+module.exports = { servicesHub, areasHub, projectsPage, howItWorks, about, contact, privacy, notFound };

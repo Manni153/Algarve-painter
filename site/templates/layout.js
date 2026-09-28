@@ -1,7 +1,7 @@
 'use strict';
 
 const site = require('../data/site');
-const { esc, phoneHtml, abs, jsonLd, preloadImage, preloadHero } = require('../lib/util');
+const { esc, phoneHtml, waHref, abs, jsonLd, preloadImage, preloadHero } = require('../lib/util');
 const { icon } = require('../lib/icons');
 
 // Filled in by build.js once asset hashes are known.
@@ -16,77 +16,77 @@ function wordmark() {
 </a>`;
 }
 
+// Header: logo left; Home | Services | Areas | phone on the right. On phones
+// the same list becomes the menu panel (Services and Areas as accordions,
+// Call Us with the number), so the bar itself is just logo + menu button.
 function header({ locations, transparent }) {
-  const services = site.nav.services;
   const menus = {
-    services: `<ul class="menu__list" role="list">${services.map((s) => `<li><a href="${s.href}">${esc(s.label)}</a></li>`).join('')}<li class="menu__all"><a href="/painting-services/">All painting services ${icon('arrow', { size: 14 })}</a></li></ul>`,
+    services: `<ul class="menu__list" role="list">${site.nav.services.map((s) => `<li><a href="${s.href}">${esc(s.label)}</a></li>`).join('')}<li class="menu__all"><a href="/painting-services/">All painting services ${icon('arrow', { size: 14 })}</a></li></ul>`,
     areas: `<ul class="menu__list menu__list--cols" role="list">${locations.map((l) => `<li><a href="/painters-${l.slug}/">${esc(l.name)}</a></li>`).join('')}<li class="menu__all"><a href="/areas-we-cover/">All areas we cover ${icon('arrow', { size: 14 })}</a></li></ul>`,
   };
-  const items = site.nav.primary
-    .map((item) => {
-      if (!item.menu) return `<li class="nav__item"><a class="nav__link" href="${item.href}">${esc(item.label)}</a></li>`;
-      const id = `menu-${item.menu}`;
-      return `<li class="nav__item nav__item--menu">
-<a class="nav__link" href="${item.href}">${esc(item.label)}</a><button class="nav__toggle" type="button" aria-expanded="false" aria-controls="${id}"><span class="visually-hidden">Show ${esc(item.label.toLowerCase())} menu</span>${icon('chevron', { size: 16 })}</button>
-<div class="menu" id="${id}">${menus[item.menu]}</div>
+  const menuItem = (label, href, key) => `<li class="nav__item nav__item--menu">
+<a class="nav__link" href="${href}">${label}</a><button class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu-${key}"><span class="visually-hidden">Show ${label.toLowerCase()} menu</span>${icon('chevron', { size: 18 })}</button>
+<div class="menu" id="menu-${key}">${menus[key]}</div>
 </li>`;
-    })
-    .join('');
   return `<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header${transparent ? ' site-header--over' : ''}" data-header>
 <div class="container site-header__inner">
 ${wordmark()}
 <nav class="nav" id="site-nav" aria-label="Main">
-<ul class="nav__list" role="list">${items}</ul>
-<div class="nav__mobile-cta">
-<a class="btn btn--primary btn--block" href="#quote" data-quote-link>Request a Free Quote</a>
-<a class="btn btn--ghost btn--block" href="${site.telHref}">${icon('phone', { size: 18 })}<span>${phoneHtml()}</span></a>
-</div>
+<ul class="nav__list" role="list">
+<li class="nav__item"><a class="nav__link" href="/">Home</a></li>
+${menuItem('Services', '/painting-services/', 'services')}
+${menuItem('Areas', '/areas-we-cover/', 'areas')}
+<li class="nav__item nav__item--call"><a class="nav__call" href="${site.telHref}">${icon('phone', { size: 18 })}<span class="nav__call-label">Call Us</span><span class="nav__call-number">${phoneHtml()}</span></a></li>
+</ul>
 </nav>
-<div class="site-header__actions">
-<a class="header-phone" href="${site.telHref}">${icon('phone', { size: 18 })}<span>${phoneHtml()}</span></a>
-<a class="btn btn--primary btn--sm header-quote" href="#quote" data-quote-link>Free Quote</a>
 <button class="nav-burger" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle><span class="visually-hidden">Menu</span>${icon('menu', { size: 24, className: 'icon nav-burger__open' })}${icon('close', { size: 24, className: 'icon nav-burger__close' })}</button>
-</div>
 </div>
 </header>`;
 }
 
 function footer({ locations }) {
   const year = new Date().getFullYear();
+  const ordered = [...locations].sort((a, b) => a.rank - b.rank);
   return `<footer class="site-footer">
 <div class="container site-footer__grid">
 <div class="site-footer__brand">
 ${wordmark()}
-<p>English-speaking painters for villas, houses and apartments across the Algarve. Interior and exterior painting, properly prepared and clearly quoted.</p>
-<ul class="site-footer__contact" role="list">
-<li><a href="${site.telHref}">${icon('phone', { size: 18 })}<span>${phoneHtml()}</span></a></li>
-${site.whatsappEnabled ? `<li><a href="${site.whatsappHref}" target="_blank" rel="noopener">${icon('whatsapp', { size: 18 })}<span>WhatsApp</span></a></li>` : ''}
-<li><a href="mailto:${site.email}">${icon('mail', { size: 18 })}<span>${esc(site.email)}</span></a></li>
-</ul>
+<p>English-speaking painters for villas, houses and apartments across the Algarve.</p>
 </div>
-<nav class="site-footer__col" aria-label="Painting services"><h2 class="site-footer__title">Services</h2><ul role="list">${site.nav.services.map((s) => `<li><a href="${s.href}">${esc(s.label)}</a></li>`).join('')}</ul></nav>
-<nav class="site-footer__col" aria-label="Areas we cover"><h2 class="site-footer__title">Areas</h2><ul role="list" class="site-footer__areas">${locations.map((l) => `<li><a href="/painters-${l.slug}/">Painters ${esc(l.name)}</a></li>`).join('')}</ul></nav>
-<nav class="site-footer__col" aria-label="Company"><h2 class="site-footer__title">Company</h2><ul role="list">
-<li><a href="/projects/">Projects</a></li><li><a href="/how-it-works/">How It Works</a></li><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li><li><a href="/privacy-policy/">Privacy Policy</a></li>
+<nav class="site-footer__col" aria-label="Footer"><h2 class="site-footer__title">Explore</h2><ul role="list">
+<li><a href="/">Home</a></li><li><a href="/painting-services/">Services</a></li><li><a href="/areas-we-cover/">Areas</a></li>
 </ul></nav>
+<div class="site-footer__col"><h2 class="site-footer__title">Contact</h2><ul role="list" class="site-footer__contact">
+<li><a href="${site.telHref}">${icon('phone', { size: 18 })}<span>${phoneHtml()}</span></a></li>
+${site.whatsappEnabled ? `<li><a href="${waHref()}" target="_blank" rel="noopener">${icon('whatsapp', { size: 18 })}<span>WhatsApp</span></a></li>` : ''}
+</ul></div>
+<nav class="site-footer__col site-footer__col--areas" aria-label="Service areas"><h2 class="site-footer__title">Service areas</h2><ul role="list" class="site-footer__areas">${ordered.map((l) => `<li><a href="/painters-${l.slug}/">${esc(l.name)}</a></li>`).join('')}</ul></nav>
 </div>
 <div class="container site-footer__base">
-<p>© ${year} ${esc(site.legalName)}. Painting across the Algarve, Portugal.</p>
+<p>© ${year} ${esc(site.legalName)}. Interior &amp; exterior painting across the Algarve, Portugal.</p>
+<ul class="site-footer__legal" role="list"><li><a href="/projects/">Projects</a></li><li><a href="/how-it-works/">How it works</a></li><li><a href="/about/">About</a></li><li><a href="/contact/">Contact</a></li><li><a href="/privacy-policy/">Privacy</a></li></ul>
 ${site.disclosure ? `<p class="site-footer__disclosure">${esc(site.disclosure)}</p>` : ''}
 </div>
 </footer>`;
 }
 
-// Fixed bottom bar on small screens: the two fastest ways to get in touch.
+// Fixed bottom bar on phones: two equal actions, Call and WhatsApp.
 function mobileBar() {
-  const second = site.whatsappEnabled
-    ? `<a class="mobile-bar__btn" href="${site.whatsappHref}" target="_blank" rel="noopener">${icon('whatsapp', { size: 20 })}<span>WhatsApp</span></a>`
-    : `<a class="mobile-bar__btn" href="#quote" data-quote-link>${icon('doc', { size: 20 })}<span>Free Quote</span></a>`;
+  if (!site.whatsappEnabled) {
+    return `<aside class="mobile-bar mobile-bar--single" aria-label="Quick contact"><a class="mobile-bar__btn mobile-bar__btn--primary" href="${site.telHref}">${icon('phone', { size: 20 })}<span>Call ${phoneHtml()}</span></a></aside>`;
+  }
   return `<aside class="mobile-bar" aria-label="Quick contact">
-<a class="mobile-bar__btn mobile-bar__btn--primary" href="${site.telHref}">${icon('phone', { size: 20 })}<span>Call</span></a>
-${second}
+<a class="mobile-bar__btn" href="${site.telHref}">${icon('phone', { size: 20 })}<span>Call</span></a>
+<a class="mobile-bar__btn mobile-bar__btn--primary" href="${waHref()}" target="_blank" rel="noopener">${icon('whatsapp', { size: 21 })}<span>WhatsApp</span></a>
 </aside>`;
+}
+
+// Desktop only: one floating WhatsApp button, bottom right. Phones have the
+// contact bar instead, so there is never more than one floating element.
+function floatingWhatsApp() {
+  if (!site.whatsappEnabled) return '';
+  return `<a class="wa-float" href="${waHref()}" target="_blank" rel="noopener" aria-label="WhatsApp us">${icon('whatsapp', { size: 30 })}</a>`;
 }
 
 function localBusinessRef() {
@@ -147,6 +147,7 @@ ${p.body}
 </main>
 ${footer({ locations: p.locations })}
 ${mobileBar()}
+${floatingWhatsApp()}
 <script src="${assets.js}" defer></script>
 </body>
 </html>

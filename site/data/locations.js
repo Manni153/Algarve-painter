@@ -30,11 +30,32 @@ const PHOTOS = {
   vilamoura: ['vilamoura-golf-view-terrace-rendered-wall', 'Painted rendered terrace wall overlooking a golf course, lake and villas'],
 };
 
+// Short descriptor shown under each town in the area grids, and the order
+// the grids use (the most important markets first).
+const TAGLINES = {
+  vilamoura: 'Marina, golf and townhouses',
+  'quinta-do-lago': 'Estate villas among the pines',
+  'vale-do-lobo': 'Resort villas above the cliffs',
+  almancil: 'Golden Triangle villas',
+  loule: 'Market town and country quintas',
+  albufeira: 'Clifftop villas and apartments',
+  carvoeiro: 'Clifftop homes and holiday lets',
+  lagoa: 'Porches, Ferragudo and quintas',
+  portimao: 'Seafront apartments and Alvor',
+  lagos: 'Old Town and sea-view villas',
+  faro: 'City apartments and townhouses',
+  tavira: 'Historic town and coastal villages',
+  quarteira: 'Seafront apartment blocks',
+  olhao: 'Cubist houses by the Ria Formosa',
+};
+const RANK = Object.keys(TAGLINES);
+
 const locations = list
   .map((l) => {
     const photo = PHOTOS[l.slug];
     if (!photo) throw new Error(`No photo mapped for location "${l.slug}"`);
-    return { ...l, image: photo[0], imageAlt: photo[1] };
+    if (!TAGLINES[l.slug]) throw new Error(`No tagline for location "${l.slug}"`);
+    return { ...l, image: photo[0], imageAlt: photo[1], tagline: TAGLINES[l.slug], rank: RANK.indexOf(l.slug) };
   })
   .sort((a, b) => a.name.localeCompare(b.name, 'pt'));
 

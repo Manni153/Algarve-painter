@@ -17,12 +17,11 @@ Netlify reads `netlify.toml`: build command `node site/build.js`, publish direct
 
 The build prints a warning for each of these while it is still a placeholder.
 
-1. **Phone and WhatsApp**: set `phoneDisplay`, `phoneTel` and `whatsappNumber` at the top of `site/data/site.js`. Every button, the header, the mobile call bar, the footer and the schema read from there. Set `whatsappEnabled: false` to remove WhatsApp everywhere.
+1. **Phone and WhatsApp**: set `phoneDisplay`, `phoneTel` and `whatsappNumber` at the top of `site/data/site.js`. These are the site's only contact routes: every button, the header, the mobile contact bar, the floating WhatsApp button, the footer and the schema read from there. `whatsappMessage` is the default prefilled WhatsApp text; service and location pages prefill their own ("…villa painting at my property…", "…my property in Vilamoura").
 2. **Email and domain**: `email` and `baseUrl` in the same file. `baseUrl` drives canonical tags, OpenGraph, schema and `sitemap.xml`.
 3. **Opening hours**: `openingHours` in `site.js`. Keep them accurate or empty the array.
 4. **Google reviews**: set `googleReviewsUrl` once the Business Profile exists, then add genuine reviews to `site/data/reviews.js` (instructions in the file).
 5. **Project photos**: see *Before & after gallery* below.
-6. **Netlify Forms**: enable form detection in the Netlify dashboard and set the notification email. The form is named `quote`.
 7. **How the business operates**: if the site should say how the work is delivered (for example a marketing service connecting owners with a local painter), put one plain sentence in `disclosure` in `site.js`. It then shows on the About page and in the footer.
 8. **Local fact check**: the location pages name neighbourhoods and local features. Have someone local read them. Worth checking in particular: Vale d'Éguas, Ludo and Fonte Santa (Almancil), Monte Carvoeiro and Vale de Milho (Carvoeiro), Tôr and São Clemente (Loulé), Belmonte de Baixo (Olhão), Pedra Mourinha (Portimão), Encosta do Lago and Quinta Jacintina (Quinta do Lago), Santa Catarina da Fonte do Bispo (Tavira). The Lagos, Faro, Tavira and Vilamoura Old Village copy mentions possible local rules on exterior colours, phrased as "may".
 
@@ -53,20 +52,20 @@ dist/                 build output (git-ignored)
 
 `src/`, `public/` and `tools/brand`, `tools/paint` are the **previous version** of the site, left untouched. Nothing in the new build uses them. Once the new site is live they can be deleted. `npm run build:legacy` still builds the old version.
 
-## Pages (31)
+## Pages (30)
 
 | URL | Purpose |
 | --- | --- |
-| `/` | Homepage: hero, trust stats, reviews, services, why us, trust strip, Algarve climate content, common painting problems, before/after, how it works, service area, FAQ, quote form |
+| `/` | Homepage: hero, trust stats, reviews, services, why us, trust strip, Algarve climate content, common painting problems, before/after, how it works, service area, FAQ, WhatsApp and phone contact block |
 | `/interior-painting/`, `/exterior-house-painting/`, `/villa-painting/`, `/apartment-painting/`, `/walls-ceilings/`, `/doors-shutters-woodwork/`, `/rental-property-painting/` | Service pages: hero, intro, customer problems, detail, Algarve considerations, what's included, preparation, how it works, who it's for, why us, related services, locations, FAQ, quote |
-| `/painters-albufeira/` … `/painters-vilamoura/` (14) | Location pages: local property types, conditions, relevant services, typical projects, nearby areas, FAQ, quote form with the town preselected |
+| `/painters-albufeira/` … `/painters-vilamoura/` (14) | Location pages: local property types, conditions, relevant services, typical projects, nearby areas, FAQ, contact block with a WhatsApp message that names the town |
 | `/painting-services/`, `/areas-we-cover/` | Hubs for internal linking |
 | `/projects/`, `/how-it-works/`, `/about/`, `/contact/`, `/privacy-policy/` | Company pages |
-| `/thank-you/`, `/404.html` | `noindex` |
+| `/404.html` | `noindex` |
 
 ### Adding a service or location
 
-Add an entry to `site/data/services.js` or `site/data/locations-*.js`, following the shape in `docs/content-guide.md`. For a location, also map a photo in `site/data/locations.js`. The page, menus, footer, area grid, quote-form dropdown, sitemap and schema all update on the next build. The build fails if a `related`, `nearby` or service slug doesn't exist, and warns about long titles and duplicate titles or descriptions.
+Add an entry to `site/data/services.js` or `site/data/locations-*.js`, following the shape in `docs/content-guide.md`. For a location, also map a photo in `site/data/locations.js`. The page, menus, footer, area grid, sitemap and schema all update on the next build. The build fails if a `related`, `nearby` or service slug doesn't exist, and warns about long titles and duplicate titles or descriptions.
 
 Location pages must not be thin: each one needs local property types, conditions and scenarios, not just a different town name.
 
@@ -89,7 +88,7 @@ Location pages must not be thin: each one needs local property types, conditions
 - The CSS is inlined into every page, so no request blocks rendering. Fonts are self-hosted variable WOFF2, subset to Latin, and only the display face is preloaded.
 - Images are responsive WebP with `srcset`/`sizes`, explicit width and height (no layout shift) and lazy loading below the fold. The homepage hero uses a portrait crop on phones.
 - `_headers` sets long cache lifetimes for the script, fonts and images, plus basic security headers.
-- Lighthouse (mobile, simulated throttling, brotli): performance 95–99, accessibility 100, best practices 100, SEO 100.
+- Lighthouse (mobile, simulated throttling, brotli): performance 92–98, accessibility 100, best practices 100, SEO 100.
 
 ## Images
 
@@ -108,9 +107,16 @@ The photography currently on the site is a finished Algarve villa exterior and a
 
 `site/data/projects.js` drives the gallery on the homepage, `/projects/`, and the matching service and location pages. Until real photos are added, each entry shows a drawn before/after illustration of the project type, clearly labelled as an illustration. To publish a real project, add the before and after photos (same position and framing), run the image script, fill in `before`, `after` and the alt text, and remove `illustration`. Set `showIllustrations: false` to hide the drawn entries.
 
-## Contact form
+## Contact: phone and WhatsApp only
 
-Fields: name, phone, email, property location, property type, interior/exterior/both, approximate areas, timeframe and message. The form also records which page it was sent from, and presets the location or service on those pages. It has a honeypot for spam. For photo uploads, set `form.photoUpload: true` in `site.js` to add an optional multi-file field (Netlify Forms accepts attachments; check your plan's limits).
+There are no forms anywhere on the site. Every page ends in a direct-contact block (WhatsApp first, "Prefer to speak?" then the phone number, plus opening hours), and CTAs are standardised as **WhatsApp Us** / **Get a quote on WhatsApp** (primary) and **Call Us** (secondary).
+
+- **Header:** logo; Home, Services ▾, Areas ▾ and the phone number. On phones: logo and menu button only; the menu holds Home, Services and Areas (accordions) and Call Us with the number.
+- **Phones and tablets (below 960px):** a fixed Call | WhatsApp bar at the bottom, padded for the iPhone home indicator. The body is padded by the same height so nothing is hidden behind it.
+- **Desktop:** one floating WhatsApp button, bottom right. It never appears alongside the mobile bar.
+- WhatsApp links are `wa.me` links with a short prefilled message (`waHref()` in `site/lib/util.js`). The WhatsApp glyph is in `site/lib/icons.js`.
+
+On phones, the long homepage and service-page sections (the Algarve climate notes, common problems and service detail) collapse into accordions. The content stays in the HTML, and everything is open on larger screens or without JavaScript.
 
 ## Content rules
 

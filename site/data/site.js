@@ -12,9 +12,10 @@
 const phoneDisplay = '+351 000 000 000';
 const phoneTel = '+351000000000';
 
-// WhatsApp number in international format, digits only. Set `whatsappEnabled`
-// to false to remove every WhatsApp button (the mobile sticky bar then shows
-// "Call" and "Quote" instead).
+// WhatsApp number in international format, digits only. Phone and WhatsApp
+// are the only contact routes on the site; set `whatsappEnabled` to false
+// only if WhatsApp is genuinely unavailable (every WhatsApp button then
+// disappears and phone becomes the single action).
 const whatsappNumber = '351000000000';
 const whatsappEnabled = true;
 
@@ -35,9 +36,10 @@ module.exports = {
   telHref: `tel:${phoneTel}`,
   email: 'hello@algarvepainter.com',
   whatsappEnabled,
-  whatsappHref: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-    "Hello, I'd like to ask about painting my property in the Algarve."
-  )}`,
+  whatsappNumber,
+  // Default prefilled WhatsApp message. Pages pass their own short message
+  // (with the service or town) through waHref() in site/lib/util.js.
+  whatsappMessage: "Hi, I'm looking for painting work at my property in the Algarve.",
 
   // Hours shown on the contact page and in LocalBusiness schema. Keep them
   // true — leave the array empty rather than guess.
@@ -56,19 +58,12 @@ module.exports = {
   googleReviewsUrl: '',
   googleWriteReviewUrl: '',
 
-  // Netlify Forms. `photoUpload` adds an optional file field to the quote
-  // form (Netlify Forms accepts attachments — check your plan's limits).
-  form: {
-    name: 'quote',
-    photoUpload: false,
-    successPath: '/thank-you/',
-  },
-
   // Optional plain-language note on how the business operates, shown on the
   // About page and in the footer. Leave empty ('') to hide it.
   disclosure: '',
 
   nav: {
+    // Header: Home | Services (dropdown) | Areas (dropdown) | phone.
     services: [
       { label: 'Interior Painting', href: '/interior-painting/' },
       { label: 'Exterior House Painting', href: '/exterior-house-painting/' },
@@ -77,14 +72,6 @@ module.exports = {
       { label: 'Walls & Ceilings', href: '/walls-ceilings/' },
       { label: 'Doors, Shutters & Woodwork', href: '/doors-shutters-woodwork/' },
       { label: 'Rental & Pre-Sale Painting', href: '/rental-property-painting/' },
-    ],
-    primary: [
-      { label: 'Services', href: '/painting-services/', menu: 'services' },
-      { label: 'Areas', href: '/areas-we-cover/', menu: 'areas' },
-      { label: 'Projects', href: '/projects/' },
-      { label: 'How It Works', href: '/how-it-works/' },
-      { label: 'About', href: '/about/' },
-      { label: 'Contact', href: '/contact/' },
     ],
   },
 

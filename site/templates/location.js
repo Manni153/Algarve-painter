@@ -11,6 +11,7 @@ module.exports = function renderLocation(l, { services, locations }) {
   const path = `/painters-${l.slug}/`;
   const crumbs = c.breadcrumbs([{ name: 'Areas', path: '/areas-we-cover/' }, { name: `Painters in ${l.name}`, path }]);
   const faq = c.faqSection(l.faqs, { eyebrow: 'FAQ', heading: `Painting in ${l.name}: Common Questions`, id: 'faq-title' });
+  const message = `Hi, I'm looking for painting work at my property in ${l.name}.`;
   const nearby = l.nearby.map((slug) => locations.find((x) => x.slug === slug)).filter(Boolean);
 
   const hero = c.pageHero({
@@ -21,6 +22,7 @@ module.exports = function renderLocation(l, { services, locations }) {
     image: l.image,
     imageAlt: l.imageAlt,
     points: ['English-speaking', 'Interior + exterior', `Covering ${l.name} & nearby`],
+    message,
   });
 
   const intro = `<section class="section" aria-labelledby="intro-title">
@@ -51,7 +53,7 @@ ${c.sectionHead({ eyebrow: 'LOCAL CONDITIONS', heading: l.conditions.heading, id
 <div class="prose">${c.paras(l.conditions.paragraphs)}</div>
 <ul class="point-list" role="list">${map(l.conditions.points, (p) => `<li><h3>${esc(p.title)}</h3><p>${esc(p.text)}</p></li>`)}</ul>
 </div>
-${c.inlineCta(`Own a property in ${l.name}?`, 'Arrange a free visit')}
+${c.inlineCta(`Own a property in ${l.name}?`, { label: 'Arrange a visit on WhatsApp', message })}
 </div>
 </section>`;
 
@@ -101,12 +103,11 @@ ${c.areaGrid(locations, { current: l.slug })}
     c.steps(home.steps),
     areaSection,
     faq.html,
-    c.quoteForm({
-      locations,
-      services,
-      presetLocation: l.slug,
-      pagePath: path,
-      heading: `Request a Free Quote in ${l.name}`,
+    c.contactBlock({
+      eyebrow: `PAINTERS IN ${l.name.toUpperCase()}`,
+      heading: `Painting a Property in ${l.name}?`,
+      text: `Send us a few photos on WhatsApp with a line about the property. We reply in English and arrange a visit in ${l.name}.`,
+      message,
     }),
   ]);
 

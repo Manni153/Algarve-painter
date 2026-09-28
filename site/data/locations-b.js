@@ -14,7 +14,7 @@ module.exports = [
     municipality: "Olhão",
     region: "east",
     title: "Painters in Olhão | English-Speaking | Algarve Painter",
-    metaDescription: "English-speaking painters in Olhão for cubist townhouses, açoteias, apartments and country homes near the Ria Formosa. Careful preparation. Free quotes.",
+    metaDescription: "English-speaking painters in Olhão for cubist townhouses, açoteias, apartments and country homes near the Ria Formosa. Careful preparation. WhatsApp or call.",
     hero: {
       h1: "Painters in Olhão",
       lead: "Interior and exterior painting for Olhão townhouses, apartments and quintas, from the old fishermen's quarter to Moncarapacho and Fuseta, with clear English quotes and preparation done properly.",
@@ -132,7 +132,7 @@ module.exports = [
     municipality: "Portimão",
     region: "west",
     title: "Painters in Portimão | English-Speaking | Algarve Painter",
-    metaDescription: "English-speaking painters in Portimão, Praia da Rocha and Alvor. Seafront apartments, townhouses and villas prepared and painted properly. Free quotes.",
+    metaDescription: "English-speaking painters in Portimão, Praia da Rocha and Alvor. Seafront apartments, townhouses and villas prepared and painted properly. WhatsApp or call.",
     hero: {
       h1: "Painters in Portimão",
       lead: "Interior and exterior painting across Portimão, Praia da Rocha, Três Irmãos and Alvor, for apartment owners, villa owners and landlords who want clear communication in English.",
@@ -250,7 +250,7 @@ module.exports = [
     municipality: "Loulé",
     region: "central",
     title: "Painters in Quarteira | English-Speaking | Algarve Painter",
-    metaDescription: "English-speaking painters in Quarteira for seafront apartments, balconies, townhouses and condomínio repaints. Proper preparation and clear free quotes.",
+    metaDescription: "English-speaking painters in Quarteira for seafront apartments, balconies, townhouses and condomínio repaints. Proper preparation and clear quotes.",
     hero: {
       h1: "Painters in Quarteira",
       lead: "Apartment, townhouse and building painting in Quarteira, from the seafront promenade to Forte Novo, with written quotes in English and careful preparation of sea-exposed surfaces.",
@@ -486,7 +486,7 @@ module.exports = [
     municipality: "Tavira",
     region: "east",
     title: "Painters in Tavira | English-Speaking | Algarve Painter",
-    metaDescription: "English-speaking painters in Tavira for historic town houses, lime-washed walls, villas and apartments. Careful, compatible preparation. Free quotes.",
+    metaDescription: "English-speaking painters in Tavira for historic town houses, lime-washed walls, villas and apartments. Careful, compatible preparation. WhatsApp or call.",
     hero: {
       h1: "Painters in Tavira",
       lead: "Interior and exterior painting in Tavira and the surrounding villages, with particular care for older town houses, lime-washed walls and traditional joinery, and quotes explained in clear English.",
@@ -604,7 +604,7 @@ module.exports = [
     municipality: "Loulé",
     region: "central",
     title: "Painters Vale do Lobo | English-Speaking Villa Painters",
-    metaDescription: "English-speaking painters in Vale do Lobo for villas, townhouses and holiday lets near the cliffs and golf courses. Careful preparation and free quotes.",
+    metaDescription: "English-speaking painters in Vale do Lobo for villas, townhouses and holiday lets near the cliffs and golf courses. Careful preparation and clear quotes.",
     hero: {
       h1: "Painters in Vale do Lobo",
       lead: "Villa and townhouse painting in Vale do Lobo, planned around holiday bookings and absent owners, with careful preparation of sea-exposed surfaces and communication in English throughout.",
@@ -722,7 +722,7 @@ module.exports = [
     municipality: "Loulé",
     region: "central",
     title: "Painters in Vilamoura | English-Speaking | Algarve Painter",
-    metaDescription: "English-speaking painters in Vilamoura for marina apartments, golf villas and townhouses. Holiday lets and absent owners handled clearly. Free quotes.",
+    metaDescription: "English-speaking painters in Vilamoura for marina apartments, golf villas and townhouses. Holiday lets and absent owners handled clearly. WhatsApp or call.",
     hero: {
       h1: "Painters in Vilamoura",
       lead: "Interior and exterior painting for Vilamoura apartments, townhouses and villas, from the marina to the golf courses, with clear quotes in English and work planned around owners who are often abroad.",

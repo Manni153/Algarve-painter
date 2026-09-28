@@ -16,7 +16,7 @@ module.exports = [
     region: "central",
     title: "Painters in Albufeira | English-Speaking | Algarve Painter",
     metaDescription:
-      "English-speaking painters in Albufeira for villas, holiday apartments and Old Town houses. Careful preparation for coastal render. Request a free quote.",
+      "English-speaking painters in Albufeira for villas, holiday apartments and Old Town houses. Careful preparation for coastal render. WhatsApp or call us.",
     hero: {
       h1: "Painters in Albufeira",
       lead:
@@ -182,7 +182,7 @@ module.exports = [
     region: "central",
     title: "Painters in Almancil | English-Speaking | Algarve Painter",
     metaDescription:
-      "English-speaking painters in Almancil for villas, quintas and townhouses near the Golden Triangle. Thorough preparation, clear quotes. Request a free quote.",
+      "English-speaking painters in Almancil for villas, quintas and townhouses near the Golden Triangle. Thorough preparation, clear quotes. WhatsApp or call us.",
     hero: {
       h1: "Painters in Almancil",
       lead:
@@ -504,7 +504,7 @@ module.exports = [
     region: "central",
     title: "Painters in Faro | English-Speaking | Algarve Painter",
     metaDescription:
-      "English-speaking painters in Faro for city apartments, historic townhouses and villas in Gambelas and Estoi. Thorough prep, clear quotes. Request a quote.",
+      "English-speaking painters in Faro for city apartments, historic townhouses and villas in Gambelas and Estoi. Thorough prep, clear quotes. WhatsApp or call us.",
     hero: {
       h1: "Painters in Faro",
       lead:
@@ -667,7 +667,7 @@ module.exports = [
     region: "west",
     title: "Painters in Lagoa | English-Speaking | Algarve Painter",
     metaDescription:
-      "English-speaking painters in Lagoa, Porches, Ferragudo and Estômbar for villas, quintas and village houses. Thorough prep, clear quotes. Request a quote.",
+      "English-speaking painters in Lagoa, Porches, Ferragudo and Estômbar for villas, quintas and village houses. Thorough prep, clear quotes. WhatsApp or call us.",
     hero: {
       h1: "Painters in Lagoa",
       lead:
@@ -825,7 +825,7 @@ module.exports = [
     region: "west",
     title: "Painters in Lagos | English-Speaking | Algarve Painter",
     metaDescription:
-      "English-speaking painters in Lagos for Old Town houses, Meia Praia apartments and villas at Porto de Mós, Luz and Burgau. Careful prep. Request a free quote.",
+      "English-speaking painters in Lagos for Old Town houses, Meia Praia apartments and villas at Porto de Mós, Luz and Burgau. Careful prep. WhatsApp or call us.",
     hero: {
       h1: "Painters in Lagos",
       lead:
@@ -989,7 +989,7 @@ module.exports = [
     region: "central",
     title: "Painters in Loulé | English-Speaking | Algarve Painter",
     metaDescription:
-      "English-speaking painters in Loulé for townhouses, rural quintas and villas in the barrocal, Querença, Salir and Boliqueime. Clear quotes. Request a quote.",
+      "English-speaking painters in Loulé for townhouses, rural quintas and villas in the barrocal, Querença, Salir and Boliqueime. Clear quotes. WhatsApp or call us.",
     hero: {
       h1: "Painters in Loulé",
       lead:

@@ -117,14 +117,11 @@ function build() {
     ['/about/', () => pages.about(ctx), '0.5'],
     ['/contact/', () => pages.contact(ctx), '0.6'],
     ['/privacy-policy/', () => pages.privacy(ctx), '0.2'],
-    ['/thank-you/', () => pages.thankYou(ctx), null],
   ];
 
   const seen = { titles: new Map(), descriptions: new Map() };
   for (const [route, render, priority] of routes) {
-    let out = render();
-    // Pages without an on-page quote form send quote links to the contact page.
-    if (!out.includes('id="quote"')) out = out.replace(/href="#quote"/g, 'href="/contact/#quote"');
+    const out = render();
     const title = (out.match(/<title>([^<]*)<\/title>/) || [])[1];
     const desc = (out.match(/<meta name="description" content="([^"]*)"/) || [])[1];
     if (priority) {
@@ -137,8 +134,7 @@ function build() {
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'index.html'), out);
   }
-  let notFound = pages.notFound(ctx).replace(/href="#quote"/g, 'href="/contact/#quote"');
-  fs.writeFileSync(path.join(OUT, '404.html'), notFound);
+  fs.writeFileSync(path.join(OUT, '404.html'), pages.notFound(ctx));
 
   // sitemap.xml and robots.txt
   const today = new Date().toISOString().slice(0, 10);

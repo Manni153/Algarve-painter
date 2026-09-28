@@ -1,29 +1,35 @@
 'use strict';
 
 // Shared page sections. Every template composes pages from these so the
-// homepage, service pages and location pages stay consistent, and so a
-// change to (say) the quote form happens in one place.
+// homepage, service pages and location pages stay consistent. Phone and
+// WhatsApp are the only contact actions anywhere on the site.
 
 const site = require('../data/site');
 const home = require('../data/home');
+const servicePhotos = require('../data/service-photos');
 const reviews = require('../data/reviews');
 const projects = require('../data/projects');
-const { esc, html, map, picture, jsonLd, abs, phoneHtml } = require('./util');
+const { esc, html, map, picture, jsonLd, abs, phoneHtml, waHref } = require('./util');
 const { icon, googleG } = require('./icons');
 const { illustration } = require('./illustrations');
 
 // ---------------------------------------------------------------- buttons
 
-const btnQuote = (label = 'Request a Free Quote', cls = 'btn btn--primary') =>
-  `<a class="${cls}" href="#quote" data-quote-link>${esc(label)}</a>`;
-
-const btnCall = (label = 'Call Us', cls = 'btn btn--ghost') =>
-  `<a class="${cls}" href="${site.telHref}">${icon('phone', { size: 18 })}<span>${label === site.phoneDisplay ? phoneHtml() : esc(label)}</span></a>`;
-
-const btnWhatsApp = (label = 'WhatsApp', cls = 'btn btn--ghost') =>
+// Primary action. `message` is the prefilled WhatsApp text for this context.
+const btnWhatsApp = ({ label = 'WhatsApp Us', cls = 'btn btn--primary', message } = {}) =>
   site.whatsappEnabled
-    ? `<a class="${cls}" href="${site.whatsappHref}" target="_blank" rel="noopener">${icon('whatsapp', { size: 18 })}<span>${esc(label)}</span></a>`
+    ? `<a class="${cls} btn--wa" href="${waHref(message)}" target="_blank" rel="noopener">${icon('whatsapp', { size: 19 })}<span>${esc(label)}</span></a>`
     : '';
+
+// Secondary action. Pass `number: true` to show the phone number as the label.
+const btnCall = ({ label = 'Call Us', cls = 'btn btn--ghost', number = false } = {}) =>
+  `<a class="${cls}" href="${site.telHref}">${icon('phone', { size: 18 })}<span>${number ? `Call ${phoneHtml()}` : esc(label)}</span></a>`;
+
+// The standard pair: WhatsApp first, Call second.
+const contactButtons = ({ message, tone = 'light-bg', number = false } = {}) => {
+  const dark = tone === 'dark-bg';
+  return `<div class="btn-row">${btnWhatsApp({ message, cls: dark ? 'btn btn--light' : 'btn btn--primary' })}${btnCall({ number, cls: dark ? 'btn btn--outline-light' : 'btn btn--ghost' })}</div>`;
+};
 
 // ---------------------------------------------------------------- headings
 
@@ -36,6 +42,16 @@ ${intro ? `<p class="section-intro">${esc(intro)}</p>` : ''}
 }
 
 const paras = (list) => map(list, (p) => `<p>${esc(p)}</p>`);
+
+// A block that is fully open on larger screens and collapses to an
+// accordion on phones (main.js closes it there unless `keepOpen`). Without
+// JavaScript everything stays open.
+function mobileAccordion({ heading, headingClass = '', body, keepOpen = false, level = 3 }) {
+  return `<details class="acc" data-acc${keepOpen ? '="open"' : ''} open>
+<summary class="acc__sum"><h${level}${headingClass ? ` class="${headingClass}"` : ''}>${esc(heading)}</h${level}>${icon('chevron', { size: 20, className: 'icon acc__chev' })}</summary>
+<div class="acc__body">${body}</div>
+</details>`;
+}
 
 // ---------------------------------------------------------------- breadcrumbs
 
@@ -61,7 +77,7 @@ function breadcrumbs(items) {
 
 // Split hero used by every page except the homepage: text on the limestone
 // ground (so the LCP element is text, not a photograph) with a framed photo.
-function pageHero({ crumbs, eyebrow, h1, lead, image, imageAlt, points }) {
+function pageHero({ crumbs, eyebrow, h1, lead, image, imageAlt, points, message, actions = true }) {
   return `<section class="page-hero" aria-labelledby="page-title">
 <div class="container page-hero__grid">
 <div class="page-hero__text">
@@ -69,7 +85,7 @@ ${crumbs || ''}
 ${eyebrow ? `<p class="eyebrow">${esc(eyebrow)}</p>` : ''}
 <h1 class="page-hero__title" id="page-title">${esc(h1)}</h1>
 ${lead ? `<p class="page-hero__lead">${esc(lead)}</p>` : ''}
-<div class="btn-row">${btnQuote()}${btnCall()}</div>
+${actions ? contactButtons({ message }) : ''}
 ${points ? `<ul class="tick-list tick-list--inline" role="list">${points.map((pt) => `<li>${icon('check', { size: 16 })}<span>${esc(pt)}</span></li>`).join('')}</ul>` : ''}
 </div>
 ${image ? `<div class="page-hero__media">${picture(image, { alt: imageAlt, sizes: '(min-width: 1000px) 44vw, 92vw', className: 'frame', eager: true })}</div>` : ''}
@@ -79,60 +95,52 @@ ${image ? `<div class="page-hero__media">${picture(image, { alt: imageAlt, sizes
 
 // ---------------------------------------------------------------- CTAs
 
-// Quiet single-line prompt placed after a major section. Deliberately low
-// key: the page should not shout "quote" after every block.
-function inlineCta(text, label = 'Request a free quote') {
-  return `<p class="inline-cta"><span>${esc(text)}</span> <a href="#quote" data-quote-link>${esc(label)} ${icon('arrow', { size: 16 })}</a></p>`;
+// Quiet single-line prompt placed after a major section: one WhatsApp link,
+// deliberately low key so the page never shouts after every block.
+function inlineCta(text, { label = 'WhatsApp us', message } = {}) {
+  if (!site.whatsappEnabled) return `<p class="inline-cta"><span>${esc(text)}</span> <a href="${site.telHref}">Call ${phoneHtml()} ${icon('arrow', { size: 16 })}</a></p>`;
+  return `<p class="inline-cta"><span>${esc(text)}</span> <a href="${waHref(message)}" target="_blank" rel="noopener">${icon('whatsapp', { size: 17 })} ${esc(label)} ${icon('arrow', { size: 16 })}</a></p>`;
 }
 
-function ctaBand({ heading, text, image = 'algarve-villa-exterior-freshly-painted', alt = '' }) {
+function ctaBand({ heading, text, image = 'algarve-villa-exterior-freshly-painted', alt = '', message }) {
   return `<section class="cta-band" aria-labelledby="cta-band-title">
 <div class="cta-band__media">${picture(image, { alt, sizes: '100vw' })}</div>
 <div class="container cta-band__inner">
 <h2 class="cta-band__title" id="cta-band-title">${esc(heading)}</h2>
 <p class="cta-band__text">${esc(text)}</p>
-<div class="btn-row">${btnQuote('Request a Free Quote', 'btn btn--light')}${btnCall(site.phoneDisplay, 'btn btn--outline-light')}</div>
+${contactButtons({ message, tone: 'dark-bg' })}
 </div>
 </section>`;
 }
 
 // ---------------------------------------------------------------- services
 
-// Service cards. With `feature`, the complete-villa service leads as a
-// full-width card with a photograph: it is the project type the business
-// most wants, so it gets the most visual weight. Numbering keeps the
-// standard service order.
+// Image-led service cards. With `feature`, the complete-villa service leads
+// as a wide card: it is the project type the business most wants, so it gets
+// the most visual weight. On phones the grid becomes a horizontal
+// scroll-snap row so seven services don't turn into a very long page.
 const FEATURE_SLUG = 'villa-painting';
 
 function serviceCards(services, { exclude, feature = false, headingLevel = 3 } = {}) {
   const list = services.filter((s) => s.slug !== exclude);
   const ordered = feature ? [...list.filter((s) => s.slug === FEATURE_SLUG), ...list.filter((s) => s.slug !== FEATURE_SLUG)] : list;
   const card = (s) => {
-    const num = String(services.indexOf(s) + 1).padStart(2, '0');
-    const more = `<span class="service-card__more">Learn more ${icon('arrow', { size: 16 })}<span class="visually-hidden"> about ${esc(s.name.toLowerCase())}</span></span>`;
-    if (feature && s.slug === FEATURE_SLUG) {
-      return `<li class="service-card service-card--feature">
-<a href="/${s.slug}/" class="service-card__link">
-<div class="service-card__media">${picture('algarve-villa-exterior-freshly-painted', { alt: 'Villa with freshly painted rendered walls, window surrounds and shutters', sizes: '(min-width: 1240px) 700px, (min-width: 900px) 56vw, 100vw' })}</div>
-<div class="service-card__body">
-<span class="service-card__kicker">Complete projects</span>
-<h${headingLevel} class="service-card__title">${esc(s.name)}</h${headingLevel}>
-<p class="service-card__text">${esc(s.card)}</p>
-${more}
+    const isFeature = feature && s.slug === FEATURE_SLUG;
+    const [img, alt] = servicePhotos[s.slug];
+    const sizes = isFeature ? '(min-width: 1240px) 700px, (min-width: 900px) 56vw, (min-width: 700px) 46vw, 82vw' : '(min-width: 1240px) 380px, (min-width: 700px) 46vw, 82vw';
+    return `<li class="svc${isFeature ? ' svc--feature' : ''}">
+<a href="/${s.slug}/" class="svc__link">
+<div class="svc__media">${picture(img, { alt, sizes })}</div>
+<div class="svc__body">
+${isFeature ? '<p class="svc__kicker">Complete projects</p>' : ''}
+<h${headingLevel} class="svc__title">${esc(s.name)}</h${headingLevel}>
+<p class="svc__text">${esc(s.card)}</p>
+<span class="svc__more">Explore ${esc(s.name.toLowerCase())} ${icon('arrow', { size: 16 })}</span>
 </div>
 </a>
 </li>`;
-    }
-    return `<li class="service-card">
-<a href="/${s.slug}/" class="service-card__link">
-<span class="service-card__num" aria-hidden="true">${num}</span>
-<h${headingLevel} class="service-card__title">${esc(s.name)}</h${headingLevel}>
-<p class="service-card__text">${esc(s.card)}</p>
-${more}
-</a>
-</li>`;
   };
-  return `<ul class="service-grid" role="list">${ordered.map(card).join('')}</ul>`;
+  return `<ul class="svc-grid${feature ? ' svc-grid--feature' : ''}" role="list">${ordered.map(card).join('')}</ul>`;
 }
 
 // ---------------------------------------------------------------- why choose us
@@ -182,25 +190,18 @@ ${sectionHead({ eyebrow, heading, intro, id })}
 
 // ---------------------------------------------------------------- areas
 
+// The areas as an editorial list: town name, a short line about its
+// property, and a link to its page. Most important markets first.
 function areaGrid(locations, { current } = {}) {
-  const regions = [
-    ['west', 'Western Algarve'],
-    ['central', 'Central Algarve'],
-    ['east', 'Eastern Algarve'],
-  ];
-  return `<div class="area-regions">${regions
-    .map(([key, label]) => {
-      const locs = locations.filter((l) => l.region === key);
-      if (!locs.length) return '';
-      return `<div class="area-region"><h3 class="area-region__title">${label}</h3><ul class="area-list" role="list">${locs
-        .map((l) =>
-          l.slug === current
-            ? `<li><span class="area-link is-current" aria-current="page">${esc(l.name)}</span></li>`
-            : `<li><a class="area-link" href="/painters-${l.slug}/">Painters in ${esc(l.name)} ${icon('arrow', { size: 14 })}</a></li>`
-        )
-        .join('')}</ul></div>`;
+  const ordered = [...locations].sort((a, b) => a.rank - b.rank);
+  return `<ul class="areas" role="list">${ordered
+    .map((l) => {
+      const inner = `<span class="area__name"><span class="visually-hidden">Painters in </span>${esc(l.name)}</span><span class="area__tag">${esc(l.tagline)}</span>`;
+      return l.slug === current
+        ? `<li><span class="area is-current" aria-current="page">${inner}</span></li>`
+        : `<li><a class="area" href="/painters-${l.slug}/">${inner}${icon('arrow', { size: 16, className: 'icon area__arrow' })}</a></li>`;
     })
-    .join('')}</div>`;
+    .join('')}</ul>`;
 }
 
 // ---------------------------------------------------------------- FAQs
@@ -300,76 +301,48 @@ ${real ? '' : '<p class="project__note">Illustration of this project type. Proje
 </figure>`;
 }
 
-function gallery({ limit, filter } = {}) {
+function gallery({ limit, filter, compactOnPhones = false } = {}) {
   let list = visibleProjects();
   if (filter) list = list.filter(filter);
   if (limit) list = list.slice(0, limit);
   if (!list.length) return '';
-  return `<div class="project-grid">${list.map((p, i) => baCompare(p, `${filter ? 'f' : 'g'}${i}`)).join('')}</div>`;
+  return `<div class="project-grid${compactOnPhones ? ' project-grid--compact' : ''}">${list.map((p, i) => baCompare(p, `${filter ? 'f' : 'g'}${i}`)).join('')}</div>`;
 }
 
-// ---------------------------------------------------------------- quote form
+// ---------------------------------------------------------------- contact
 
-function quoteForm({ locations, services, presetLocation = '', presetService = '', pagePath = '/', heading, intro } = {}) {
-  const f = site.form;
-  const q = home.quote;
-  const opt = (value, label, selected) => `<option value="${esc(value)}"${selected ? ' selected' : ''}>${esc(label)}</option>`;
-  const scope = presetService === 'interior-painting' || presetService === 'walls-ceilings' ? 'Interior' : presetService === 'exterior-house-painting' ? 'Exterior' : '';
-  const propertyType = presetService === 'apartment-painting' ? 'Apartment' : presetService === 'villa-painting' ? 'Villa' : '';
-  return `<section class="section section--quote" id="quote" aria-labelledby="quote-title">
-<div class="container quote">
-<div class="quote__intro">
-<p class="eyebrow">${esc(q.eyebrow)}</p>
-<h2 class="section-title" id="quote-title">${esc(heading || q.heading)}</h2>
-<p class="section-intro">${esc(intro || q.intro)}</p>
-<ul class="quote__contact" role="list">
-<li><a href="${site.telHref}">${icon('phone')}<span><small>Call</small>${phoneHtml()}</span></a></li>
-${site.whatsappEnabled ? `<li><a href="${site.whatsappHref}" target="_blank" rel="noopener">${icon('whatsapp')}<span><small>WhatsApp</small>Send a message</span></a></li>` : ''}
-<li><a href="mailto:${site.email}">${icon('mail')}<span><small>Email</small>${esc(site.email)}</span></a></li>
-</ul>
-<p class="quote__note">${icon('camera', { size: 18 })}<span>Photographs help: a wide shot of each area and a close-up of any cracks, peeling or staining. You can send them by ${site.whatsappEnabled ? 'WhatsApp or ' : ''}email after submitting the form.</span></p>
+// Direct-contact block at the foot of every page. No form: WhatsApp first,
+// the phone as the alternative. `message` prefills WhatsApp for this page.
+function contactBlock({ eyebrow = 'READY TO REPAINT YOUR PROPERTY?', heading = 'Tell Us What Needs Painting', text, message } = {}) {
+  const hours = site.openingHours.map((h) => `<span>${esc(h.label)}</span>`).join('');
+  const intro =
+    text ||
+    'Send us a few photos of the areas that need painting on WhatsApp, with a line about the property and where it is. We reply in English and arrange a visit.';
+  return `<section class="section section--contact" id="contact" aria-labelledby="contact-title">
+<div class="container contact-block">
+<div class="contact-block__text">
+<p class="eyebrow">${esc(eyebrow)}</p>
+<h2 class="section-title" id="contact-title">${esc(heading)}</h2>
+<p class="section-intro">${esc(intro)}</p>
+<p class="contact-block__tip">${icon('camera', { size: 18 })}<span>Helpful photos: a wide shot of each wall or room, plus close-ups of any cracks, peeling or staining.</span></p>
 </div>
-<form class="form" name="${f.name}" method="POST" action="${f.successPath}" data-netlify="true" netlify-honeypot="company"${f.photoUpload ? ' enctype="multipart/form-data"' : ''}>
-<input type="hidden" name="form-name" value="${f.name}">
-<input type="hidden" name="page" value="${esc(pagePath)}">
-<p class="visually-hidden"><label>Leave this empty: <input type="text" name="company" tabindex="-1" autocomplete="off"></label></p>
-<div class="form__grid">
-<div class="field"><label for="f-name">Name</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
-<div class="field"><label for="f-phone">Phone</label><input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required></div>
-<div class="field field--full"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required></div>
-<div class="field"><label for="f-location">Property location</label><select id="f-location" name="location" required>
-${opt('', 'Select an area', !presetLocation)}
-${locations.map((l) => opt(l.name, l.name, l.slug === presetLocation)).join('')}
-${opt('Elsewhere in the Algarve', 'Elsewhere in the Algarve', false)}
-</select></div>
-<div class="field"><label for="f-type">Property type</label><select id="f-type" name="property_type" required>
-${opt('', 'Select a type', !propertyType)}
-${['Villa', 'House or townhouse', 'Apartment', 'Penthouse', 'Rental or holiday let', 'Commercial', 'Other'].map((t) => opt(t, t, t === propertyType)).join('')}
-</select></div>
-<fieldset class="field field--full choice"><legend>What needs painting?</legend>
-<div class="choice__row">${['Interior', 'Exterior', 'Both'].map((v) => `<label class="choice__opt"><input type="radio" name="scope" value="${v}"${v === scope ? ' checked' : ''} required><span>${v}</span></label>`).join('')}</div>
-</fieldset>
-<div class="field field--full"><label for="f-areas">Approximate areas requiring painting</label><input id="f-areas" name="areas" type="text" placeholder="e.g. whole exterior and boundary walls, or 3 bedrooms and living room"></div>
-<div class="field field--full"><label for="f-time">Desired timeframe</label><select id="f-time" name="timeframe">
-${['As soon as possible', 'Within 1–3 months', 'In 3–6 months', 'Before a sale or rental date', 'Flexible / planning ahead'].map((t, i) => opt(t, t, i === 4)).join('')}
-</select></div>
-${f.photoUpload ? `<div class="field field--full"><label for="f-photos">Photos <span class="optional">(optional)</span></label><input id="f-photos" name="photos" type="file" accept="image/*" multiple></div>` : ''}
-<div class="field field--full"><label for="f-message">Message <span class="optional">(optional)</span></label><textarea id="f-message" name="message" rows="4" placeholder="Anything else we should know: condition, access, colours, whether you will be in Portugal"></textarea></div>
-${presetService ? `<input type="hidden" name="service" value="${esc(services.find((s) => s.slug === presetService)?.name || presetService)}">` : ''}
+<div class="contact-block__actions">
+${site.whatsappEnabled ? `${btnWhatsApp({ message, cls: 'btn btn--light btn--lg btn--block' })}
+<p class="contact-block__alt">Prefer to speak?</p>` : ''}
+${btnCall({ number: true, cls: `btn ${site.whatsappEnabled ? 'btn--outline-light' : 'btn--light'} btn--lg btn--block` })}
+${hours ? `<p class="contact-block__hours">${icon('clock', { size: 16 })}<span class="contact-block__hours-list">${hours}</span></p>` : ''}
 </div>
-<button class="btn btn--primary btn--block" type="submit">Request a Free Quote</button>
-<p class="form__legal">We use your details only to reply about your project. See our <a href="/privacy-policy/">privacy policy</a>.</p>
-</form>
 </div>
 </section>`;
 }
 
 module.exports = {
-  btnQuote,
   btnCall,
   btnWhatsApp,
+  contactButtons,
   sectionHead,
   paras,
+  mobileAccordion,
   pageHero,
   breadcrumbs,
   inlineCta,
@@ -383,5 +356,5 @@ module.exports = {
   reviewsSection,
   gallery,
   visibleProjects,
-  quoteForm,
+  contactBlock,
 };

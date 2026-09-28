@@ -13,6 +13,9 @@ module.exports = [
   ['/metalwork-railing-painting', '/doors-shutters-woodwork/'],
   ['/waterproof-roof-coating', '/exterior-house-painting/'],
   ['/how-we-work', '/how-it-works/'],
+  // The quote form (and its thank-you page) was removed: contact is by phone
+  // and WhatsApp only.
+  ['/thank-you', '/'],
 
   // Town pages that now have a /painters-<town>/ page.
   ...['albufeira', 'almancil', 'carvoeiro', 'faro', 'lagoa', 'lagos', 'loule', 'olhao', 'portimao', 'quarteira', 'tavira', 'vilamoura'].map((t) => town(t, t)),

@@ -280,11 +280,4 @@ module.exports = {
       a: 'The whole Algarve, including Lagos, Portimão, Carvoeiro, Lagoa, Albufeira, Vilamoura, Quarteira, Vale do Lobo, Quinta do Lago, Almancil, Loulé, Faro, Olhão and Tavira. If your property is somewhere not listed, just ask.',
     },
   ],
-
-  quote: {
-    eyebrow: 'REQUEST A FREE QUOTE',
-    heading: 'Tell Us About Your Property',
-    intro:
-      'Send a few details and, if you can, some photographs. We will reply in English to arrange a visit or discuss the next step.',
-  },
 };

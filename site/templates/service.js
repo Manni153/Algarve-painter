@@ -6,22 +6,13 @@ const c = require('../lib/components');
 const { layout } = require('./layout');
 const { serviceSchema } = require('./schema');
 
-// Photograph for each service page hero. Swap for a real project photo when
-// one exists (add it to site/photos, run tools/site-images.py, use its name).
-const HERO_PHOTO = {
-  'interior-painting': ['vilamoura-golf-view-terrace-rendered-wall', 'Freshly painted terrace wall and limestone floor of an Algarve villa overlooking a golf course'],
-  'exterior-house-painting': ['lagoa-coast-terrace-rendered-wall', 'Painted rendered pillar and white coping on a coastal Algarve villa terrace above the sea'],
-  'villa-painting': ['algarve-villa-exterior-freshly-painted', 'Algarve villa with freshly painted rendered walls, white window surrounds and dark shutters'],
-  'apartment-painting': ['seafront-town-terrace-rendered-wall', 'Apartment terrace with a painted rendered wall above white seafront buildings'],
-  'walls-ceilings': ['barrocal-olive-hills-terrace-rendered-wall', 'Smooth painted rendered wall on a villa terrace looking over olive groves'],
-  'doors-shutters-woodwork': ['lagos-sea-view-terrace-rendered-wall', 'Painted louvred timber shutter and rendered wall on a sea-view terrace'],
-  'rental-property-painting': ['albufeira-coastal-terrace-rendered-wall', 'Holiday-let terrace with a freshly painted rendered wall overlooking a beach'],
-};
+const HERO_PHOTO = require('../data/service-photos');
 
 module.exports = function renderService(s, { services, locations }) {
   const path = `/${s.slug}/`;
   const crumbs = c.breadcrumbs([{ name: 'Services', path: '/painting-services/' }, { name: s.name, path }]);
   const [img, alt] = HERO_PHOTO[s.slug] || HERO_PHOTO['villa-painting'];
+  const message = `Hi, I'm looking for ${s.name.toLowerCase()} at my property in the Algarve.`;
   const faq = c.faqSection(s.faqs, { eyebrow: 'FAQ', heading: `${s.name}: Questions Owners Ask`, id: 'faq-title' });
   const related = s.related.map((slug) => services.find((x) => x.slug === slug)).filter(Boolean);
 
@@ -33,6 +24,7 @@ module.exports = function renderService(s, { services, locations }) {
     image: img,
     imageAlt: alt,
     points: ['English-speaking', 'Free written quote', 'Algarve-wide'],
+    message,
   });
 
   const intro = `<section class="section" aria-labelledby="intro-title">
@@ -41,7 +33,7 @@ module.exports = function renderService(s, { services, locations }) {
 <h2 class="section-title" id="intro-title">${esc(s.intro.heading)}</h2>
 ${c.paras(s.intro.paragraphs)}
 </div>
-<aside class="aside-card" aria-labelledby="glance-title">
+<aside class="aside-card aside-card--summary" aria-labelledby="glance-title">
 <h3 class="aside-card__title" id="glance-title">Typically included</h3>
 <ul class="tick-list" role="list">${s.included.items.slice(0, 6).map((i) => `<li>${icon('check', { size: 16 })}<span>${esc(i)}</span></li>`).join('')}</ul>
 <a class="text-link" href="#included">Full scope ${icon('arrow', { size: 16 })}</a>
@@ -60,8 +52,8 @@ ${c.sectionHead({ eyebrow: 'WHAT OWNERS NOTICE', heading: s.problems.heading, in
 <div class="container container--narrow prose">
 <p class="eyebrow">IN DETAIL</p>
 <h2 class="section-title" id="detail-title">${esc(s.detail.heading)}</h2>
-${s.detail.sections.map((d) => `<h3>${esc(d.heading)}</h3>${c.paras(d.paragraphs)}`).join('\n')}
-${c.inlineCta(`Want ${s.name.toLowerCase()} priced properly for your property?`)}
+${s.detail.sections.map((d, i) => c.mobileAccordion({ heading: d.heading, body: c.paras(d.paragraphs), keepOpen: i === 0 })).join('\n')}
+${c.inlineCta(`Want ${s.name.toLowerCase()} priced properly for your property?`, { label: 'Get a quote on WhatsApp', message })}
 </div>
 </section>`;
 
@@ -136,6 +128,7 @@ ${c.areaGrid(locations)}
       text: s.cta.text,
       // Avoid showing the hero photograph twice on the same page.
       image: img === 'algarve-villa-exterior-freshly-painted' ? 'carvoeiro-cliff-terrace-rendered-wall' : 'algarve-villa-exterior-freshly-painted',
+      message,
     }),
     process,
     forWhom,
@@ -144,7 +137,7 @@ ${c.areaGrid(locations)}
     relatedSection,
     areas,
     faq.html,
-    c.quoteForm({ locations, services, presetService: s.slug, pagePath: path }),
+    c.contactBlock({ message }),
   ]);
 
   return layout({

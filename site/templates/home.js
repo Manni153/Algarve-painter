@@ -2,7 +2,7 @@
 
 const site = require('../data/site');
 const home = require('../data/home');
-const { esc, map, picture, heroPicture, jsonLd, html } = require('../lib/util');
+const { esc, map, picture, heroPicture, jsonLd, html, waHref } = require('../lib/util');
 const { icon } = require('../lib/icons');
 const c = require('../lib/components');
 const { layout } = require('./layout');
@@ -14,12 +14,12 @@ module.exports = function renderHome({ services, locations }) {
 
   const hero = `<section class="hero hero--home" aria-labelledby="hero-title">
 <div class="hero__media">${heroPicture(h.image, { alt: h.imageAlt, imgClass: 'hero__img' })}</div>
-<div class="container hero__inner">
+<div class="container hero__inner"><div class="hero__text">
 <p class="eyebrow eyebrow--light">${esc(h.eyebrow)}</p>
 <h1 class="hero__title" id="hero-title">${h.h1Lines.map((l) => `<span>${esc(l)}</span>`).join(' ')}</h1>
 <p class="hero__lead">${h.lead.map((l) => `<span>${esc(l)}</span>`).join(' ')}</p>
-<div class="btn-row">${c.btnQuote('Request a Free Quote', 'btn btn--light')}${c.btnCall('Call Us', 'btn btn--outline-light')}</div>
-</div>
+<div class="btn-row hero__actions">${c.btnWhatsApp({ cls: 'btn btn--light' })}${c.btnCall({ cls: 'btn btn--outline-light' })}</div>
+</div></div>
 </section>
 <section class="hero-stats" aria-label="At a glance">
 <div class="container"><ul class="hero-stats__list" role="list">${map(
@@ -32,7 +32,8 @@ module.exports = function renderHome({ services, locations }) {
 <div class="container">
 ${c.sectionHead({ ...home.services, id: 'services-title' })}
 ${c.serviceCards(services, { feature: true })}
-${c.inlineCta('Planning a complete villa repaint or a full interior?')}
+<p class="svc-hint" aria-hidden="true">Swipe for all seven services ${icon('arrow', { size: 14 })}</p>
+${c.inlineCta('Planning a complete villa repaint or a full interior?', { label: 'Get a quote on WhatsApp' })}
 </div>
 </section>`;
 
@@ -44,7 +45,7 @@ ${c.sectionHead({ eyebrow: a.eyebrow, heading: a.heading, id: 'algarve-title' })
 <div class="split__media">${picture(a.image, { alt: a.imageAlt, sizes: '(min-width: 1000px) 420px, 92vw', className: 'frame frame--tall' })}</div>
 <div class="split__body prose">
 <p class="lede">${esc(a.intro)}</p>
-${a.blocks.map((b) => `<h3>${esc(b.heading)}</h3>${c.paras(b.paragraphs)}`).join('\n')}
+${a.blocks.map((b, i) => c.mobileAccordion({ heading: b.heading, body: c.paras(b.paragraphs), keepOpen: i === 0 })).join('\n')}
 </div>
 </div>
 </div>
@@ -57,20 +58,23 @@ ${c.sectionHead({ eyebrow: p.eyebrow, heading: p.heading, intro: p.intro, id: 'p
 <div class="problem-grid">${map(
     p.items,
     (it) => `<article class="problem" id="${it.id}">
-<h3 class="problem__title">${esc(it.title)}</h3>
-<dl class="problem__dl">
+${c.mobileAccordion({
+      heading: it.title,
+      headingClass: 'problem__title',
+      body: `<dl class="problem__dl">
 <div><dt>What you see</dt><dd>${esc(it.see)}</dd></div>
 <div><dt>Why it can happen</dt><dd>${esc(it.why)}</dd></div>
 <div><dt>What the work involves</dt><dd>${esc(it.process)}</dd></div>
 </dl>
-<a class="text-link" href="${it.link}">${esc(services.find((s) => `/${s.slug}/` === it.link)?.name || 'Learn more')} ${icon('arrow', { size: 16 })}</a>
+<a class="text-link" href="${it.link}">${esc(services.find((s) => `/${s.slug}/` === it.link)?.name || 'Learn more')} ${icon('arrow', { size: 16 })}</a>`,
+    })}
 </article>`
   )}</div>
-${c.inlineCta('Seeing one of these on your property?', 'Send us some photos')}
+${c.inlineCta('Seeing one of these on your property?', { label: 'Send us a photo on WhatsApp', message: "Hi, I'd like advice on a painting problem at my property in the Algarve." })}
 </div>
 </section>`;
 
-  const galleryHtml = c.gallery({ limit: 4 });
+  const galleryHtml = c.gallery({ limit: 4, compactOnPhones: true });
   const gallery = galleryHtml
     ? `<section class="section section--sand" aria-labelledby="gallery-title" id="projects">
 <div class="container">
@@ -85,7 +89,7 @@ ${galleryHtml}
 <div class="container">
 ${c.sectionHead({ ...home.area, id: 'area-title' })}
 ${c.areaGrid(locations)}
-<p class="area-note">Not listed? We cover the whole Algarve, including ${['Praia da Luz', 'Alvor', 'Ferragudo', 'Silves', 'São Brás de Alportel', 'Santa Luzia'].join(', ')} and inland villages. <a href="#quote" data-quote-link>Ask about your area</a>.</p>
+<p class="area-note">Not listed? We cover the whole Algarve, including ${['Praia da Luz', 'Alvor', 'Ferragudo', 'Silves', 'São Brás de Alportel', 'Santa Luzia'].join(', ')} and inland villages. <a href="${waHref("Hi, is my area of the Algarve covered? My property is in ")}" target="_blank" rel="noopener">Ask us on WhatsApp</a>.</p>
 </div>
 </section>`;
 
@@ -101,7 +105,7 @@ ${c.areaGrid(locations)}
     c.steps(home.steps),
     area,
     faq.html,
-    c.quoteForm({ locations, services, pagePath: '/' }),
+    c.contactBlock(),
   ]);
 
   return layout({
