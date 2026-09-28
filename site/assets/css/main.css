@@ -312,9 +312,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .hero { position: relative; color: #fff; isolation: isolate; }
 .hero--home {
   display: flex; align-items: flex-start; background: #2b2a26;
-  /* Phones: hero + stats row fill the first screen, clear of the floating
-     WhatsApp button. The text sits in the upper part of the photograph. */
-  min-height: max(540px, calc(100svh - var(--bar-h) - 92px));
+  /* The photograph fills the whole screen on every device (svh, so the
+     phone's browser bars never crop it). */
+  min-height: 100vh; min-height: 100svh;
 }
 .hero__media { position: absolute; inset: 0; z-index: -1; }
 .hero__media picture, .hero__img { width: 100%; height: 100%; }
@@ -343,12 +343,13 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .hero__lead { font-size: 1rem; line-height: 1.45; max-width: 34ch; margin: 0; color: rgba(255, 255, 255, 0.92); }
 .hero__lead span { display: block; }
 .hero__lead span + span { margin-top: 4px; font-weight: 600; color: #fff; }
-.hero__actions { margin-top: 22px; gap: 10px; }
-.hero__actions .btn { min-height: 50px; padding: 0 22px; flex: 1 1 auto; }
-@media (min-width: 480px) { .hero__actions .btn { flex: 0 1 auto; } }
+.hero__actions { margin-top: 24px; gap: 10px; }
+/* The hero's only action: the phone number itself. */
+.hero__call { font-size: 1.12rem; letter-spacing: 0.02em; gap: 12px; }
+.hero__actions .btn { min-height: 54px; padding: 0 26px; }
 
 @media (min-width: 900px) {
-  .hero--home { align-items: center; min-height: min(100svh, 940px); }
+  .hero--home { align-items: center; }
   .hero__img { object-position: 60% 50%; }
   .hero__media::after {
     background:
@@ -357,13 +358,14 @@ button, input, select, textarea { font: inherit; color: inherit; }
   }
   .hero__inner { padding-top: calc(var(--header-h) + 64px); padding-bottom: 140px; }
   .hero__text { max-width: 640px; }
-  .hero-stats { margin-top: -56px; padding-top: 0; }
+  .hero-stats { padding-top: 32px; }
   .hero__inner .eyebrow { margin-bottom: 18px; }
   .hero__title { font-size: clamp(3.6rem, 1.4rem + 4.2vw, 5.4rem); margin-bottom: 26px; }
   .hero__lead { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.3rem); line-height: 1.5; }
   .hero__lead span + span { margin-top: 6px; }
   .hero__actions { margin-top: 32px; gap: 12px; }
-  .hero__actions .btn { min-height: 54px; padding: 0 28px; }
+  .hero__actions .btn { min-height: 58px; padding: 0 32px; }
+  .hero__call { font-size: 1.2rem; }
 }
 
 /* Trust stats: a compact three-column row directly under the hero on
@@ -377,7 +379,6 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .hero-stats__list span { font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
 @media (min-width: 400px) { .hero-stats__list strong { font-size: 1.12rem; } }
 @media (min-width: 720px) {
-  .hero--home { min-height: max(540px, calc(100svh - var(--bar-h) - 150px)); }
   .hero-stats { background: none; border: 0; padding-top: 24px; }
   .hero-stats .container { padding-inline: var(--gutter); }
   .hero-stats__list { background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }

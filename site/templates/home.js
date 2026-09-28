@@ -2,7 +2,7 @@
 
 const site = require('../data/site');
 const home = require('../data/home');
-const { esc, map, picture, heroPicture, jsonLd, html, waHref } = require('../lib/util');
+const { esc, map, picture, heroPicture, jsonLd, html, waHref, phoneHtml } = require('../lib/util');
 const { icon } = require('../lib/icons');
 const c = require('../lib/components');
 const { layout } = require('./layout');
@@ -18,7 +18,7 @@ module.exports = function renderHome({ services, locations }) {
 <p class="eyebrow eyebrow--light">${esc(h.eyebrow)}</p>
 <h1 class="hero__title" id="hero-title">${h.h1Lines.map((l) => `<span>${esc(l)}</span>`).join(' ')}</h1>
 <p class="hero__lead">${h.lead.map((l) => `<span>${esc(l)}</span>`).join(' ')}</p>
-<div class="btn-row hero__actions">${c.btnWhatsApp({ cls: 'btn btn--light' })}${c.btnCall({ cls: 'btn btn--outline-light' })}</div>
+<div class="btn-row hero__actions"><a class="btn btn--light hero__call" href="${site.telHref}" aria-label="Call ${esc(site.phoneDisplay)}">${icon('phone', { size: 20 })}<span>${phoneHtml()}</span></a></div>
 </div></div>
 </section>
 <section class="hero-stats" aria-label="At a glance">
